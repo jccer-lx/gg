@@ -28,10 +28,11 @@ type Questions interface {
 
 type BaseQuestion struct {
 	gorm.Model
-	Stem       string  `gorm:"type:TEXT;"`                            //题干
-	Score      float64 `gorm:"type:DECIMAL(10, 2) UNSIGNED;NOT NULL"` //分数
-	Answer     string  `gorm:"type:TEXT;"`                            //参考答案
-	Analysis   string  `gorm:"type:TEXT;"`                            //解析
-	CategoryId uint    `gorm:"type:INT(10) UNSIGNED;NOT NULL"`        //类别
-	Difficulty int     `gorm:"type:INT(10);NOT NULL"`                 //难度
+	Stem             string  `gorm:"type:TEXT;"`                            //题干
+	Score            float64 `gorm:"type:DECIMAL(10, 2) UNSIGNED;NOT NULL"` //分数
+	Answer           string  `gorm:"type:TEXT;"`                            //参考答案
+	Analysis         string  `gorm:"type:TEXT;"`                            //解析
+	AnalysisVideoUrl string  `gorm:"type:TEXT;"`                            //解析视频地址
+	CategoryId       uint    `gorm:"type:INT(10) UNSIGNED;NOT NULL"`        //类别
+	Difficulty       int     `gorm:"type:INT(10);NOT NULL"`                 //难度
 }
