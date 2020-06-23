@@ -15,11 +15,11 @@ type MultipleChoiceQuestion struct {
 }
 
 func (q *MultipleChoiceQuestion) TableName() string {
-	return "multiple_questions_choice"
+	return "question_multiple_choice"
 }
 
 func (q *MultipleChoiceQuestion) GetType() int {
-	return Choice
+	return MultipleChoice
 }
 
 //填充options内容保存到option_list

@@ -15,7 +15,7 @@ type ChoiceQuestion struct {
 }
 
 func (q *ChoiceQuestion) TableName() string {
-	return "questions_choice"
+	return "question_choice"
 }
 
 func (q *ChoiceQuestion) GetType() int {

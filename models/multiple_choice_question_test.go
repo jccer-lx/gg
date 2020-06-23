@@ -13,7 +13,7 @@ func TestMultipleChoiceQuestionInsert(t *testing.T) {
 			BaseQuestion: BaseQuestion{
 				Stem:       "测试多选择题题干",
 				Score:      4,
-				Answer:     "o1",
+				Answer:     "o2,o3",
 				Analysis:   "测试多选择题解析",
 				CategoryId: 1,
 				Difficulty: Level6,

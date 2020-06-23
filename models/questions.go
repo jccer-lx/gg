@@ -5,6 +5,7 @@ import "github.com/jinzhu/gorm"
 const (
 	Choice         = iota //单选题
 	MultipleChoice        //多选题
+	Judgment              //判断题
 )
 
 const (
