@@ -15,6 +15,8 @@ func main() {
 func createTable() {
 	tableModels := []interface{}{
 		models.ChoiceQuestion{},
+		models.MultipleChoiceQuestion{},
+		models.QuestionCategory{},
 	}
 	databases.NewDB().DropTable(tableModels...)
 	databases.NewDB().CreateTable(tableModels...)

@@ -1,0 +1,60 @@
+package models
+
+import (
+	"github.com/lvxin0315/gg/databases"
+	. "github.com/smartystreets/goconvey/convey"
+	"testing"
+)
+
+func TestMultipleChoiceQuestionInsert(t *testing.T) {
+	databases.InitMysqlDB()
+	Convey("insert 一条多选择题", t, func() {
+		err := databases.NewDB().Create(&MultipleChoiceQuestion{
+			BaseQuestion: BaseQuestion{
+				Stem:       "测试多选择题题干",
+				Score:      4,
+				Answer:     "o1",
+				Analysis:   "测试多选择题解析",
+				CategoryId: 1,
+				Difficulty: Level6,
+			},
+			Options:     []string{"o1", "o2", "o3", "o4"},
+			AnswerIndex: "[1,2]",
+		}).Error
+		So(err, ShouldBeNil)
+	})
+}
+
+func TestMultipleChoiceQuestionFirst(t *testing.T) {
+	//先插入1条
+	TestMultipleChoiceQuestionInsert(t)
+	Convey("查询1条", t, func() {
+		var q MultipleChoiceQuestion
+		err := databases.NewDB().Order("id DESC").First(&q).Error
+		So(err, ShouldBeNil)
+		So(q.Options[0], ShouldEqual, "o1")
+		So(q.Options[1], ShouldEqual, "o2")
+		So(q.Options[2], ShouldEqual, "o3")
+		So(q.Options[3], ShouldEqual, "o4")
+	})
+}
+
+func TestMultipleChoiceQuestionFind(t *testing.T) {
+	//先插入10条
+	limit := 10
+	for limit > 0 {
+		TestMultipleChoiceQuestionInsert(t)
+		limit--
+	}
+	Convey("查询10条", t, func() {
+		var qList []*MultipleChoiceQuestion
+		err := databases.NewDB().Order("id DESC").Limit(10).Find(&qList).Error
+		So(err, ShouldBeNil)
+		for _, q := range qList {
+			So(q.Options[0], ShouldEqual, "o1")
+			So(q.Options[1], ShouldEqual, "o2")
+			So(q.Options[2], ShouldEqual, "o3")
+			So(q.Options[3], ShouldEqual, "o4")
+		}
+	})
+}
