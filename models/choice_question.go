@@ -6,12 +6,22 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
+const (
+	StringOption = "string"
+	ImageOption  = "img"
+)
+
+type ChoiceOption struct {
+	OptionType string `json:"option_type"`
+	Item       string `json:"item"`
+}
+
 //单选题
 type ChoiceQuestion struct {
 	BaseQuestion
-	OptionList  string   `gorm:"type:TEXT;"`    //选项
-	Options     []string `gorm:"-"`             //选项
-	AnswerIndex uint     `gorm:"type:INT(10);"` //参考答案对应索引
+	OptionList  string          `gorm:"type:TEXT;"`    //选项
+	Options     []*ChoiceOption `gorm:"-"`             //选项
+	AnswerIndex uint            `gorm:"type:INT(10);"` //参考答案对应索引
 }
 
 func (q *ChoiceQuestion) TableName() string {
@@ -52,7 +62,7 @@ func (q *ChoiceQuestion) Options2OptionList() error {
 }
 
 func (q *ChoiceQuestion) OptionList2Options() error {
-	var os []string
+	var os []*ChoiceOption
 	err := json.Unmarshal([]byte(q.OptionList), &os)
 	if err != nil {
 		return err

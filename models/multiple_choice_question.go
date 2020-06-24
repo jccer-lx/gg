@@ -9,9 +9,9 @@ import (
 //多选题
 type MultipleChoiceQuestion struct {
 	BaseQuestion
-	OptionList  string   `gorm:"type:TEXT;"` //选项
-	Options     []string `gorm:"-"`          //选项
-	AnswerIndex string   `gorm:"type:TEXT;"` //参考答案对应索引
+	OptionList  string          `gorm:"type:TEXT;"` //选项
+	Options     []*ChoiceOption `gorm:"-"`          //选项
+	AnswerIndex string          `gorm:"type:TEXT;"` //参考答案对应索引
 }
 
 func (q *MultipleChoiceQuestion) TableName() string {
@@ -52,7 +52,7 @@ func (q *MultipleChoiceQuestion) Options2OptionList() error {
 }
 
 func (q *MultipleChoiceQuestion) OptionList2Options() error {
-	var os []string
+	var os []*ChoiceOption
 	err := json.Unmarshal([]byte(q.OptionList), &os)
 	if err != nil {
 		return err

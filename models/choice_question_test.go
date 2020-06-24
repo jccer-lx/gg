@@ -18,7 +18,12 @@ func TestChoiceQuestionInsert(t *testing.T) {
 				CategoryId: 0,
 				Difficulty: Level4,
 			},
-			Options:     []string{"o1", "o2", "o3", "o4"},
+			Options: []*ChoiceOption{
+				{OptionType: StringOption, Item: "o1"},
+				{OptionType: StringOption, Item: "o2"},
+				{OptionType: StringOption, Item: "o3"},
+				{OptionType: StringOption, Item: "o4"},
+			},
 			AnswerIndex: 0,
 		}).Error
 		So(err, ShouldBeNil)
@@ -32,10 +37,10 @@ func TestChoiceQuestionFirst(t *testing.T) {
 		var q ChoiceQuestion
 		err := databases.NewDB().Order("id DESC").First(&q).Error
 		So(err, ShouldBeNil)
-		So(q.Options[0], ShouldEqual, "o1")
-		So(q.Options[1], ShouldEqual, "o2")
-		So(q.Options[2], ShouldEqual, "o3")
-		So(q.Options[3], ShouldEqual, "o4")
+		So(q.Options[0].Item, ShouldEqual, "o1")
+		So(q.Options[1].Item, ShouldEqual, "o2")
+		So(q.Options[2].Item, ShouldEqual, "o3")
+		So(q.Options[3].Item, ShouldEqual, "o4")
 	})
 }
 
@@ -51,10 +56,10 @@ func TestChoiceQuestionFind(t *testing.T) {
 		err := databases.NewDB().Order("id DESC").Limit(10).Find(&qList).Error
 		So(err, ShouldBeNil)
 		for _, q := range qList {
-			So(q.Options[0], ShouldEqual, "o1")
-			So(q.Options[1], ShouldEqual, "o2")
-			So(q.Options[2], ShouldEqual, "o3")
-			So(q.Options[3], ShouldEqual, "o4")
+			So(q.Options[0].Item, ShouldEqual, "o1")
+			So(q.Options[1].Item, ShouldEqual, "o2")
+			So(q.Options[2].Item, ShouldEqual, "o3")
+			So(q.Options[3].Item, ShouldEqual, "o4")
 		}
 	})
 }
