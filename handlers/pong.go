@@ -74,7 +74,7 @@ func tryDBSelect() {
 func tryConfig() {
 	logrus.Debug("tryConfig:")
 	logrus.Println("etc.Config.APPName:", etc.Config.APPName)
-	logrus.Println("etc.Config.Contacts[0].Name:", etc.Config.Contacts[0].Name)
+	//logrus.Println("etc.Config.Contacts[0].Name:", etc.Config.Contacts[0].Name)
 	logrus.Println("etc.Config.DB.Host:", etc.Config.DB.Host)
 	logrus.Println("etc.Config.DB.MaxIdleConns:", etc.Config.DB.MaxIdleConns)
 	logrus.Println("etc.Config.DB.MaxOpenConns:", etc.Config.DB.MaxOpenConns)

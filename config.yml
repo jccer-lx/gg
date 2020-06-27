@@ -13,6 +13,8 @@ db:
 memDB:
   name: one
 
-contacts:
-  - name: i test
-    email: test@test.com
+wx:
+  appID:
+  appSecret:
+  token:
+  encodingAESKey:
