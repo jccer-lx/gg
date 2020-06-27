@@ -16,19 +16,20 @@ var PongTime = 0
 func Pong(c *gin.Context) {
 	PongTime++
 	logrus.SetLevel(logrus.DebugLevel)
-	logrus.Println("我是test4的：", c.Query("a"))
+	d, _ := c.GetRawData()
+	logrus.Println("我是test4的：", string(d))
 	//试试配置文件
 	//tryConfig()
 	//试试连接池
 	//tryDBClient()
 	//试试模型操作-查询100条
-	tryDBSelect()
+	//tryDBSelect()
 	//试试memDB
-	if PongTime > 1 {
-		tryGetDataMemDB()
-	} else {
-		tryMemDB()
-	}
+	//if PongTime > 1 {
+	//	tryGetDataMemDB()
+	//} else {
+	//	tryMemDB()
+	//}
 	//返回值：pong
 	c.JSON(200, gin.H{
 		"message": "pong",
