@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lvxin0315/gg/etc"
 	"github.com/silenceper/wechat/v2"
@@ -58,12 +59,9 @@ func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
 
 	switch msg.MsgType {
 	case wxMessage.MsgTypeText: //文本类型
+		msgTypeText(msg, reply)
 	case wxMessage.MsgTypeEvent: //事件类型
-		switch msg.Event {
-		case wxMessage.EventSubscribe: //关注
-		case wxMessage.EventUnsubscribe: //取消关注
-		case wxMessage.EventClick: //点击
-		}
+		msgTypeEvent(msg, reply)
 	default:
 		//暂未处理类型
 		reply.MsgType = wxMessage.MsgTypeText
@@ -102,5 +100,24 @@ func InitMenu() {
 	})
 	if err != nil {
 		logrus.Error("m.SetMenu:", err)
+	}
+}
+
+func msgTypeText(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
+	reply.MsgType = wxMessage.MsgTypeText
+	reply.MsgData = wxMessage.NewText(fmt.Sprintf("我收到的消息是%s", msg.Content))
+}
+
+func msgTypeEvent(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
+	switch msg.Event {
+	case wxMessage.EventSubscribe: //关注
+		reply.MsgType = wxMessage.MsgTypeText
+		reply.MsgData = wxMessage.NewText("感谢关注")
+	case wxMessage.EventUnsubscribe: //取消关注
+		reply.MsgType = wxMessage.MsgTypeText
+		reply.MsgData = wxMessage.NewText("后会有期")
+	case wxMessage.EventClick: //点击
+		reply.MsgType = wxMessage.MsgTypeText
+		reply.MsgData = wxMessage.NewText(fmt.Sprintf("点击的事件是:%s", msg.EventKey))
 	}
 }
