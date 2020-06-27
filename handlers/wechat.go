@@ -68,16 +68,14 @@ func officialAccount() *officialaccount.OfficialAccount {
 //消息处理
 func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
 	reply := new(wxMessage.Reply)
+	reply.MsgType = wxMessage.MsgTypeText
+	reply.MsgData = wxMessage.NewText("暂时不能处理")
 
 	switch msg.MsgType {
 	case wxMessage.MsgTypeText: //文本类型
 		msgTypeText(msg, reply)
 	case wxMessage.MsgTypeEvent: //事件类型
 		msgTypeEvent(msg, reply)
-	default:
-		//暂未处理类型
-		reply.MsgType = wxMessage.MsgTypeText
-		reply.MsgData = wxMessage.NewText("暂时不能处理")
 	}
 	return reply
 }
@@ -173,13 +171,7 @@ func msgTypeEvent(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 //菜单点击事件
 func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 	switch msg.EventKey {
-	case WxOptionA:
-	case WxOptionB:
-	case WxOptionC:
-	case WxOptionD:
-	case WxOptionE:
-	case WxJudgeTrue:
-	case WxJudgeFalse:
+	case WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse:
 		//答题状态
 		resContent, err := services.Answer(msg.OpenID, msg.EventKey)
 		if err != nil {
@@ -188,15 +180,12 @@ func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 		}
 		reply.MsgType = wxMessage.MsgTypeText
 		reply.MsgData = resContent
-		return
 	case WxBegin: //开始答题
 		reply.MsgType = wxMessage.MsgTypeText
 		reply.MsgData = "开始答题"
-		return
 
 	case WxMyScore: //我的战绩
 		reply.MsgType = wxMessage.MsgTypeText
 		reply.MsgData = "我的战绩"
-		return
 	}
 }
