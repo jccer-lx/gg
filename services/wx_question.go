@@ -47,7 +47,21 @@ func NextQuestion(openid string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return `<div class="panel-body"><div class="question-title">1.<p>镰刀：收割机</p></div><p>A.轮船：飞机 </p><p>B.算盘：计算器</p><p>C.山泉：矿泉 </p><p>D.勤劳：安逸</p></div>`, nil
+	return `①足球进校园，让孩子们能在绿茵场上尽情奔跑，同时，也要尊重一部分孩子不喜欢足球的_____________。
+②老同学找他办事，他很为难地说：“我就这么点______，解决不了那么大的问题，你还是想想别的办法吧。”
+③中国保监会近日召开会议，强调通过开展治理理赔难等三项措施，切实保护好保险消费者合法______。
+A.权力
+权益
+权利
+B.权力
+权利
+权益
+C.权利
+权益
+权力
+D.权利
+权力
+权益`, nil
 }
 
 /**
