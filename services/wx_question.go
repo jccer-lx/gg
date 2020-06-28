@@ -2,10 +2,19 @@ package services
 
 import (
 	"fmt"
+	"github.com/lvxin0315/gg/databases"
+	"github.com/lvxin0315/gg/models"
 	"github.com/sirupsen/logrus"
+	"math/rand"
 )
 
 const wxMessageBr = "\r\n"
+const choiceStemTpl = `%s
+A:%s
+B:%s
+C:%s
+D:%s
+`
 
 /**
 判断是否微信答题状态
@@ -42,26 +51,26 @@ func GetQuestionForOpenid(openid string) (questionId uint, err error) {
 */
 func NextQuestion(openid string) (string, error) {
 	//TODO
+	m := new(models.ChoiceQuestion)
+	databases.NewDB().Find(m, map[string]interface{}{
+		"id": rand.Intn(20000),
+	})
+	stem := fmt.Sprintf(choiceStemTpl,
+		m.Stem,
+		m.Options[0].Item,
+		m.Options[1].Item,
+		m.Options[2].Item,
+		m.Options[3].Item,
+	)
+	if m.Options[4] != nil {
+		stem = stem + "E:" + m.Options[4].Item
+	}
 	nextQuestionId := 2
 	err := SetQuestionForOpenid(openid, uint(nextQuestionId))
 	if err != nil {
 		return "", err
 	}
-	return `①足球进校园，让孩子们能在绿茵场上尽情奔跑，同时，也要尊重一部分孩子不喜欢足球的_____________。
-②老同学找他办事，他很为难地说：“我就这么点______，解决不了那么大的问题，你还是想想别的办法吧。”
-③中国保监会近日召开会议，强调通过开展治理理赔难等三项措施，切实保护好保险消费者合法______。
-A.权力
-权益
-权利
-B.权力
-权利
-权益
-C.权利
-权益
-权力
-D.权利
-权力
-权益`, nil
+	return stem, nil
 }
 
 /**
