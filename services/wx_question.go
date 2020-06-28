@@ -62,7 +62,7 @@ func NextQuestion(openid string) (string, error) {
 		m.Options[2].Item,
 		m.Options[3].Item,
 	)
-	if m.Options[4] != nil {
+	if len(m.Options) > 4 {
 		stem = stem + "E:" + m.Options[4].Item
 	}
 	nextQuestionId := 2
