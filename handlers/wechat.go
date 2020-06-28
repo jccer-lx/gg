@@ -67,19 +67,22 @@ func officialAccount() *officialaccount.OfficialAccount {
 
 //消息处理
 func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
-	reply := new(wxMessage.Reply)
-	reply.MsgType = wxMessage.MsgTypeText
-	reply.MsgData = wxMessage.NewText("暂时不能处理")
+	reply := wxMessage.Reply{
+		MsgType: wxMessage.MsgTypeText,
+		MsgData: wxMessage.NewText("暂时不能处理"),
+	}
 
 	switch msg.MsgType {
 	case wxMessage.MsgTypeText: //文本类型
-		msgTypeText(msg, reply)
+		logrus.Debug("MsgTypeText")
+		msgTypeText(msg, &reply)
 	case wxMessage.MsgTypeEvent: //事件类型
-		msgTypeEvent(msg, reply)
+		logrus.Debug("MsgTypeEvent")
+		msgTypeEvent(msg, &reply)
 	}
 	logrus.Debug("reply.MsgType:", reply.MsgType)
 	logrus.Debug("reply.MsgData:", reply.MsgData)
-	return reply
+	return &reply
 }
 
 //初始化自定义菜单
