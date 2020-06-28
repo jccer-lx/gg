@@ -47,7 +47,7 @@ func NextQuestion(openid string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	return "以下哪些时候1111111111", nil
+	return `<div class="panel-body"><div class="question-title">1.<p>镰刀：收割机</p></div><p>A.轮船：飞机 </p><p>B.算盘：计算器</p><p>C.山泉：矿泉 </p><p>D.勤劳：安逸</p></div>`, nil
 }
 
 /**
