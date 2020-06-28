@@ -13,7 +13,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-var ot *officialaccount.OfficialAccount
+var oa *officialaccount.OfficialAccount
 
 const (
 	WxOptionA    = "A"
@@ -49,7 +49,7 @@ func WeChat(c *gin.Context) {
 }
 
 func officialAccount() *officialaccount.OfficialAccount {
-	if ot == nil {
+	if oa == nil {
 		wc := wechat.NewWechat()
 		//这里本地内存保存access_token，也可选择redis，memcache或者自定cache
 		memory := wxCache.NewMemory()
@@ -60,9 +60,9 @@ func officialAccount() *officialaccount.OfficialAccount {
 			EncodingAESKey: etc.Config.Wx.EncodingAESKey,
 			Cache:          memory,
 		}
-		ot = wc.GetOfficialAccount(cfg)
+		oa = wc.GetOfficialAccount(cfg)
 	}
-	return ot
+	return oa
 }
 
 //消息处理

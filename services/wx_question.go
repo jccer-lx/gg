@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const wxMessageBr = "\r\n"
+const wxMessageBr = ""
 
 /**
 判断是否微信答题状态
@@ -66,7 +66,7 @@ func Answer(openid string, answer string) (string, error) {
 	res += fmt.Sprintf("回答正确~~~%s", wxMessageBr)
 	//下一题
 	nextQuestionStr, err := NextQuestion(openid)
-	if !IsExamination(openid) {
+	if err != nil {
 		return "查询题目错误", err
 	}
 	res += nextQuestionStr
