@@ -5,7 +5,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-const wxMessageBr = ""
+const wxMessageBr = "\r\n"
 
 /**
 判断是否微信答题状态
