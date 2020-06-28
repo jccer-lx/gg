@@ -153,7 +153,7 @@ func msgTypeText(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 				return
 			}
 			reply.MsgType = wxMessage.MsgTypeText
-			reply.MsgData = resContent
+			reply.MsgData = wxMessage.NewText(resContent)
 			return
 		}
 	}
@@ -184,13 +184,13 @@ func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 			return
 		}
 		reply.MsgType = wxMessage.MsgTypeText
-		reply.MsgData = resContent
+		reply.MsgData = wxMessage.NewText(resContent)
 	case WxBegin: //开始答题
 		reply.MsgType = wxMessage.MsgTypeText
-		reply.MsgData = "开始答题"
+		reply.MsgData = wxMessage.NewText("开始答题")
 
 	case WxMyScore: //我的战绩
 		reply.MsgType = wxMessage.MsgTypeText
-		reply.MsgData = "我的战绩"
+		reply.MsgData = wxMessage.NewText("我的战绩")
 	}
 }
