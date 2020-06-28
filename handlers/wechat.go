@@ -77,6 +77,8 @@ func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
 	case wxMessage.MsgTypeEvent: //事件类型
 		msgTypeEvent(msg, reply)
 	}
+	logrus.Debug("reply.MsgType:", reply.MsgType)
+	logrus.Debug("reply.MsgData:", reply.MsgData)
 	return reply
 }
 

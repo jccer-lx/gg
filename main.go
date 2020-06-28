@@ -8,10 +8,12 @@ import (
 	"github.com/lvxin0315/gg/handlers"
 	"github.com/lvxin0315/gg/middlewares"
 	"github.com/lvxin0315/gg/routers"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
 	engine := gin.Default()
+	logrus.SetLevel(logrus.DebugLevel)
 	//加载路由
 	routers.InitRouter(engine)
 	//中间件-跨域
