@@ -23,8 +23,11 @@ const (
 
 //试题
 type Questions interface {
-	GetId() uint  //试题id
-	GetType() int //试题类型
+	GetId() uint         //试题id
+	GetType() int        //试题类型
+	GetAnswer() string   //参考答案
+	GetAnalysis() string //解析
+	GetCategoryId() uint //类别
 }
 
 type BaseQuestion struct {
@@ -40,4 +43,16 @@ type BaseQuestion struct {
 
 func (q *BaseQuestion) GetId() uint {
 	return q.ID
+}
+
+func (q *BaseQuestion) GetAnswer() string {
+	return q.Answer
+}
+
+func (q *BaseQuestion) GetAnalysis() string {
+	return q.Analysis
+}
+
+func (q *BaseQuestion) GetCategoryId() uint {
+	return q.CategoryId
 }

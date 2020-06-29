@@ -61,6 +61,27 @@ func GetQuestionByBankId(id uint) (questionBankModel *models.QuestionBank, err e
 		logrus.Debug("databases.NewDB().First(questionBankModel)", err)
 		return
 	}
+	err = FindQuestionByType(questionBankModel)
+	return
+}
+
+/*
+根据ID返回下一题题库内容，未添加条件
+@param uint id 选择题ID
+@return
+*/
+func GetNextQuestionByBankId(id uint) (questionBankModel *models.QuestionBank, err error) {
+	questionBankModel = new(models.QuestionBank)
+	err = databases.NewDB().Where("id > ?", id).First(questionBankModel).Error
+	if err != nil {
+		logrus.Debug("databases.NewDB().First(questionBankModel)", err)
+		return
+	}
+	err = FindQuestionByType(questionBankModel)
+	return
+}
+
+func FindQuestionByType(questionBankModel *models.QuestionBank) error {
 	//查询对应题目内容
 	switch questionBankModel.QuestionType {
 	case models.Choice:
@@ -70,20 +91,39 @@ func GetQuestionByBankId(id uint) (questionBankModel *models.QuestionBank, err e
 	case models.MultipleChoice:
 		questionBankModel.Question = new(models.MultipleChoiceQuestion)
 	default:
-		err = fmt.Errorf("暂时不支持的类型")
-		return
+		return fmt.Errorf("暂时不支持的类型")
 	}
 	//查询
-	err = databases.NewDB().First(questionBankModel.Question, map[string]interface{}{
+	err := databases.NewDB().First(questionBankModel.Question, map[string]interface{}{
 		"id": questionBankModel.QuestionId,
 	}).Error
 	if err != nil {
 		logrus.Debug("questionBankModel 类型查询：", err)
-		return
+		return err
 	}
 	if questionBankModel.Question.GetId() == 0 {
-		err = fmt.Errorf("未查询到对应题目数据")
+		return fmt.Errorf("未查询到对应题目数据")
+	}
+	return nil
+}
+
+/*
+判断答案是否正确
+@param uint id 选择题ID
+@param string answer 选择题ID
+@return
+*/
+func CheckQuestionAnswer(id uint, answer string) (res bool, err error) {
+	questionBankModel, err := GetQuestionByBankId(id)
+	if err != nil {
 		return
 	}
+	//答案不一样
+	if questionBankModel.Question.GetAnswer() != answer {
+		err = fmt.Errorf("答案错误")
+		res = false
+		return
+	}
+	res = true
 	return
 }

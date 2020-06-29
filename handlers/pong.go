@@ -1,13 +1,9 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"github.com/lvxin0315/gg/databases"
 	"github.com/lvxin0315/gg/etc"
-	"github.com/lvxin0315/gg/models"
 	"github.com/sirupsen/logrus"
-	"reflect"
 )
 
 //记录访问次数
@@ -37,38 +33,38 @@ func Pong(c *gin.Context) {
 }
 
 //试试连接池
-func tryDBClient() {
-	logrus.Debug("tryDBClient:")
-	t := 20
-	for {
-		databases.NewDB().Exec("SELECT * FROM mall_article")
-		t--
-		//试试模型操作-插入数据
-		articleModel := new(models.MallArticle)
-		articleModel.Author = fmt.Sprintf("Author%d", t)
-		articleModel.Title = fmt.Sprintf("Title%d", t)
-		articleModel.ShareTitle = fmt.Sprintf("ShareTitle%d", t)
-		err := databases.NewDB().Model(models.MallArticle{}).Save(articleModel).Error
-		if err != nil {
-			logrus.Error(err)
-		}
-
-		if t == 0 {
-			break
-		}
-	}
-}
+//func tryDBClient() {
+//	logrus.Debug("tryDBClient:")
+//	t := 20
+//	for {
+//		databases.NewDB().Exec("SELECT * FROM mall_article")
+//		t--
+//		//试试模型操作-插入数据
+//		articleModel := new(models.MallArticle)
+//		articleModel.Author = fmt.Sprintf("Author%d", t)
+//		articleModel.Title = fmt.Sprintf("Title%d", t)
+//		articleModel.ShareTitle = fmt.Sprintf("ShareTitle%d", t)
+//		err := databases.NewDB().Model(models.MallArticle{}).Save(articleModel).Error
+//		if err != nil {
+//			logrus.Error(err)
+//		}
+//
+//		if t == 0 {
+//			break
+//		}
+//	}
+//}
 
 //试试查询
-func tryDBSelect() {
-	logrus.Debug("tryDBSelect:")
-	var articleModelList []*models.MallArticle
-	err := databases.NewDB().Model(&models.MallArticle{}).Where("id > ?", 10).Limit(100).Scan(&articleModelList).Error
-	if err != nil {
-		logrus.Error(err)
-	}
-	logrus.Println(articleModelList[0].Author)
-}
+//func tryDBSelect() {
+//	logrus.Debug("tryDBSelect:")
+//	var articleModelList []*models.MallArticle
+//	err := databases.NewDB().Model(&models.MallArticle{}).Where("id > ?", 10).Limit(100).Scan(&articleModelList).Error
+//	if err != nil {
+//		logrus.Error(err)
+//	}
+//	logrus.Println(articleModelList[0].Author)
+//}
 
 //试试配置文件
 func tryConfig() {
@@ -81,42 +77,42 @@ func tryConfig() {
 }
 
 //试试memdb
-func tryMemDB() {
-	logrus.Debug("tryMemDB:")
-	var articleModelList []*models.MallArticle
-	err := databases.NewDB().Model(&models.MallArticle{}).Limit(10000).Scan(&articleModelList).Error
-	if err != nil {
-		logrus.Error(err)
-	}
-	//保存到memDB
-	memberTable, err := databases.NewMemBD().CreateTableSchema("MallArticle", reflect.TypeOf(&models.MallArticle{}))
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
-	for _, articleModel := range articleModelList {
-		_, err = memberTable.Insert(articleModel)
-		if err != nil {
-			logrus.Error(err)
-			break
-		}
-	}
-}
+//func tryMemDB() {
+//	logrus.Debug("tryMemDB:")
+//	var articleModelList []*models.MallArticle
+//	err := databases.NewDB().Model(&models.MallArticle{}).Limit(10000).Scan(&articleModelList).Error
+//	if err != nil {
+//		logrus.Error(err)
+//	}
+//	//保存到memDB
+//	memberTable, err := databases.NewMemBD().CreateTableSchema("MallArticle", reflect.TypeOf(&models.MallArticle{}))
+//	if err != nil {
+//		logrus.Error(err)
+//		return
+//	}
+//	for _, articleModel := range articleModelList {
+//		_, err = memberTable.Insert(articleModel)
+//		if err != nil {
+//			logrus.Error(err)
+//			break
+//		}
+//	}
+//}
 
 //试试在memDB 读取数据
-func tryGetDataMemDB() {
-	logrus.Debug("tryGetDataMemDB:")
-	table, err := databases.NewMemBD().GetTableSchema("MallArticle")
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
-	dataList, err := table.Select(10, 10)
-	if err != nil {
-		logrus.Error(err)
-		return
-	}
-	for _, article := range dataList {
-		logrus.Debug("article.Author", article.(*models.MallArticle).Author)
-	}
-}
+//func tryGetDataMemDB() {
+//	logrus.Debug("tryGetDataMemDB:")
+//	table, err := databases.NewMemBD().GetTableSchema("MallArticle")
+//	if err != nil {
+//		logrus.Error(err)
+//		return
+//	}
+//	dataList, err := table.Select(10, 10)
+//	if err != nil {
+//		logrus.Error(err)
+//		return
+//	}
+//	for _, article := range dataList {
+//		logrus.Debug("article.Author", article.(*models.MallArticle).Author)
+//	}
+//}

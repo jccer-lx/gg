@@ -146,11 +146,12 @@ func InitMenu() {
 
 //文本消息处理
 func msgTypeText(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
+	wxQuestionService := services.NewWxQuestionService(msg.OpenID)
 	//判断是不是答题内容
 	for _, item := range []string{WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse} {
 		if msg.Content == item {
 			//答题内容
-			resContent, err := services.Answer(msg.OpenID, item)
+			resContent, err := wxQuestionService.Answer(item)
 			if err != nil {
 				logrus.Error("services.Answer error:", err)
 				return
@@ -178,10 +179,11 @@ func msgTypeEvent(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 
 //菜单点击事件
 func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
+	wxQuestionService := services.NewWxQuestionService(msg.OpenID)
 	switch msg.EventKey {
 	case WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse:
 		//答题状态
-		resContent, err := services.Answer(msg.OpenID, msg.EventKey)
+		resContent, err := wxQuestionService.Answer(msg.EventKey)
 		if err != nil {
 			logrus.Error("services.Answer error:", err)
 			return
