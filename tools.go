@@ -14,11 +14,13 @@ func main() {
 
 func createTable() {
 	tableModels := []interface{}{
-		models.QuestionCategory{},
-		models.ChoiceQuestion{},
-		models.MultipleChoiceQuestion{},
-		models.FillInQuestion{},
-		models.JudgmentQuestion{},
+		//models.QuestionCategory{},
+		//models.ChoiceQuestion{},
+		//models.MultipleChoiceQuestion{},
+		//models.FillInQuestion{},
+		//models.JudgmentQuestion{},
+		models.QuestionBank{},
 	}
-	databases.NewDB().DropTable(tableModels...).CreateTable(tableModels...)
+	//databases.NewDB().DropTable(tableModels...)
+	databases.NewDB().CreateTable(tableModels...)
 }

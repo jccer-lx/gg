@@ -23,6 +23,7 @@ const (
 
 //试题
 type Questions interface {
+	GetId() uint  //试题id
 	GetType() int //试题类型
 }
 
@@ -35,4 +36,8 @@ type BaseQuestion struct {
 	AnalysisVideoUrl string  `gorm:"type:TEXT;"`                            //解析视频地址
 	CategoryId       uint    `gorm:"type:INT(10) UNSIGNED;NOT NULL"`        //类别
 	Difficulty       int     `gorm:"type:INT(10);NOT NULL"`                 //难度
+}
+
+func (q *BaseQuestion) GetId() uint {
+	return q.ID
 }
