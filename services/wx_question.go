@@ -26,7 +26,7 @@ func NewWxQuestionService(openid string) *WxQuestionService {
 }
 
 func (s *WxQuestionService) GetUserModel() (userModel *models.User, err error) {
-	if s.userModel.ID == 0 {
+	if s.userModel == nil {
 		userModel, err = SaveOpenid(s.Openid)
 		if err != nil {
 			return
