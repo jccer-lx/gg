@@ -35,3 +35,17 @@ func TestAddAllChoiceQuestionForBank(t *testing.T) {
 		}
 	}
 }
+
+func TestGetQuestionByBankId(t *testing.T) {
+	databases.InitMysqlDB()
+	logrus.SetLevel(logrus.DebugLevel)
+	questionBankModel, err := GetQuestionByBankId(15)
+	if err != nil {
+		fmt.Println(err)
+		t.Fail()
+	}
+	fmt.Println(questionBankModel.ID)
+	fmt.Println(questionBankModel.QuestionType)
+	fmt.Println(questionBankModel.Question.GetId())
+	fmt.Println(questionBankModel.Question.(*models.ChoiceQuestion).Stem)
+}

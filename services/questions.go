@@ -46,3 +46,44 @@ func AddChoiceQuestionForBank(id uint) (err error) {
 	err = databases.NewDB().Save(questionBankModel).Error
 	return
 }
+
+/*
+根据ID返回题库内容
+@param uint id 选择题ID
+@return
+*/
+func GetQuestionByBankId(id uint) (questionBankModel *models.QuestionBank, err error) {
+	questionBankModel = new(models.QuestionBank)
+	err = databases.NewDB().First(questionBankModel, map[string]interface{}{
+		"id": id,
+	}).Error
+	if err != nil {
+		logrus.Debug("databases.NewDB().First(questionBankModel)", err)
+		return
+	}
+	//查询对应题目内容
+	switch questionBankModel.QuestionType {
+	case models.Choice:
+		questionBankModel.Question = new(models.ChoiceQuestion)
+	case models.Judgment:
+		questionBankModel.Question = new(models.JudgmentQuestion)
+	case models.MultipleChoice:
+		questionBankModel.Question = new(models.MultipleChoiceQuestion)
+	default:
+		err = fmt.Errorf("暂时不支持的类型")
+		return
+	}
+	//查询
+	err = databases.NewDB().First(questionBankModel.Question, map[string]interface{}{
+		"id": questionBankModel.QuestionId,
+	}).Error
+	if err != nil {
+		logrus.Debug("questionBankModel 类型查询：", err)
+		return
+	}
+	if questionBankModel.Question.GetId() == 0 {
+		err = fmt.Errorf("未查询到对应题目数据")
+		return
+	}
+	return
+}

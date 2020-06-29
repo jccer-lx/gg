@@ -19,8 +19,9 @@ func createTable() {
 		//models.MultipleChoiceQuestion{},
 		//models.FillInQuestion{},
 		//models.JudgmentQuestion{},
-		models.QuestionBank{},
+		//models.QuestionBank{},
+		models.User{},
 	}
-	//databases.NewDB().DropTable(tableModels...)
+	databases.NewDB().DropTable(tableModels...)
 	databases.NewDB().CreateTable(tableModels...)
 }

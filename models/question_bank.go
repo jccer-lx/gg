@@ -10,6 +10,7 @@ type QuestionBank struct {
 	gorm.Model
 	QuestionType int
 	QuestionId   uint
+	Question     Questions `gorm:"-"`
 }
 
 func (q *QuestionBank) TableName() string {
