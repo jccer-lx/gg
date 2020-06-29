@@ -68,8 +68,7 @@ func officialAccount() *officialaccount.OfficialAccount {
 //消息处理
 func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
 	//记录openid
-	_, _ = services.SaveOpenid(msg.OpenID)
-
+	_, _ = services.SaveOpenid(string(msg.FromUserName))
 	reply := wxMessage.Reply{
 		MsgType: wxMessage.MsgTypeText,
 		MsgData: wxMessage.NewText("暂时不能处理"),
@@ -146,7 +145,7 @@ func InitMenu() {
 
 //文本消息处理
 func msgTypeText(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
-	wxQuestionService := services.NewWxQuestionService(msg.OpenID)
+	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
 	//判断是不是答题内容
 	for _, item := range []string{WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse} {
 		if msg.Content == item {
@@ -179,7 +178,7 @@ func msgTypeEvent(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 
 //菜单点击事件
 func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
-	wxQuestionService := services.NewWxQuestionService(msg.OpenID)
+	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
 	switch msg.EventKey {
 	case WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse:
 		//答题状态
