@@ -67,6 +67,9 @@ func officialAccount() *officialaccount.OfficialAccount {
 
 //消息处理
 func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
+	//记录openid
+	_, _ = services.SaveOpenid(msg.OpenID)
+
 	reply := wxMessage.Reply{
 		MsgType: wxMessage.MsgTypeText,
 		MsgData: wxMessage.NewText("暂时不能处理"),
