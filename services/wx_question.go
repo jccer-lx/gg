@@ -129,6 +129,6 @@ func (s *WxQuestionService) Correction() (err error) {
 	if err != nil {
 		return
 	}
-	err = CorrectionQuestion(userModel.ID, userModel.LastQuestionBankId)
+	err = CorrectionQuestion(userModel.LastQuestionBankId, userModel.ID)
 	return
 }

@@ -152,17 +152,11 @@ func CorrectionQuestion(id, userId uint) (err error) {
 		return err
 	}
 	questionBankCorrectionModel := new(models.QuestionBankCorrection)
-	//questionBankCorrectionModel.QuestionBankId = id
-	//questionBankCorrectionModel.UserId = userId
-	databases.NewDB().First(questionBankCorrectionModel, map[string]interface{}{
-		"question_bank_id": id,
-		"user_id":          userId,
-	})
-	if questionBankCorrectionModel.ID > 0 {
-		return
-	}
 	questionBankCorrectionModel.QuestionBankId = id
 	questionBankCorrectionModel.UserId = userId
-	err = databases.NewDB().Save(questionBankCorrectionModel).Error
+	err = databases.NewDB().FirstOrCreate(questionBankCorrectionModel, map[string]interface{}{
+		"question_bank_id": id,
+		"user_id":          userId,
+	}).Error
 	return
 }
