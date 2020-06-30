@@ -27,9 +27,9 @@ func InitMysqlDB() {
 	}
 	db.DB().SetMaxIdleConns(etc.Config.DB.MaxIdleConns)
 	db.DB().SetMaxOpenConns(etc.Config.DB.MaxOpenConns)
-	//plugin
-	db.Callback().Create().After("gorm:create").Register("plugin:gg_after_create", ggAfterCreate)
-	db.Callback().Query().Before("gorm:query_destination").Register("plugin:gg_before_query_destination", ggBeforeQueryDestination)
+	//plugin 目前没用
+	//db.Callback().Create().After("gorm:create").Register("plugin:gg_after_create", ggAfterCreate)
+	//db.Callback().Query().Before("gorm:query_destination").Register("plugin:gg_before_query_destination", ggBeforeQueryDestination)
 	gormDB = db
 }
 
