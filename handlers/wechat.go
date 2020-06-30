@@ -252,9 +252,15 @@ func checkQuestion(msg wxMessage.MixMessage, reply *wxMessage.Reply, item string
 //题目纠错
 func correctionQuestion(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
-	_ = wxQuestionService.Correction()
+	err := wxQuestionService.Correction()
+	if err != nil {
+		logrus.Error("wxQuestionService.Correction error:", err)
+	}
 	//感谢反馈
-	_ = sendManagerTextMessage(string(msg.FromUserName), "感谢反馈")
+	err = sendManagerTextMessage(string(msg.FromUserName), "感谢反馈")
+	if err != nil {
+		logrus.Error("sendManagerTextMessage error:", err)
+	}
 	//发送下一题
 	sendNextQuestionContent(reply, wxQuestionService)
 }
