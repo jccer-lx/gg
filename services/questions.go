@@ -151,19 +151,15 @@ func CorrectionQuestion(id, userId uint) (err error) {
 	questionBankCorrectionModel := new(models.QuestionBankCorrection)
 	//questionBankCorrectionModel.QuestionBankId = id
 	//questionBankCorrectionModel.UserId = userId
-	err = databases.NewDB().First(questionBankCorrectionModel, map[string]interface{}{
+	databases.NewDB().First(questionBankCorrectionModel, map[string]interface{}{
 		"question_bank_id": id,
 		"user_id":          userId,
-	}).Error
-	if err != nil {
-		if err != gorm.ErrRecordNotFound {
-			return err
-		}
-		//新增
-		questionBankCorrectionModel.QuestionBankId = id
-		questionBankCorrectionModel.UserId = userId
-		err = databases.NewDB().Save(questionBankCorrectionModel).Error
+	})
+	if questionBankCorrectionModel.ID > 0 {
 		return
 	}
+	questionBankCorrectionModel.QuestionBankId = id
+	questionBankCorrectionModel.UserId = userId
+	err = databases.NewDB().Save(questionBankCorrectionModel).Error
 	return
 }
