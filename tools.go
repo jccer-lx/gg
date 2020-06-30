@@ -20,8 +20,9 @@ func createTable() {
 		//models.FillInQuestion{},
 		//models.JudgmentQuestion{},
 		//models.QuestionBank{},
-		models.User{},
+		//models.User{},
+		models.QuestionBankCorrection{},
 	}
-	databases.NewDB().DropTable(tableModels...)
+	//databases.NewDB().DropTable(tableModels...)
 	databases.NewDB().CreateTable(tableModels...)
 }

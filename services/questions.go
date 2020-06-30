@@ -109,7 +109,7 @@ func FindQuestionByType(questionBankModel *models.QuestionBank) error {
 
 /*
 判断答案是否正确
-@param uint id 选择题ID
+@param uint id 题库ID
 @param string answer 选择题ID
 @return bool res 回答是否正确
 @return *models.QuestionBank questionBankModel 具体题目信息
@@ -125,5 +125,35 @@ func CheckQuestionAnswer(id uint, answer string) (res bool, questionBankModel *m
 		return
 	}
 	res = true
+	return
+}
+
+/*
+题目纠错，每个用户只能对题目纠错一次
+@param uint id 题库ID
+@param uint userId 用户ID
+*/
+func CorrectionQuestion(id, userId uint) (err error) {
+	//用户存在？
+	userModel := new(models.User)
+	userModel.ID = userId
+	err = databases.NewDB().First(userModel).Error
+	if err != nil {
+		return err
+	}
+	//题库存在？
+	questionBankModel := new(models.QuestionBank)
+	questionBankModel.ID = id
+	err = databases.NewDB().First(questionBankModel).Error
+	if err != nil {
+		return err
+	}
+	questionBankCorrectionModel := new(models.QuestionBankCorrection)
+	questionBankCorrectionModel.QuestionBankId = id
+	questionBankCorrectionModel.UserId = userId
+	err = databases.NewDB().FirstOrCreate(questionBankCorrectionModel).Error
+	if err != nil {
+		return err
+	}
 	return
 }

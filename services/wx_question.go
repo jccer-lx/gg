@@ -122,3 +122,13 @@ func (s *WxQuestionService) formatChoiceQuestion(questionBankModel *models.Quest
 	}
 	return stem
 }
+
+//Correction
+func (s *WxQuestionService) Correction() (err error) {
+	userModel, err := s.GetUserModel()
+	if err != nil {
+		return
+	}
+	err = CorrectionQuestion(userModel.ID, userModel.LastQuestionBankId)
+	return
+}

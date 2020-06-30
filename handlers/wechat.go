@@ -24,8 +24,9 @@ const (
 	WxOptionE    = "E"
 	WxJudgeTrue  = "对"
 	WxJudgeFalse = "错"
-	WxBegin      = "wx_begin"    //开始答题
-	WxMyScore    = "wx_my_score" //我的战绩
+	WxBegin      = "wx_begin"      //开始答题
+	WxMyScore    = "wx_my_score"   //我的战绩
+	WxCorrection = "wx_correction" //题目纠错
 )
 
 //返回消息格式
@@ -118,15 +119,18 @@ func InitMenu() {
 	choiceDBtn.SetClickButton("选项D", WxOptionD)
 	choiceEBtn.SetClickButton("选项E", WxOptionE)
 	//判断题快捷键
-	judgeBtn := new(menu.Button)
-	judgeTrueBtn := new(menu.Button)
-	judgeFalseBtn := new(menu.Button)
-	judgeBtn.SetSubButton("判断键", []*menu.Button{
-		judgeTrueBtn,
-		judgeFalseBtn,
-	})
-	judgeTrueBtn.SetClickButton("对", WxJudgeTrue)
-	judgeFalseBtn.SetClickButton("错", WxJudgeFalse)
+	//judgeBtn := new(menu.Button)
+	//judgeTrueBtn := new(menu.Button)
+	//judgeFalseBtn := new(menu.Button)
+	//judgeBtn.SetSubButton("判断键", []*menu.Button{
+	//	judgeTrueBtn,
+	//	judgeFalseBtn,
+	//})
+	//judgeTrueBtn.SetClickButton("对", WxJudgeTrue)
+	//judgeFalseBtn.SetClickButton("错", WxJudgeFalse)
+	//题目纠错
+	correctionBtn := new(menu.Button)
+	correctionBtn.SetClickButton("题目纠错", WxCorrection)
 	//其他
 	otherBtn := new(menu.Button)
 	//开始答题
@@ -142,7 +146,8 @@ func InitMenu() {
 	//保存到菜单
 	err := m.SetMenu([]*menu.Button{
 		choiceBtn,
-		judgeBtn,
+		//judgeBtn,
+		correctionBtn,
 		otherBtn,
 	})
 	if err != nil {
@@ -182,7 +187,6 @@ func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 	case WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse:
 		//答题状态
 		checkQuestion(msg, reply, msg.EventKey)
-
 	case WxBegin: //开始答题
 		reply.MsgType = wxMessage.MsgTypeText
 		reply.MsgData = wxMessage.NewText("开始答题")
@@ -190,6 +194,9 @@ func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 	case WxMyScore: //我的战绩
 		reply.MsgType = wxMessage.MsgTypeText
 		reply.MsgData = wxMessage.NewText("我的战绩")
+
+	case WxCorrection: //题目纠错
+		correctionQuestion(msg, reply)
 	}
 }
 
@@ -238,6 +245,15 @@ func checkQuestion(msg wxMessage.MixMessage, reply *wxMessage.Reply, item string
 			}
 		}
 	}
+	//发送下一题
+	sendNextQuestionContent(reply, wxQuestionService)
+}
+
+//题目纠错
+func correctionQuestion(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
+	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
+	//感谢反馈
+	_ = sendManagerTextMessage(string(msg.FromUserName), "感谢反馈")
 	//发送下一题
 	sendNextQuestionContent(reply, wxQuestionService)
 }
