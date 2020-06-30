@@ -121,7 +121,6 @@ func CheckQuestionAnswer(id uint, answer string) (res bool, questionBankModel *m
 	}
 	//答案不一样
 	if questionBankModel.Question.GetAnswer() != answer {
-		err = fmt.Errorf("答案错误")
 		res = false
 		return
 	}
