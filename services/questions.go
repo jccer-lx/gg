@@ -134,18 +134,21 @@ func CheckQuestionAnswer(id uint, answer string) (res bool, questionBankModel *m
 @param uint userId 用户ID
 */
 func CorrectionQuestion(id, userId uint) (err error) {
+	logrus.Debug("CorrectionQuestion params:", id, userId)
 	//用户存在？
 	userModel := new(models.User)
 	userModel.ID = userId
 	err = databases.NewDB().First(userModel).Error
 	if err != nil {
-		return err
+		err = fmt.Errorf("用户ID错误")
+		return
 	}
 	//题库存在？
 	questionBankModel := new(models.QuestionBank)
 	questionBankModel.ID = id
 	err = databases.NewDB().First(questionBankModel).Error
 	if err != nil {
+		err = fmt.Errorf("题库ID错误")
 		return err
 	}
 	questionBankCorrectionModel := new(models.QuestionBankCorrection)
