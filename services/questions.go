@@ -111,10 +111,11 @@ func FindQuestionByType(questionBankModel *models.QuestionBank) error {
 判断答案是否正确
 @param uint id 选择题ID
 @param string answer 选择题ID
-@return
+@return bool res 回答是否正确
+@return *models.QuestionBank questionBankModel 具体题目信息
 */
-func CheckQuestionAnswer(id uint, answer string) (res bool, err error) {
-	questionBankModel, err := GetQuestionByBankId(id)
+func CheckQuestionAnswer(id uint, answer string) (res bool, questionBankModel *models.QuestionBank, err error) {
+	questionBankModel, err = GetQuestionByBankId(id)
 	if err != nil {
 		return
 	}

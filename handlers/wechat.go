@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lvxin0315/gg/etc"
 	"github.com/lvxin0315/gg/services"
@@ -27,6 +28,12 @@ const (
 	WxMyScore    = "wx_my_score" //我的战绩
 )
 
+//返回消息格式
+const (
+	AnswerErrMessageTpl = `答案：%s
+解析：%s`
+)
+
 //微信接口
 func WeChat(c *gin.Context) {
 	officialAccount := officialAccount()
@@ -46,9 +53,6 @@ func WeChat(c *gin.Context) {
 		logrus.Error("server.Send error:", err)
 		return
 	}
-	//TODO测试发个客服消息
-	wxMessage.NewMessageManager(wxServer.Context).Send(wxMessage.NewCustomerTextMessage("obpsSs3AlIxNepp63YlB6Ltl0awc", "我是客服消息"))
-	wxMessage.NewMessageManager(wxServer.Context).Send(wxMessage.NewCustomerTextMessage("obpsSsxmi53MsILfk2GZe2OP8i60", "我是客服消息"))
 }
 
 func officialAccount() *officialaccount.OfficialAccount {
@@ -148,18 +152,11 @@ func InitMenu() {
 
 //文本消息处理
 func msgTypeText(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
-	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
 	//判断是不是答题内容
 	for _, item := range []string{WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse} {
 		if msg.Content == item {
-			//答题内容
-			resContent, err := wxQuestionService.Answer(item)
-			if err != nil {
-				logrus.Error("services.Answer error:", err)
-				return
-			}
-			reply.MsgType = wxMessage.MsgTypeText
-			reply.MsgData = wxMessage.NewText(resContent)
+			//答题内容判断
+			checkQuestion(msg, reply, item)
 			return
 		}
 	}
@@ -181,17 +178,11 @@ func msgTypeEvent(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 
 //菜单点击事件
 func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
-	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
 	switch msg.EventKey {
 	case WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse:
 		//答题状态
-		resContent, err := wxQuestionService.Answer(msg.EventKey)
-		if err != nil {
-			logrus.Error("services.Answer error:", err)
-			return
-		}
-		reply.MsgType = wxMessage.MsgTypeText
-		reply.MsgData = wxMessage.NewText(resContent)
+		checkQuestion(msg, reply, msg.EventKey)
+
 	case WxBegin: //开始答题
 		reply.MsgType = wxMessage.MsgTypeText
 		reply.MsgData = wxMessage.NewText("开始答题")
@@ -200,4 +191,53 @@ func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 		reply.MsgType = wxMessage.MsgTypeText
 		reply.MsgData = wxMessage.NewText("我的战绩")
 	}
+}
+
+//发送客服文本消息
+func sendManagerTextMessage(openid string, text string) error {
+	manager := wxMessage.NewMessageManager(officialAccount().GetContext())
+	//构造文本消息
+	customerMessage := wxMessage.NewCustomerTextMessage(openid, text)
+	return manager.Send(customerMessage)
+}
+
+//发送下一题题目信息
+func sendNextQuestionContent(reply *wxMessage.Reply, wxQuestionService *services.WxQuestionService) {
+	nextQuestionStr, err := wxQuestionService.NextQuestion()
+	if err != nil {
+		logrus.Error("sendQuestionContent error:", err)
+	}
+	reply.MsgType = wxMessage.MsgTypeText
+	reply.MsgData = wxMessage.NewText(nextQuestionStr)
+}
+
+/*
+判断答题情况
+@param string item 回答的答案
+*/
+func checkQuestion(msg wxMessage.MixMessage, reply *wxMessage.Reply, item string) {
+	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
+	res, questionBank, err := wxQuestionService.Answer(item)
+	if !res {
+		//第一种情况：报错。显示日志
+		if err != nil && err != services.AnswerNotStartedErr {
+			logrus.Error("services.Answer error:", err)
+		}
+		//第二种情况：未开始。什么都不干
+		//if err == services.AnswerNotStartedErr {
+		//
+		//}
+		//第三种情况：就是普通的回答错误。通过客服消息，给用户返回解析
+		if err == nil {
+			err = sendManagerTextMessage(string(msg.FromUserName),
+				fmt.Sprintf(AnswerErrMessageTpl,
+					questionBank.Question.GetAnswer(),
+					questionBank.Question.GetAnalysis()))
+			if err != nil {
+				logrus.Error("sendManagerTextMessage", err)
+			}
+		}
+	}
+	//发送下一题
+	sendNextQuestionContent(reply, wxQuestionService)
 }

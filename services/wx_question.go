@@ -1,6 +1,7 @@
 package services
 
 import (
+	"errors"
 	"fmt"
 	"github.com/lvxin0315/gg/databases"
 	"github.com/lvxin0315/gg/models"
@@ -13,6 +14,10 @@ B:%s
 C:%s
 D:%s
 `
+
+var (
+	AnswerNotStartedErr = errors.New("AnswerNotStarted")
+)
 
 type WxQuestionService struct {
 	Openid    string
@@ -84,31 +89,22 @@ func (s *WxQuestionService) NextQuestion() (questionStr string, err error) {
 微信答题
 @param string openid
 @param string answer 答案
-@return string
+@return bool res 是否回到正确
+@r
 */
-func (s *WxQuestionService) Answer(answer string) (res string, err error) {
+func (s *WxQuestionService) Answer(answer string) (res bool, questionBank *models.QuestionBank, err error) {
 	//如果用户没有正在回答题目，直接反馈
 	userModel, err := s.GetUserModel()
 	if err != nil {
 		return
 	}
-	if userModel.LastQuestionBankId > 0 {
-		//判断答案 TODO
-		questionRes, _ := CheckQuestionAnswer(userModel.LastQuestionBankId, answer)
-		if !questionRes {
-			res += fmt.Sprintf("回答错误~~~%s", wxMessageBr)
-		} else {
-			res += fmt.Sprintf("回答正确~~~%s", wxMessageBr)
-		}
-	}
-	//下一题
-	nextQuestionStr, err := s.NextQuestion()
-	if err != nil {
-		res = "查询题目错误"
+	if userModel.LastQuestionBankId == 0 {
+		err = AnswerNotStartedErr
 		return
 	}
-	res += nextQuestionStr
-	return res, nil
+	//判断答案
+	res, questionBank, err = CheckQuestionAnswer(userModel.LastQuestionBankId, answer)
+	return
 }
 
 //选择题格式整理
