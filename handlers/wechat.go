@@ -46,6 +46,9 @@ func WeChat(c *gin.Context) {
 		logrus.Error("server.Send error:", err)
 		return
 	}
+	//TODO测试发个客服消息
+	wxMessage.NewMessageManager(wxServer.Context).Send(wxMessage.NewCustomerTextMessage("obpsSs3AlIxNepp63YlB6Ltl0awc", "我是客服消息"))
+	wxMessage.NewMessageManager(wxServer.Context).Send(wxMessage.NewCustomerTextMessage("obpsSsxmi53MsILfk2GZe2OP8i60", "我是客服消息"))
 }
 
 func officialAccount() *officialaccount.OfficialAccount {
