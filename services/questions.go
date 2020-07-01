@@ -121,7 +121,7 @@ func CheckQuestionAnswer(id, userId uint, answer string) (res bool, questionBank
 		return
 	}
 	//答案判断
-	res = questionBankModel.Question.GetAnswer() != answer
+	res = questionBankModel.Question.GetAnswer() == answer
 	//记录
 	if res {
 		addAnswerRecord(id, userId, answer, models.AnswerRecordTrue)
