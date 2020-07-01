@@ -103,7 +103,7 @@ func (s *WxQuestionService) Answer(answer string) (res bool, questionBank *model
 		return
 	}
 	//判断答案
-	res, questionBank, err = CheckQuestionAnswer(userModel.LastQuestionBankId, answer)
+	res, questionBank, err = CheckQuestionAnswer(userModel.LastQuestionBankId, userModel.ID, answer)
 	return
 }
 

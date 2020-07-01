@@ -110,21 +110,24 @@ func FindQuestionByType(questionBankModel *models.QuestionBank) error {
 /*
 判断答案是否正确
 @param uint id 题库ID
-@param string answer 选择题ID
+@param uint userId 用户ID
+@param string answer 答案
 @return bool res 回答是否正确
 @return *models.QuestionBank questionBankModel 具体题目信息
 */
-func CheckQuestionAnswer(id uint, answer string) (res bool, questionBankModel *models.QuestionBank, err error) {
+func CheckQuestionAnswer(id, userId uint, answer string) (res bool, questionBankModel *models.QuestionBank, err error) {
 	questionBankModel, err = GetQuestionByBankId(id)
 	if err != nil {
 		return
 	}
-	//答案不一样
-	if questionBankModel.Question.GetAnswer() != answer {
-		res = false
-		return
+	//答案判断
+	res = questionBankModel.Question.GetAnswer() != answer
+	//记录
+	if res {
+		addAnswerRecord(id, userId, answer, models.AnswerRecordTrue)
+	} else {
+		addAnswerRecord(id, userId, answer, models.AnswerRecordFalse)
 	}
-	res = true
 	return
 }
 
@@ -158,5 +161,22 @@ func CorrectionQuestion(id, userId uint) (err error) {
 		"question_bank_id": id,
 		"user_id":          userId,
 	}).Error
+	//添加记录
+	addAnswerRecord(id, userId, "", models.AnswerRecordUndefined)
+	return
+}
+
+//添加答题记录
+func addAnswerRecord(id, userId uint, answer string, result int) {
+	answerRecord := new(models.AnswerRecord)
+	answerRecord.UserId = userId
+	answerRecord.QuestionBankId = id
+	answerRecord.Answer = answer
+	answerRecord.Result = result
+	recordErr := databases.NewDB().Save(answerRecord).Error
+	//添加记录的error不做返回值了
+	if recordErr != nil {
+		logrus.Error("recordErr: ", recordErr)
+	}
 	return
 }

@@ -21,7 +21,8 @@ func createTable() {
 		//models.JudgmentQuestion{},
 		//models.QuestionBank{},
 		//models.User{},
-		models.QuestionBankCorrection{},
+		//models.QuestionBankCorrection{},
+		models.AnswerRecord{},
 	}
 	//databases.NewDB().DropTable(tableModels...)
 	databases.NewDB().CreateTable(tableModels...)
