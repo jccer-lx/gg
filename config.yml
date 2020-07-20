@@ -2,7 +2,7 @@ appname: test
 port: 8088
 
 db:
-  name:     jcc_mall
+  name:     admin_test
   user:     root
   password: root
   port:     3306

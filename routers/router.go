@@ -6,6 +6,8 @@ import (
 )
 
 func InitRouter(engine *gin.Engine) {
-	v1 := engine.Group("/v1")
-	v1.Any("/ping", handlers.Pong)
+	engine.GET("/", handlers.AdminIndexView)
+	admin := engine.Group("/admin")
+	admin.GET("/tpl/:view", handlers.AdminView)
+	admin.GET("/api/:view", handlers.AdminApi)
 }

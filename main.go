@@ -15,6 +15,12 @@ func main() {
 	routers.InitRouter(engine)
 	//中间件-跨域
 	engine.Use(middlewares.Cors())
+	//自定义函数
+	//engine.SetFuncMap(template.FuncMap{})
+	//静态资源
+	engine.Static("/assets", "assets")
+	engine.LoadHTMLGlob("views/**/*")
+
 	//加载db
 	databases.InitMysqlDB()
 	databases.InitMemDB()

@@ -1,0 +1,16 @@
+{{ define "admin/list.html" }}
+    <table id="{{.Id}}"></table>
+    <script>
+        layui.use('table', function () {
+            var table = layui.table;
+            //第一个实例
+            table.render({
+                elem: '#{{.Id}}',
+                // height: 312,
+                url: '{{.ApiUrl}}', //数据接口
+                page: true, //开启分页
+                cols: [{{.FieldList}}]
+            });
+        });
+    </script>
+{{ end }}
