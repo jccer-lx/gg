@@ -1,0 +1,12 @@
+{{.FormHtml}}
+<script>
+    layui.use(['layer','jquery','form'], function () {
+        let layer = layui.layer;
+        let $ = layui.jquery;
+        let form = layui.form;
+        $("#{{.FormId}} .layui-btn").on("click", function(){
+            layer.close(layerIndex);
+            console.log(form.val("{{.FormId}}"))
+        });
+    });
+</script>

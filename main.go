@@ -7,6 +7,7 @@ import (
 	"github.com/lvxin0315/gg/etc"
 	"github.com/lvxin0315/gg/middlewares"
 	"github.com/lvxin0315/gg/routers"
+	"github.com/sirupsen/logrus"
 )
 
 func main() {
@@ -24,5 +25,7 @@ func main() {
 	//加载db
 	databases.InitMysqlDB()
 	databases.InitMemDB()
+	//debug?
+	logrus.SetLevel(logrus.DebugLevel)
 	engine.Run(fmt.Sprintf(":%s", etc.Config.Port))
 }

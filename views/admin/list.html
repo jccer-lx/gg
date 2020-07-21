@@ -1,16 +1,58 @@
 {{ define "admin/list.html" }}
-    <table id="{{.Id}}"></table>
+    <table id="{{.Id}}" lay-filter="lay{{.Id}}"></table>
+    <script type="text/html" id="tool{{.Id}}">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+{{/*            <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>*/}}
+{{/*            <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>*/}}
+        </div>
+    </script>
+
     <script>
-        layui.use('table', function () {
+        var layerIndex;
+        layui.use(['table', 'layer','jquery'], function () {
             var table = layui.table;
-            //第一个实例
+            var layer = layui.layer;
+            var $ = layui.jquery;
             table.render({
+                toolbar: '#tool{{.Id}}',
                 elem: '#{{.Id}}',
                 // height: 312,
                 url: '{{.ApiUrl}}', //数据接口
                 page: true, //开启分页
                 cols: [{{.FieldList}}]
             });
+            //监听事件
+            table.on('toolbar(lay{{.Id}})', function(obj){
+                // var checkStatus = table.checkStatus(obj.config.id);
+                switch(obj.event){
+                    case 'add':
+                        $.get("/admin/tpl/{{.ViewName}}/add", function (content) {
+                            layerIndex = layer.open({
+                                type: 1,
+                                // skin: 'layui-layer-demo', //样式类名
+                                // closeBtn: 0, //不显示关闭按钮
+                                anim: 5,
+                                title: "新增",
+                                shadeClose: true, //开启遮罩关闭
+                                content: content,
+                                maxmin: true,
+                                area: ['60vw', '60vh'],
+                            });
+                            // layer.full(addIndex);
+                        })
+                        // layer.msg('添加');
+                        break;
+                    case 'delete':
+                        layer.msg('删除');
+                        break;
+                    case 'update':
+                        layer.msg('编辑');
+                        break;
+                };
+            });
         });
+
+
     </script>
 {{ end }}
