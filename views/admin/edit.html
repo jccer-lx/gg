@@ -1,0 +1,61 @@
+{{define "admin/edit.tpl"}}
+<div class="layui-form-item">
+    <label class="layui-form-label">编辑管理员</label>
+    <div class="layui-input-block">
+        <form class="layui-form" action="" lay-filter="admin-edit" id="admin-edit">
+            <input type="hidden" name="id" id="id" value="{{.ID}}">
+            <div class="layui-form-item">
+                <label class="layui-form-label">昵称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="nickname" id="nickname" lay-verify="required" autocomplete="off"
+                           placeholder="Nickname" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">Email</label>
+                <div class="layui-input-block">
+                    <input type="text" name="email" id="email" lay-verify="required" autocomplete="off"
+                           placeholder="Email" class="layui-input">
+                </div>
+            </div>
+            <button type="button" class="layui-btn">提交</button>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use(['layer','jquery','form'], function () {
+        let layer = layui.layer;
+        let $ = layui.jquery;
+        let form = layui.form;
+        let id = $("#id").val();
+        //init
+        $.ajax({
+            type: 'get',
+            url:'/admin/api/edit/' + id,
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                form.val("admin-edit", res.data)
+            }
+        })
+
+        $("#admin-edit .layui-btn").on("click", function(){
+            $.ajax({
+                type: 'put',
+                url:'/admin/api/edit/' + id,
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(form.val("admin-edit")),
+                success:function (res) {
+                    console.log(res)
+                    if(res.code === 0){
+                        layer.close(layerIndex);
+                    }else{
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        });
+    });
+</script>
+{{end}}

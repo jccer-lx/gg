@@ -1,58 +1,91 @@
-{{ define "admin/list.html" }}
-    <table id="{{.Id}}" lay-filter="lay{{.Id}}"></table>
-    <script type="text/html" id="tool{{.Id}}">
-        <div class="layui-btn-container">
-            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
-{{/*            <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>*/}}
-{{/*            <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>*/}}
-        </div>
-    </script>
+{{define "admin/list.tpl"}}
+<table id="admin-table" lay-filter="admin-table" lay-skin="" lay-size="" lay-data="{id: 'id'}"></table>
+<script type="text/html" id="tool-admin-table">
+	<div class="layui-btn-container">
+		<button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+	</div>
+</script>
 
-    <script>
-        var layerIndex;
-        layui.use(['table', 'layer','jquery'], function () {
-            var table = layui.table;
-            var layer = layui.layer;
-            var $ = layui.jquery;
-            table.render({
-                toolbar: '#tool{{.Id}}',
-                elem: '#{{.Id}}',
-                // height: 312,
-                url: '{{.ApiUrl}}', //数据接口
-                page: true, //开启分页
-                cols: [{{.FieldList}}]
-            });
-            //监听事件
-            table.on('toolbar(lay{{.Id}})', function(obj){
-                // var checkStatus = table.checkStatus(obj.config.id);
-                switch(obj.event){
-                    case 'add':
-                        $.get("/admin/tpl/{{.ViewName}}/add", function (content) {
-                            layerIndex = layer.open({
-                                type: 1,
-                                // skin: 'layui-layer-demo', //样式类名
-                                // closeBtn: 0, //不显示关闭按钮
-                                anim: 5,
-                                title: "新增",
-                                shadeClose: true, //开启遮罩关闭
-                                content: content,
-                                maxmin: true,
-                                area: ['60vw', '60vh'],
-                            });
-                            // layer.full(addIndex);
-                        })
-                        // layer.msg('添加');
-                        break;
-                    case 'delete':
-                        layer.msg('删除');
-                        break;
-                    case 'update':
-                        layer.msg('编辑');
-                        break;
-                };
-            });
-        });
+<script type="text/html" id="tool-admin-ctrl">
+    <div class="layui-btn-container">
+        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+        <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+    </div>
+</script>
+
+<script>
+	layui.use(['table', 'layer','jquery'], function () {
+		var table = layui.table;
+		var layer = layui.layer;
+		var $ = layui.jquery;
+		table.render({
+			toolbar: '#tool-admin-table',
+			elem: '#admin-table',
+			url: '/admin/api/list', //数据接口
+			page: true, //开启分页
+			cols: [[
+                    {"field":"username","title":"账号","sort":"true"},
+                    {"field":"nickname","title":"昵称","sort":"true"},
+                    {"field":"avatar","title":"头像","sort":"true"},
+                    {"field":"email","title":"Email","sort":"true"},
+                    {"field":"status","title":"Status","sort":"true"},
+                {fixed: 'right', width:150, align:'center', toolbar: '#tool-admin-ctrl'}]]
+		});
+		//监听事件
+		table.on('toolbar(admin-table)', function(obj){
+			switch(obj.event){
+				case 'add':
+                    $.get("/admin/view/add", function (content) {
+                        layerIndex = layer.open({
+                            type: 1,
+                            // skin: 'layui-layer-demo', //样式类名
+                            // closeBtn: 0, //不显示关闭按钮
+                            anim: 5,
+                            title: "新增",
+                            shadeClose: true, //开启遮罩关闭
+                            content: content,
+                            maxmin: true,
+                            area: ['60vw', '60vh'],
+                        });
+                        // layer.full(addIndex);
+                    })
+					break;
+				case 'delete':
+					layer.msg('删除');
+					break;
+				case 'update':
+                    var checkStatus = table.checkStatus('id');
+                    console.log(checkStatus.data)
+					layer.msg('编辑');
+					break;
+			}
+		});
+
+        table.on('tool(admin-table)', function(obj){
+            switch(obj.event){
+                case 'delete':
+                    layer.msg('删除');
+                    break;
+                case 'update':
+                    $.get("/admin/view/edit/" + obj.data.id, function (content) {
+                        layerIndex = layer.open({
+                            type: 1,
+                            // skin: 'layui-layer-demo', //样式类名
+                            // closeBtn: 0, //不显示关闭按钮
+                            anim: 5,
+                            title: "编辑",
+                            shadeClose: true, //开启遮罩关闭
+                            content: content,
+                            maxmin: true,
+                            area: ['60vw', '60vh'],
+                        });
+                        // layer.full(addIndex);
+                    })
+                    break;
+            }
+        })
+	});
 
 
-    </script>
-{{ end }}
+</script>
+{{end}}
