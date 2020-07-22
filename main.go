@@ -7,6 +7,7 @@ import (
 	"github.com/lvxin0315/gg/etc"
 	"github.com/lvxin0315/gg/middlewares"
 	"github.com/lvxin0315/gg/routers"
+	"github.com/lvxin0315/gg/validation"
 	"github.com/sirupsen/logrus"
 )
 
@@ -21,10 +22,14 @@ func main() {
 	//静态资源
 	engine.Static("/assets", "assets")
 	engine.LoadHTMLGlob("views/**/*")
-
 	//加载db
 	databases.InitMysqlDB()
 	databases.InitMemDB()
+	//validate init
+	err := validation.InitValidate()
+	if err != nil {
+		panic(err)
+	}
 	//debug?
 	logrus.SetLevel(logrus.DebugLevel)
 	engine.Run(fmt.Sprintf(":%s", etc.Config.Port))

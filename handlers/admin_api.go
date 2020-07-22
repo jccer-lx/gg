@@ -6,22 +6,25 @@ import (
 	"github.com/lvxin0315/gg/helper"
 	"github.com/lvxin0315/gg/models"
 	"github.com/lvxin0315/gg/services"
-	"net/http"
 )
 
 //使用自定义结构体接受参数，防止直接操作model的意外惊喜
-type AdminParams struct {
-	Username string `from:"username" json:"username"`
-	Nickname string `from:"nickname" json:"nickname"`
-	Password string `from:"password" json:"password"`
+type adminAddApiParams struct {
+	adminUpdateApiParams
+	Username string `from:"username" json:"username" validate:"required,min=6,max=30" label:"账号"`
+	Password string `from:"password" json:"password" validate:"required,min=6,max=20" label:"密码"`
 	Salt     string `from:"salt" json:"salt"`
 	Avatar   string `from:"avatar" json:"avatar"`
-	Email    string `from:"email" json:"email"`
+}
+
+type adminUpdateApiParams struct {
+	Nickname string `from:"nickname" json:"nickname" binding:"required" label:"昵称"`
+	Email    string `from:"email" json:"email" validate:"email" label:"邮箱"`
 }
 
 func AdminListApi(c *gin.Context) {
 	output := new(helper.Output)
-	defer c.JSON(http.StatusOK, output.ReturnOutput())
+	defer apiReturn(c, output)
 	//分页参数
 	pagination := new(helper.Pagination)
 	err := c.ShouldBind(pagination)
@@ -43,10 +46,10 @@ func AdminListApi(c *gin.Context) {
 
 func AdminAddApi(c *gin.Context) {
 	output := new(helper.Output)
-	defer c.JSON(http.StatusOK, output.ReturnOutput())
+	defer apiReturn(c, output)
 	adminModel := new(models.Admin)
-	adminParams := new(AdminParams)
-	err := c.ShouldBind(adminParams)
+	adminParams := new(adminAddApiParams)
+	err := params(c, adminParams)
 	if err != nil {
 		output.Err = err
 		return
@@ -64,7 +67,7 @@ func AdminAddApi(c *gin.Context) {
 
 func AdminGetApi(c *gin.Context) {
 	output := new(helper.Output)
-	defer c.JSON(http.StatusOK, output.ReturnOutput())
+	defer apiReturn(c, output)
 	id := c.Param("id")
 	if id == "" {
 		output.Err = fmt.Errorf("参数异常")
@@ -93,8 +96,8 @@ func AdminUpdateApi(c *gin.Context) {
 		return
 	}
 	adminModel := new(models.Admin)
-	adminParams := new(AdminParams)
-	err := c.ShouldBind(adminParams)
+	adminParams := new(adminUpdateApiParams)
+	err := params(c, adminParams)
 	if err != nil {
 		fmt.Println(err)
 		output.Err = err
