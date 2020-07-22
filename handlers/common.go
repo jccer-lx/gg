@@ -1,11 +1,13 @@
 package handlers
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lvxin0315/gg/helper"
 	"github.com/lvxin0315/gg/validation"
 	"github.com/sirupsen/logrus"
 	"net/http"
+	"strings"
 )
 
 //通用404页面
@@ -37,4 +39,17 @@ func params(c *gin.Context, data interface{}) error {
 		return err
 	}
 	return nil
+}
+
+//通用的view
+func GGView(c *gin.Context) {
+	uriList := strings.Split(c.Request.RequestURI, "/")
+	if len(uriList) < 3 || uriList[2] != "view" {
+		return
+	}
+	//参数[id]
+	data := map[string]interface{}{
+		"ID": c.Param("id"),
+	}
+	c.HTML(http.StatusOK, fmt.Sprintf("%s/%s.tpl", uriList[1], uriList[3]), data)
 }

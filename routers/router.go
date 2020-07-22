@@ -8,9 +8,8 @@ import (
 func InitRouter(engine *gin.Engine) {
 	engine.GET("/", handlers.IndexView)
 	admin := engine.Group("/admin")
-	admin.GET("/view/list", handlers.AdminListView)
-	admin.GET("/view/add", handlers.AdminAddView)
-	admin.GET("/view/edit/:id", handlers.AdminEditView)
+	admin.GET("/view/list", handlers.GGView)
+	admin.GET("/view/add", handlers.GGView)
 
 	admin.GET("/api/list", handlers.AdminListApi)
 	admin.POST("/api/add", handlers.AdminAddApi)
