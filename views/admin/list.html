@@ -1,5 +1,5 @@
 {{define "admin/list.tpl"}}
-<table id="admin-table" lay-filter="admin-table" lay-skin="" lay-size="" lay-data="{id: 'id'}"></table>
+<table id="admin-table" lay-filter="admin-table" lay-skin="" lay-size="" ></table>
 <script type="text/html" id="tool-admin-table">
 	<div class="layui-btn-container">
 		<button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
@@ -8,7 +8,7 @@
 
 <script type="text/html" id="tool-admin-ctrl">
     <div class="layui-btn-container">
-        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>
+{{/*        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>*/}}
         <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
     </div>
 </script>
@@ -25,9 +25,9 @@
 			page: true, //开启分页
 			cols: [[
                     {"field":"username","title":"账号","sort":"true"},
-                    {"field":"nickname","title":"昵称","sort":"true"},
+                    {"field":"nickname","title":"昵称","sort":"true","edit":"text"},
                     {"field":"avatar","title":"头像","sort":"true"},
-                    {"field":"email","title":"Email","sort":"true"},
+                    {"field":"email","title":"Email","sort":"true","edit":"text"},
                     {"field":"status","title":"Status","sort":"true"},
                 {fixed: 'right', width:150, align:'center', toolbar: '#tool-admin-ctrl'}]]
 		});
@@ -61,29 +61,44 @@
 			}
 		});
 
-        table.on('tool(admin-table)', function(obj){
-            switch(obj.event){
-                case 'delete':
-                    layer.msg('删除');
-                    break;
-                case 'update':
-                    $.get("/admin/view/edit/" + obj.data.id, function (content) {
-                        layerIndex = layer.open({
-                            type: 1,
-                            // skin: 'layui-layer-demo', //样式类名
-                            // closeBtn: 0, //不显示关闭按钮
-                            anim: 5,
-                            title: "编辑",
-                            shadeClose: true, //开启遮罩关闭
-                            content: content,
-                            maxmin: true,
-                            area: ['60vw', '60vh'],
-                        });
-                        // layer.full(addIndex);
-                    })
-                    break;
-            }
-        })
+        // table.on('tool(admin-table)', function(obj){
+        //     switch(obj.event){
+        //         case 'delete':
+        //             layer.msg('删除');
+        //             break;
+        //         case 'update':
+        //             $.get("/admin/view/edit/" + obj.data.id, function (content) {
+        //                 layerIndex = layer.open({
+        //                     type: 1,
+        //                     // skin: 'layui-layer-demo', //样式类名
+        //                     // closeBtn: 0, //不显示关闭按钮
+        //                     anim: 5,
+        //                     title: "编辑",
+        //                     shadeClose: true, //开启遮罩关闭
+        //                     content: content,
+        //                     maxmin: true,
+        //                     area: ['60vw', '60vh'],
+        //                 });
+        //                 // layer.full(addIndex);
+        //             })
+        //             break;
+        //     }
+        // })
+
+        table.on('edit(admin-table)', function(obj){ //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+            $.ajax({
+                type: 'put',
+                url:'/admin/api/edit/' + obj.data.id,
+                dataType: 'json',
+                contentType: "application/json; charset=utf-8",
+                data: JSON.stringify(obj.data),
+                success:function (res) {
+                    if(res.code !== 0){
+                        layer.msg(res.msg)
+                    }
+                }
+            })
+        });
 	});
 
 

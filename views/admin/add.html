@@ -36,8 +36,9 @@
     </div>
 </div>
 <script>
-    layui.use(['layer','jquery','form'], function () {
+    layui.use(['layer','jquery','form','table'], function () {
         let layer = layui.layer;
+        let table = layui.table;
         let $ = layui.jquery;
         let form = layui.form;
         $("#admin-add .layui-btn").on("click", function(){
@@ -50,6 +51,9 @@
                 success:function (res) {
                     console.log(res)
                     if(res.code === 0){
+                        table.reload("admin-table", {
+                            url : '/admin/api/list'
+                        })
                         layer.close(layerIndex);
                     }else{
                         layer.msg(res.msg)

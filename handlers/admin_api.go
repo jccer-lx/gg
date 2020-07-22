@@ -87,8 +87,8 @@ func AdminGetApi(c *gin.Context) {
 func AdminUpdateApi(c *gin.Context) {
 	output := new(helper.Output)
 	defer apiReturn(c, output)
-	id := c.Param("id")
-	if id == "" {
+	id := helper.String2Uint(c.Param("id"))
+	if id <= 0 {
 		output.Err = fmt.Errorf("参数异常")
 		return
 	}
@@ -100,7 +100,7 @@ func AdminUpdateApi(c *gin.Context) {
 		output.Err = err
 		return
 	}
-	adminModel.ID = helper.String2Uint(id)
+	adminModel.ID = id
 	adminModel.Nickname = adminParams.Nickname
 	adminModel.Email = adminParams.Email
 	err = services.UpdateOne(adminModel)
@@ -108,4 +108,5 @@ func AdminUpdateApi(c *gin.Context) {
 		output.Err = err
 		return
 	}
+	output.Data = adminModel
 }
