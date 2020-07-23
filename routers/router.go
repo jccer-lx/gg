@@ -12,6 +12,7 @@ func InitRouter(engine *gin.Engine) {
 	public.GET("/view/login", handlers.GGView)
 
 	public.POST("/api/login", handlers.LoginApi)
+	public.GET("/api/logout", handlers.LogoutApi)
 
 	//管理员
 	admin := engine.Group("/admin")
@@ -22,5 +23,4 @@ func InitRouter(engine *gin.Engine) {
 	admin.POST("/api/add", handlers.AdminAddApi)
 	admin.GET("/api/edit/:id", handlers.AdminGetApi)
 	admin.PUT("/api/edit/:id", handlers.AdminUpdateApi)
-
 }

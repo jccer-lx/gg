@@ -23,7 +23,7 @@ func AddAdmin(adminModel *models.Admin) error {
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return err
 	}
-	if hasAdminModel.ID > 0 {
+	if hasAdminModel != nil && hasAdminModel.ID > 0 {
 		return fmt.Errorf("username 不能重复")
 	}
 	err = databases.NewDB().Save(adminModel).Error
@@ -67,7 +67,7 @@ func Login(username string, password string) (*models.Admin, error) {
 		return nil, fmt.Errorf("账号被禁用")
 	}
 	//生成token
-	adminModel.Token = helper.UUidV4()
+	adminModel.Token = helper.SaveToken(adminModel.ID)
 	err = databases.NewDB().Model(adminModel).Save(adminModel).Error
 	if err != nil {
 		return nil, fmt.Errorf("token异常")

@@ -2,10 +2,12 @@ package handlers
 
 import (
 	"fmt"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/lvxin0315/gg/helper"
 	"github.com/lvxin0315/gg/models"
 	"github.com/lvxin0315/gg/services"
+	"github.com/sirupsen/logrus"
 )
 
 //使用自定义结构体接受参数，防止直接操作model的意外惊喜
@@ -138,5 +140,20 @@ func LoginApi(c *gin.Context) {
 	//密码和盐去掉哦~
 	adminModel.Password = ""
 	adminModel.Salt = ""
+	//保存session
+	session := sessions.Default(c)
+	session.Set("token", adminModel.Token)
+	session.Save()
+	logrus.Info("login token:", session.Get("token"))
 	output.Data = adminModel
+}
+
+func LogoutApi(c *gin.Context) {
+	output := new(helper.Output)
+	defer apiReturn(c, output)
+	session := sessions.Default(c)
+	token := session.Get("token")
+	session.Clear()
+	session.Save()
+	helper.DeleteToken(token.(string))
 }

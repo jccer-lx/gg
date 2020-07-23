@@ -33,3 +33,9 @@ func (op *Output) ReturnOutput() *Output {
 	}
 	return op
 }
+
+func (op *Output) UnLogin() *Output {
+	op.Msg = "请先登录"
+	op.Code = 2
+	return op
+}
