@@ -3,6 +3,7 @@ package helper
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"math/rand"
 	"strconv"
@@ -34,4 +35,10 @@ func String2Uint(str string) uint {
 		return 0
 	}
 	return uint(i)
+}
+
+//uuid
+func UUidV4() string {
+	v := uuid.NewV4()
+	return v.String()
 }

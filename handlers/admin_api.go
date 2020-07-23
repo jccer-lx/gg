@@ -11,15 +11,19 @@ import (
 //使用自定义结构体接受参数，防止直接操作model的意外惊喜
 type adminAddApiParams struct {
 	adminUpdateApiParams
-	Username string `from:"username" json:"username" validate:"required,min=6,max=30" label:"账号"`
-	Password string `from:"password" json:"password" validate:"required,min=6,max=20" label:"密码"`
-	Salt     string `from:"salt" json:"salt"`
-	Avatar   string `from:"avatar" json:"avatar"`
+	loginApiParams
+	Salt   string `from:"salt" json:"salt"`
+	Avatar string `from:"avatar" json:"avatar"`
 }
 
 type adminUpdateApiParams struct {
 	Nickname string `from:"nickname" json:"nickname" binding:"required" label:"昵称"`
 	Email    string `from:"email" json:"email" validate:"email" label:"邮箱"`
+}
+
+type loginApiParams struct {
+	Username string `from:"username" json:"username" validate:"required,min=6,max=30" label:"账号"`
+	Password string `from:"password" json:"password" validate:"required,min=6,max=20" label:"密码"`
 }
 
 func AdminListApi(c *gin.Context) {
@@ -111,5 +115,28 @@ func AdminUpdateApi(c *gin.Context) {
 		output.Err = err
 		return
 	}
+	output.Data = adminModel
+}
+
+//登录
+func LoginApi(c *gin.Context) {
+	output := new(helper.Output)
+	defer apiReturn(c, output)
+	loginParams := new(loginApiParams)
+	err := params(c, loginParams)
+	if err != nil {
+		fmt.Println(err)
+		output.Err = err
+		return
+	}
+	adminModel, err := services.Login(loginParams.Username, loginParams.Password)
+	if err != nil {
+		fmt.Println(err)
+		output.Err = err
+		return
+	}
+	//密码和盐去掉哦~
+	adminModel.Password = ""
+	adminModel.Salt = ""
 	output.Data = adminModel
 }

@@ -48,3 +48,29 @@ func FindAdminByUsername(username string) (*models.Admin, error) {
 	}
 	return adminModel, nil
 }
+
+//登录
+func Login(username string, password string) (*models.Admin, error) {
+	adminModel, err := FindAdminByUsername(username)
+	if err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, fmt.Errorf("账号不存在")
+		}
+		return nil, err
+	}
+	//判断密码
+	if adminModel.Password != helper.Md5V(adminModel.Salt+password) {
+		return nil, fmt.Errorf("密码错误")
+	}
+	//状态
+	if adminModel.Status != AdminNormal {
+		return nil, fmt.Errorf("账号被禁用")
+	}
+	//生成token
+	adminModel.Token = helper.UUidV4()
+	err = databases.NewDB().Model(adminModel).Save(adminModel).Error
+	if err != nil {
+		return nil, fmt.Errorf("token异常")
+	}
+	return adminModel, nil
+}

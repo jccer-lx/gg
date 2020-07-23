@@ -1,0 +1,89 @@
+{{ define "public/login.tpl" }}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>gg</title>
+        <link rel="stylesheet" href="/assets/layui/css/layui.css">
+        <style>
+            html,body {
+                width: 100%;
+                height: 100%;
+                margin: 0;
+                padding: 0;
+                background-color: #eeeeee;
+            }
+            .login-container{
+                top: 30%; /*偏移*/
+                margin: 0 auto; /*水平居中*/
+                position: relative;
+                width: 30vw;
+                border: 1px #009688 solid;
+                background-color: #FFF
+            }
+
+            .loginBg {
+                padding: 60px 20px 30px 20px;
+            }
+
+            .layui-form-pane .layui-form-label{
+                width: 55px;
+            }
+            .layui-form-pane .layui-input-block {
+                margin-left: 55px;
+            }
+        </style>
+    </head>
+    <body>
+    <div class="layui-container login-container ">
+        <div class="layui-row loginBg">
+            <form class="layui-form layui-form-pane" action="" id="login" lay-filter="login">
+                <div class="layui-form-item" pane>
+                    <label class="layui-form-label"><i class="layui-icon layui-icon-username"></i></label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" class="layui-input" placeholder="账号">
+                    </div>
+                </div>
+                <div class="layui-form-item" pane>
+                    <label class="layui-form-label"><i class="layui-icon layui-icon-password"></i></label>
+                    <div class="layui-input-block">
+                        <input type="password" name="password" class="layui-input" placeholder="密码">
+                    </div>
+                </div>
+                <div class="layui-form-item" pane>
+                    <button type="button" class="layui-btn layui-btn-fluid">确认</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    </body>
+    <script src="/assets/layui/layui.all.js"></script>
+    <script src="/assets/layer/layer.js"></script>
+    <script>
+        //JavaScript代码区域
+        layui.use(['jquery', 'form'], function () {
+            let form = layui.form;
+            let $ = layui.jquery;
+            $("#login .layui-btn").on("click", function(){
+                $.ajax({
+                    type: 'post',
+                    url:'/public/api/login',
+                    dataType: 'json',
+                    contentType: "application/json; charset=utf-8",
+                    data: JSON.stringify(form.val("login")),
+                    success:function (res) {
+                        console.log(res)
+                        if(res.code !== 0){
+                            layer.msg(res.msg)
+                        }else{
+                            window.location.href = "/"
+                        }
+                    }
+                })
+            });
+        });
+    </script>
+    </html>
+{{ end }}
