@@ -6,13 +6,12 @@ import (
 	"github.com/lvxin0315/gg/helper"
 	"github.com/sirupsen/logrus"
 	"net/http"
-	"strings"
 )
 
 //处理会话情况
 func SessionMiddleware(c *gin.Context) {
-	uriList := strings.Split(c.Request.RequestURI, "/")
 	//public的内容不考虑
+	uriList := helper.GetUriStringList(c)
 	logrus.Info("uriList[1]:", uriList[1])
 	if uriList[1] == "public" || uriList[1] == "assets" {
 		return
@@ -27,7 +26,7 @@ func SessionMiddleware(c *gin.Context) {
 
 //重定向到登录或ajax返回未登录
 func redirectMiddleware(c *gin.Context) {
-	if c.GetHeader("X-Requested-With") == "XMLHttpRequest" {
+	if isAjax(c) {
 		output := new(helper.Output)
 		output.UnLogin()
 		c.JSON(http.StatusPermanentRedirect, output)
@@ -35,4 +34,8 @@ func redirectMiddleware(c *gin.Context) {
 		c.Redirect(http.StatusPermanentRedirect, "/public/view/login")
 	}
 	c.Abort()
+}
+
+func isAjax(c *gin.Context) bool {
+	return c.GetHeader("X-Requested-With") == "XMLHttpRequest"
 }

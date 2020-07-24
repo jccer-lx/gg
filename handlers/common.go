@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lvxin0315/gg/helper"
-	"github.com/lvxin0315/gg/validation"
-	"github.com/sirupsen/logrus"
+	"github.com/lvxin0315/gg/middlewares"
+	"github.com/lvxin0315/gg/params"
 	"net/http"
 	"strings"
 )
@@ -26,19 +26,8 @@ func apiReturn(c *gin.Context, op *helper.Output) {
 }
 
 //通用接受参数方法
-func params(c *gin.Context, data interface{}) error {
-	err := c.ShouldBind(data)
-	if err != nil {
-		logrus.Error("ShouldBind:", err)
-		return err
-	}
-	//validate
-	err = validation.Check(data)
-	if err != nil {
-		logrus.Error("Validation:", err)
-		return err
-	}
-	return nil
+func ggBindParams(c *gin.Context, data params.GGParams) error {
+	return middlewares.GGBindParams(c, data)
 }
 
 //通用的view
@@ -52,4 +41,14 @@ func GGView(c *gin.Context) {
 		"ID": c.Param("id"),
 	}
 	c.HTML(http.StatusOK, fmt.Sprintf("%s/%s.tpl", uriList[1], uriList[3]), data)
+}
+
+//通用的获取output
+func ggOutput(c *gin.Context) *helper.Output {
+	return c.Keys["output"].(*helper.Output)
+}
+
+//通用的设置返回error
+func setGGError(c *gin.Context, err error) {
+	middlewares.SetGGError(c, err)
 }

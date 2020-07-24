@@ -2,6 +2,8 @@ package validation
 
 import (
 	"github.com/go-playground/validator/v10"
+	"github.com/sirupsen/logrus"
+	"reflect"
 	"strings"
 )
 
@@ -23,8 +25,9 @@ func (v *GGValidationError) GetErrMsgList() []string {
 }
 
 func Check(data interface{}) error {
-	err := validate.Struct(data)
+	logrus.Info("reflect.TypeOf(data):", reflect.TypeOf(data))
 	ggValidationError := new(GGValidationError)
+	err := validate.Struct(data)
 	if err != nil {
 		errs := err.(validator.ValidationErrors)
 		for _, e := range errs {

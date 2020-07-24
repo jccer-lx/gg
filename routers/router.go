@@ -23,4 +23,5 @@ func InitRouter(engine *gin.Engine) {
 	admin.POST("/api/add", handlers.AdminAddApi)
 	admin.GET("/api/edit/:id", handlers.AdminGetApi)
 	admin.PUT("/api/edit/:id", handlers.AdminUpdateApi)
+
 }

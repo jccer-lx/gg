@@ -22,6 +22,7 @@ func main() {
 	store := cookie.NewStore([]byte("secret"))
 	engine.Use(sessions.Sessions("gg-session", store))
 	engine.Use(middlewares.SessionMiddleware)
+	engine.Use(middlewares.GGMiddleware)
 	//加载路由
 	routers.InitRouter(engine)
 	//自定义函数
