@@ -22,6 +22,8 @@ func SessionMiddleware(c *gin.Context) {
 	if token == nil {
 		redirectMiddleware(c)
 	}
+	//session，具体是把token放到keys里
+	c.Keys["token"] = token.(string)
 }
 
 //重定向到登录或ajax返回未登录

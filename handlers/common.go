@@ -52,3 +52,8 @@ func ggOutput(c *gin.Context) *helper.Output {
 func setGGError(c *gin.Context, err error) {
 	middlewares.SetGGError(c, err)
 }
+
+//通过的获取token
+func getGGToken(c *gin.Context) string {
+	return c.Keys["token"].(string)
+}

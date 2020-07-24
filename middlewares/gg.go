@@ -43,9 +43,6 @@ func ggBeforeMiddleware(c *gin.Context) error {
 		}
 		c.Keys["params"] = p
 	}
-
-	//session
-	//TODO
 	return nil
 }
 
