@@ -45,7 +45,6 @@ func AdminListApi(c *gin.Context) {
 	}
 	output.Data = adminList
 	output.Count = pagination.Count
-	logrus.Info("AdminListApi over")
 }
 
 func AdminAddApi(c *gin.Context) {

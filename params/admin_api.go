@@ -13,7 +13,7 @@ func (p *AdminAddApiParams) NewParams() GGParams {
 }
 
 type AdminUpdateApiParams struct {
-	Nickname string `from:"nickname" json:"nickname" binding:"required" label:"昵称"`
+	Nickname string `from:"nickname" json:"nickname" validate:"required" label:"昵称"`
 	Email    string `from:"email" json:"email" validate:"email" label:"邮箱"`
 }
 

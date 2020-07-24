@@ -8,8 +8,6 @@ import (
 	"github.com/lvxin0315/gg/models"
 )
 
-const AdminNormal = "normal"
-
 //添加管理员
 func AddAdmin(adminModel *models.Admin) error {
 	//明文密码加密
@@ -17,7 +15,7 @@ func AddAdmin(adminModel *models.Admin) error {
 	adminModel.Password = p
 	adminModel.Salt = s
 	//状态
-	adminModel.Status = AdminNormal
+	adminModel.Status = models.AdminStatusNormal
 	//username唯一
 	hasAdminModel, err := FindAdminByUsername(adminModel.Username)
 	if err != nil && err != gorm.ErrRecordNotFound {
@@ -63,7 +61,7 @@ func Login(username string, password string) (*models.Admin, error) {
 		return nil, fmt.Errorf("密码错误")
 	}
 	//状态
-	if adminModel.Status != AdminNormal {
+	if adminModel.Status != models.AdminStatusNormal {
 		return nil, fmt.Errorf("账号被禁用")
 	}
 	//生成token
