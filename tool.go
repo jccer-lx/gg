@@ -9,7 +9,7 @@ import (
 func main() {
 	databases.InitMysqlDB()
 	tableList := []interface{}{
-		models.Admin{},
+		models.AuthRule{},
 	}
 
 	for i, t := range tableList {

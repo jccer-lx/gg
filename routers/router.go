@@ -24,4 +24,13 @@ func InitRouter(engine *gin.Engine) {
 	admin.GET("/api/edit/:id", handlers.AdminGetApi)
 	admin.PUT("/api/edit/:id", handlers.AdminUpdateApi)
 
+	//权限&菜单
+	authRule := engine.Group("/auth_rule")
+	authRule.GET("/view/list", handlers.GGView)
+	authRule.GET("/view/add", handlers.GGView)
+
+	authRule.GET("/api/list", handlers.AuthRuleListApi)
+	authRule.GET("/api/all", handlers.AuthRuleAllListApi)
+	authRule.POST("/api/add", handlers.AuthRuleAddApi)
+	authRule.PUT("/api/edit/:id", handlers.AuthRuleUpdateApi)
 }

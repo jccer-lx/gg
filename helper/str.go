@@ -3,6 +3,7 @@ package helper
 import (
 	"crypto/md5"
 	"encoding/hex"
+	"encoding/json"
 	"github.com/satori/go.uuid"
 	"github.com/sirupsen/logrus"
 	"math/rand"
@@ -32,9 +33,51 @@ func String2Uint(str string) uint {
 	i, err := strconv.Atoi(str)
 	if err != nil {
 		logrus.Error("String2Uint error:", err)
+		panic(err)
 		return 0
 	}
 	return uint(i)
+}
+
+//string -> int
+func String2Int(str string) int {
+	i, err := strconv.Atoi(str)
+	if err != nil {
+		logrus.Error("String2Int error:", err)
+		panic(err)
+		return 0
+	}
+	return i
+}
+
+func JsonNumber2Uint(jn json.Number) uint {
+	i, err := jn.Int64()
+	if err != nil {
+		logrus.Error("JsonNumber2Uint error:", err)
+		panic(err)
+		return 0
+	}
+	return uint(i)
+}
+
+func JsonNumber2Int(jn json.Number) int {
+	i, err := jn.Int64()
+	if err != nil {
+		logrus.Error("JsonNumber2Int error:", err)
+		panic(err)
+		return 0
+	}
+	return int(i)
+}
+
+func JsonNumber2Int64(jn json.Number) int64 {
+	i, err := jn.Int64()
+	if err != nil {
+		logrus.Error("JsonNumber2Int64 error:", err)
+		panic(err)
+		return 0
+	}
+	return i
 }
 
 //uuid

@@ -1,0 +1,69 @@
+{{define "auth_rule/list.tpl"}}
+    <table id="auth_rule-table" lay-filter="auth_rule-table" lay-skin="" lay-size=""></table>
+    <script type="text/html" id="tool-auth_rule-table">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="tool-auth_rule-ctrl">
+        <div class="layui-btn-container">
+            {{/*        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>*/}}
+            <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+        </div>
+    </script>
+
+    <script>
+        layui.use(['table', 'layer', 'jquery'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.jquery;
+            table.render({
+                toolbar: '#tool-auth_rule-table',
+                elem: '#auth_rule-table',
+                url: '/auth_rule/api/list', //数据接口
+                page: true, //开启分页
+                cols: [[
+                    {"field": "p_title", "title": "上级", "sort": "true"},
+                    {"field": "title", "title": "名称", "sort": "true", "edit": "text"},
+                    {"field": "name", "title": "值", "sort": "true", "edit": "text"},
+                    {"field": "weigh", "title": "权重", "sort": "true", "edit": "text"},
+                    {"field": "remark", "title": "备注", "edit": "text"},
+                    {"field": "status", "title": "状态", "sort": "true"},
+                    // {fixed: 'right', width:150, align:'center', toolbar: '#tool-auth_rule-ctrl'}
+                ]]
+            });
+            //监听事件
+            table.on('toolbar(auth_rule-table)', function (obj) {
+                switch (obj.event) {
+                    case 'add':
+                        $.get("/auth_rule/view/add", function (content) {
+                            layerIndex = layer.open({
+                                type: 1,
+                                anim: 5,
+                                title: "新增",
+                                shadeClose: true, //开启遮罩关闭
+                                content: content,
+                                maxmin: true,
+                                area: ['60vw', '60vh'],
+                            });
+                            // layer.full(addIndex);
+                        })
+                        break;
+                }
+            });
+
+            table.on('edit(auth_rule-table)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                gg_request('put','/auth_rule/api/edit/' + obj.data.id,JSON.stringify(obj.data),function (res) {
+                    if (res.code !== 0) {
+                        layer.msg(res.msg)
+                        table.reload("auth_rule-table", {
+                            url : '/auth_rule/api/list'
+                        })
+                    }
+                });
+
+            });
+        });
+    </script>
+{{end}}

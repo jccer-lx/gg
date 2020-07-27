@@ -1,0 +1,87 @@
+{{define "auth_rule/add.tpl"}}
+<div class="layui-form-item">
+    <label class="layui-form-label">添加菜单</label>
+    <div class="layui-input-block">
+        <form class="layui-form" action="" lay-filter="auth_rule-add" id="auth_rule-add">
+            <div class="layui-form-item">
+                <label class="layui-form-label">上级</label>
+                <div class="layui-input-block">
+                    <select name="pid" lay-verify="required" id="pid" lay-filter="pid"  class="layui-select">
+                        <option value="0" selected>无上级</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">名称</label>
+                <div class="layui-input-block">
+                    <input type="text" name="title" id="title" lay-verify="required" autocomplete="off"
+                           placeholder="Title" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">值</label>
+                <div class="layui-input-block">
+                    <input type="text" name="name" id="name" lay-verify="required" autocomplete="off" placeholder="建议路由值"
+                           class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">Remark</label>
+                <div class="layui-input-block">
+                    <input type="text" name="remark" id="remark" lay-verify="required" autocomplete="off"
+                           placeholder="Remark" class="layui-input">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">Weigh</label>
+                <div class="layui-input-block">
+                    <input type="number" name="weigh" id="weigh" lay-verify="required" autocomplete="off"
+                           placeholder="Weigh" class="layui-input">
+                </div>
+            </div>
+            <button type="button" class="layui-btn">提交</button>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use(['layer','jquery','form','table'], function () {
+        let layer = layui.layer;
+        let table = layui.table;
+        let $ = layui.jquery;
+        let form = layui.form;
+        $("#auth_rule-add .layui-btn").on("click", function(){
+            gg_request('post', '/auth_rule/api/add',
+                JSON.stringify(form.val("auth_rule-add")),
+                function (res) {
+                    console.log(res)
+                    if(res.code === 0){
+                        table.reload("auth_rule-table", {
+                            url : '/auth_rule/api/list'
+                        })
+                        layer.close(layerIndex);
+                    }else{
+                        layer.msg(res.msg)
+                    }
+                });
+        });
+
+        $(function(){
+            //初始化pid参数
+            gg_request('get', '/auth_rule/api/all', {}, function (res) {
+                if(res.code === 0){
+                    $.each(res.data,function (i) {
+                        $('#pid').append('<option value="' + res.data[i].id + '">' + res.data[i].title + '</option>')
+                    });
+                    // form.render('select', 'pid');
+                    form.render();
+                }else{
+                    layer.msg(res.msg)
+                }
+            });
+        });
+    });
+</script>
+{{end}}

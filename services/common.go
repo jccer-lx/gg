@@ -14,17 +14,18 @@ func checkError(tag string, err error) bool {
 	return true
 }
 
+//带分页列表
 func GetList(model interface{}, pagination *helper.Pagination) error {
 	db := databases.NewDB()
 	err := db.Model(model).
 		Offset(pagination.Limit * (pagination.Page - 1)).
 		Limit(pagination.Limit).
 		Find(pagination.Data).Error
-	if !checkError("GetAdminList", err) {
+	if !checkError("GetList", err) {
 		return err
 	}
 	err = db.Model(model).Count(&pagination.Count).Error
-	if !checkError("GetAdminList count", err) {
+	if !checkError("GetList count", err) {
 		return err
 	}
 	return nil
@@ -43,4 +44,15 @@ func SaveOne(model interface{}) error {
 func UpdateOne(model interface{}) error {
 	err := databases.NewDB().Model(model).Update(model).Error
 	return err
+}
+
+//全部列表
+func GetAllList(model interface{}, data interface{}) error {
+	db := databases.NewDB()
+	err := db.Model(model).
+		Find(data).Error
+	if !checkError("GetAllList", err) {
+		return err
+	}
+	return nil
 }

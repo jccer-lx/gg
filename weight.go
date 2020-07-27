@@ -9,7 +9,7 @@ import (
 
 //通过weight生成对应的基础模板
 func main() {
-	t := models.Admin{}
+	t := models.AuthRule{}
 	fieldList, err := getStructFields(t)
 	if err != nil {
 		panic(err)

@@ -28,34 +28,26 @@
         let $ = layui.jquery;
         let form = layui.form;
         let id = $("#id").val();
-        //init
-        $.ajax({
-            type: 'get',
-            url:'/admin/api/edit/' + id,
-            dataType: 'json',
-            contentType: "application/json; charset=utf-8",
-            success: function (res) {
-                form.val("admin-edit", res.data)
-            }
-        })
+
+
 
         $("#admin-edit .layui-btn").on("click", function(){
-            $.ajax({
-                type: 'put',
-                url:'/admin/api/edit/' + id,
-                dataType: 'json',
-                contentType: "application/json; charset=utf-8",
-                data: JSON.stringify(form.val("admin-edit")),
-                success:function (res) {
-                    console.log(res)
-                    if(res.code === 0){
-                        layer.close(layerIndex);
-                    }else{
-                        layer.msg(res.msg)
-                    }
+            gg_request('put','/admin/api/edit/' + id,JSON.stringify(form.val("admin-edit")),function (res) {
+                console.log(res)
+                if(res.code === 0){
+                    layer.close(layerIndex);
+                }else{
+                    layer.msg(res.msg)
                 }
             })
         });
+
+        $(function(){
+            //init
+            gg_request('get', '/admin/api/edit/' + id, {}, function (res) {
+                form.val("admin-edit", res.data)
+            });
+        })
     });
 </script>
 {{end}}
