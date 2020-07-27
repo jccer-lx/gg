@@ -45,7 +45,7 @@
         <div class="layui-side layui-bg-black">
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
-                <ul class="layui-nav layui-nav-tree" lay-filter="gg-nav">
+                <ul class="layui-nav layui-nav-tree" lay-filter="gg-nav" id="gg-nav">
                     <li class="layui-nav-item">
                         <a href="javascript:;">所有商品</a>
                         <dl class="layui-nav-child">
@@ -82,9 +82,10 @@
         var cache = []
         var layerIndex;
         //JavaScript代码区域
-        layui.use(['jquery', 'element'], function () {
+        layui.use(['jquery', 'element', 'layer'], function () {
             var element = layui.element;
             var $ = layui.jquery;
+            var layer = layui.layer;
 
             element.on("nav(gg-nav)", function (elem) {
                 let url = elem.attr("lay-href")
@@ -120,6 +121,33 @@
                     window.location.href = "/public/view/login"
                 });
             });
+
+            //左侧菜单栏
+            $(function () {
+                gg_request("get", "/auth_rule/api/get_menus", null, function (res) {
+                    if(res.code === 0) {
+                        $.each(res.data, function(i, menu){
+                            let menuHtml = '<li class="layui-nav-item">';
+                            //包含子菜单
+                            if(menu.children.length > 0){
+                                menuHtml +=  '<a href="javascript:;">'+menu.title+'</a>' +
+                                    '<dl class="layui-nav-child">';
+                                $.each(menu.children, function(j, child){
+                                    menuHtml += '<dd><a href="javascript:;" lay-href="'+child.name+'">'+child.title+'</a></dd>';
+                                });
+                                menuHtml += '</dl>'
+                            }else{
+                                menuHtml +=  '<a href="javascript:;" lay-href="'+menu.name+'">'+menu.title+'</a>';
+                            }
+                            menuHtml += '</li>'
+                            $("#gg-nav").append(menuHtml)
+                        })
+                        element.render('nav');
+                    }else{
+                        layer.msg("系统异常")
+                    }
+                })
+            });
         });
 
         function initNavStorage() {
@@ -154,6 +182,7 @@
                 }
             })
         }
+
 
     </script>
     </body>

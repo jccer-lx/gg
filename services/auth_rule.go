@@ -61,3 +61,34 @@ func GetAuthRuleList(authRuleModel *models.AuthRule, pagination *helper.Paginati
 	}
 	return nil
 }
+
+//获取父子级菜单数据
+func GetAuthRuleListWithChildren() ([]*models.AuthRule, error) {
+	var authRuleList []*models.AuthRule
+	err := databases.NewDB().Where(map[string]interface{}{
+		"pid": 0,
+	}).Find(&authRuleList).Error
+	if err != nil {
+		return nil, err
+	}
+	//查询子菜单
+	for _, authRule := range authRuleList {
+		children, err := GetAuthRuleListByPid(authRule.ID)
+		if err != nil {
+			return nil, err
+		}
+		authRule.Children = children
+	}
+	return authRuleList, nil
+}
+
+func GetAuthRuleListByPid(pid uint) ([]*models.AuthRule, error) {
+	var authRuleList []*models.AuthRule
+	err := databases.NewDB().Where(map[string]interface{}{
+		"pid": pid,
+	}).Find(&authRuleList).Error
+	if err != nil {
+		return nil, err
+	}
+	return authRuleList, nil
+}

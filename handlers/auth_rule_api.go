@@ -7,6 +7,7 @@ import (
 	"github.com/lvxin0315/gg/models"
 	"github.com/lvxin0315/gg/params"
 	"github.com/lvxin0315/gg/services"
+	"github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -82,4 +83,15 @@ func AuthRuleUpdateApi(c *gin.Context) {
 		return
 	}
 	output.Data = authRuleModel
+}
+
+func MenuApi(c *gin.Context) {
+	logrus.Info("MMMMMMMMMMMM")
+	authRuleModelList, err := services.GetAuthRuleListWithChildren()
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	output := ggOutput(c)
+	output.Data = authRuleModelList
 }

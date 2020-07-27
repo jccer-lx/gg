@@ -33,4 +33,6 @@ func InitRouter(engine *gin.Engine) {
 	authRule.GET("/api/all", handlers.AuthRuleAllListApi)
 	authRule.POST("/api/add", handlers.AuthRuleAddApi)
 	authRule.PUT("/api/edit/:id", handlers.AuthRuleUpdateApi)
+
+	authRule.GET("/api/get_menus", handlers.MenuApi)
 }
