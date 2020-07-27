@@ -7,6 +7,7 @@ import (
 
 func InitRouter(engine *gin.Engine) {
 	engine.GET("/", handlers.IndexView)
+	engine.GET("/index/api/data", handlers.IndexApi)
 	//public
 	public := engine.Group("/public")
 	public.GET("/view/login", handlers.GGView)

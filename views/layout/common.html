@@ -14,28 +14,28 @@
             <div class="layui-logo">导航标题</div>
             <!-- 头部区域（可配合layui已有的水平导航） -->
             <ul class="layui-nav layui-layout-left">
-                <li class="layui-nav-item">
-                    <a href="javascript:;" filter="1">left菜单1</a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">left菜单2</a>
-                </li>
-                <li class="layui-nav-item">
-                    <a href="javascript:;">left菜单3</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="javascript:;" filter="a">left菜单3-1</a></dd>
-                        <dd><a href="/b">left菜单3-2</a></dd>
-                        <dd><a href="/c">left菜单3-3</a></dd>
-                    </dl>
-                </li>
+{{/*                <li class="layui-nav-item">*/}}
+{{/*                    <a href="javascript:;" filter="1">left菜单1</a>*/}}
+{{/*                </li>*/}}
+{{/*                <li class="layui-nav-item">*/}}
+{{/*                    <a href="javascript:;">left菜单2</a>*/}}
+{{/*                </li>*/}}
+{{/*                <li class="layui-nav-item">*/}}
+{{/*                    <a href="javascript:;">left菜单3</a>*/}}
+{{/*                    <dl class="layui-nav-child">*/}}
+{{/*                        <dd><a href="javascript:;" filter="a">left菜单3-1</a></dd>*/}}
+{{/*                        <dd><a href="/b">left菜单3-2</a></dd>*/}}
+{{/*                        <dd><a href="/c">left菜单3-3</a></dd>*/}}
+{{/*                    </dl>*/}}
+{{/*                </li>*/}}
             </ul>
             <ul class="layui-nav layui-layout-right">
                 <li class="layui-nav-item">
-                    <a href="javascript:;">贤心</a>
-                    <dl class="layui-nav-child">
-                        <dd><a href="/a">基本资料</a></dd>
-                        <dd><a href="/b">安全设置</a></dd>
-                    </dl>
+                    <a href="javascript:;" id="admin-nickname">贤心</a>
+{{/*                    <dl class="layui-nav-child">*/}}
+{{/*                        <dd><a href="/a">基本资料</a></dd>*/}}
+{{/*                        <dd><a href="/b">安全设置</a></dd>*/}}
+{{/*                    </dl>*/}}
                 </li>
                 <li class="layui-nav-item">
                     <a href="javascript:;" id="logout">退了</a>
@@ -46,14 +46,14 @@
             <div class="layui-side-scroll">
                 <!-- 左侧导航区域（可配合layui已有的垂直导航） -->
                 <ul class="layui-nav layui-nav-tree" lay-filter="gg-nav" id="gg-nav">
-                    <li class="layui-nav-item">
-                        <a href="javascript:;">所有商品</a>
-                        <dl class="layui-nav-child">
-                            <dd><a href="javascript:;" lay-href="/admin/view/list">管理员</a></dd>
-                            <dd><a href="javascript:;" lay-href="/auth_rule/view/list">菜单</a></dd>
-                            <dd><a href="javascript:;" lay-href="/admin/tpl/demo2/list">列表三</a></dd>
-                        </dl>
-                    </li>
+{{/*                    <li class="layui-nav-item">*/}}
+{{/*                        <a href="javascript:;">所有商品</a>*/}}
+{{/*                        <dl class="layui-nav-child">*/}}
+{{/*                            <dd><a href="javascript:;" lay-href="/admin/view/list">管理员</a></dd>*/}}
+{{/*                            <dd><a href="javascript:;" lay-href="/auth_rule/view/list">菜单</a></dd>*/}}
+{{/*                            <dd><a href="javascript:;" lay-href="/admin/tpl/demo2/list">列表三</a></dd>*/}}
+{{/*                        </dl>*/}}
+{{/*                    </li>*/}}
                 </ul>
             </div>
         </div>
@@ -122,8 +122,12 @@
                 });
             });
 
-            //左侧菜单栏
             $(function () {
+                //基础信息
+                gg_request("get", "/index/api/data", null, function (res) {
+                    $("#admin-nickname").html(res.data.admin_nickname);
+                })
+                //左侧菜单栏
                 gg_request("get", "/auth_rule/api/get_menus", null, function (res) {
                     if(res.code === 0) {
                         $.each(res.data, function(i, menu){

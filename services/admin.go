@@ -72,3 +72,15 @@ func Login(username string, password string) (*models.Admin, error) {
 	}
 	return adminModel, nil
 }
+
+//根据token获取admin
+func FindAdminByToken(token string) (*models.Admin, error) {
+	adminModel := new(models.Admin)
+	err := databases.NewDB().Model(adminModel).Find(adminModel, map[string]interface{}{
+		"token": token,
+	}).Error
+	if err != nil {
+		return adminModel, err
+	}
+	return adminModel, nil
+}
