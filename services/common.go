@@ -3,6 +3,7 @@ package services
 import (
 	"github.com/lvxin0315/gg/databases"
 	"github.com/lvxin0315/gg/helper"
+	"github.com/lvxin0315/gg/models"
 	"github.com/sirupsen/logrus"
 )
 
@@ -20,6 +21,7 @@ func GetList(model interface{}, pagination *helper.Pagination) error {
 	err := db.Model(model).
 		Offset(pagination.Limit * (pagination.Page - 1)).
 		Limit(pagination.Limit).
+		Order("id DESC").
 		Find(pagination.Data).Error
 	if !checkError("GetList", err) {
 		return err
@@ -63,4 +65,17 @@ func GetAllList(model interface{}, data interface{}) error {
 func DeleteByIds(model interface{}, ids []uint) error {
 	err := databases.NewDB().Where("id IN (?)", ids).Delete(model).Error
 	return err
+}
+
+//token -> adminId
+func GetAdminIdByToken(token string) (uint, error) {
+	adminModel := new(models.Admin)
+	err := databases.NewDB().Model(adminModel).Find(adminModel, map[string]interface{}{
+		"token": token,
+	}).Error
+
+	if err != nil {
+		return 0, err
+	}
+	return adminModel.ID, nil
 }

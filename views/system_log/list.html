@@ -1,0 +1,31 @@
+{{define "system_log/list.tpl"}}
+    <table id="system_log-table" lay-filter="system_log-table" lay-skin="" lay-size=""></table>
+    <script type="text/html" id="tool-system_log-table">
+        <div class="layui-btn-container">
+{{/*            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>*/}}
+{{/*            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">删除</button>*/}}
+        </div>
+    </script>
+
+    <script type="text/html" id="picTpl">
+        <img src={{"{{d.pic}}"}}>
+    </script>
+
+    <script>
+        layui.use(['jquery'], function () {
+            let $ = layui.jquery;
+            let gg_table_option = {
+                table_name: 'system_log',
+                cols :[[
+                    {field: "page", title: "行为", sort: "true"},
+                    {field: "method", title: "访问类型", sort: "true"},
+                    {field: "path", title: "地址", sort: "true"},
+                    {field: "ip", title: "IP", sort: "true"},
+                    {field: "flow_in", title: "入流量(b)"},
+                    {field: "flow_out", title: "出流量(b)"},
+                ]],
+            }
+            gg_table(gg_table_option);
+        });
+    </script>
+{{end}}

@@ -34,15 +34,3 @@ func DeleteTokenById(id uint) {
 		}
 	}
 }
-
-/**
-通过token获取id
-@param string token
-@return uint id
-*/
-func GetIdByToken(token string) uint {
-	if tokenList[token] > 0 {
-		return tokenList[token]
-	}
-	return 0
-}

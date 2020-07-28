@@ -15,6 +15,12 @@ func InitRouter(engine *gin.Engine) {
 	public.POST("/api/login", handlers.LoginApi)
 	public.GET("/api/logout", handlers.LogoutApi)
 
+	//系统日志
+	systemLog := engine.Group("/system_log")
+	systemLog.GET("/view/list", handlers.GGView)
+
+	systemLog.GET("/api/list", handlers.SystemLogListApi)
+
 	//附件
 	upload := engine.Group("/upload")
 	upload.POST("/api/pic", handlers.UploadPic)
