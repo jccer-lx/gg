@@ -8,6 +8,7 @@ import (
 	"github.com/lvxin0315/gg/params"
 	"net/http"
 	"strings"
+	"time"
 )
 
 //通用404页面
@@ -56,4 +57,31 @@ func setGGError(c *gin.Context, err error) {
 //通过的获取token
 func getGGToken(c *gin.Context) string {
 	return c.Keys["token"].(string)
+}
+
+//通用图片上传
+func UploadPic(c *gin.Context) {
+	fileList, err := c.MultipartForm()
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	if fileList.File["pic_file"] == nil || len(fileList.File["pic_file"]) == 0 {
+		setGGError(c, fmt.Errorf("pic不能为空"))
+		return
+	}
+	saveDir := fmt.Sprintf("assets/uploads/%d", time.Now().UnixNano())
+	err = helper.CreateDir(saveDir)
+	if err != nil {
+		setGGError(c, fmt.Errorf("pic不能为空"))
+		return
+	}
+	savePath := fmt.Sprintf("%s/%s", saveDir, fileList.File["pic_file"][0].Filename)
+	err = c.SaveUploadedFile(fileList.File["pic_file"][0], savePath)
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	output := ggOutput(c)
+	output.Data = "/" + savePath
 }

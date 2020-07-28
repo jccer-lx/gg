@@ -15,6 +15,10 @@ func InitRouter(engine *gin.Engine) {
 	public.POST("/api/login", handlers.LoginApi)
 	public.GET("/api/logout", handlers.LogoutApi)
 
+	//附件
+	upload := engine.Group("/upload")
+	upload.POST("/api/pic", handlers.UploadPic)
+
 	//管理员
 	admin := engine.Group("/admin")
 	admin.GET("/view/list", handlers.GGView)
@@ -34,6 +38,15 @@ func InitRouter(engine *gin.Engine) {
 	authRule.GET("/api/all", handlers.AuthRuleAllListApi)
 	authRule.POST("/api/add", handlers.AuthRuleAddApi)
 	authRule.PUT("/api/edit/:id", handlers.AuthRuleUpdateApi)
-
 	authRule.GET("/api/get_menus", handlers.MenuApi)
+
+	//商品分类
+	goodsCategory := engine.Group("/goods_category")
+	goodsCategory.GET("/view/list", handlers.GGView)
+	goodsCategory.GET("/view/add", handlers.GGView)
+
+	goodsCategory.GET("/api/list", handlers.GoodsCategoryListApi)
+	goodsCategory.GET("/api/all", handlers.GoodsCategoryAllListApi)
+	goodsCategory.POST("/api/add", handlers.GoodsCategoryAddApi)
+	goodsCategory.PUT("/api/edit/:id", handlers.GoodsCategoryUpdateApi)
 }

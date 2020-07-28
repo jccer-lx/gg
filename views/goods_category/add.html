@@ -1,0 +1,111 @@
+{{define "goods_category/add.tpl"}}
+<div class="layui-form-item">
+    <label class="layui-form-label">添加分类</label>
+    <div class="layui-input-block">
+        <form class="layui-form" action="" lay-filter="goods_category-add" id="goods_category-add">
+            <div class="layui-form-item">
+                <label class="layui-form-label">上级</label>
+                <div class="layui-input-block">
+                    <select name="pid" lay-verify="required" id="pid" lay-filter="pid"  class="layui-select">
+                        <option value="0" selected>无上级</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">分类名</label>
+                <div class="layui-input-block">
+                    <input type="text" name="cate_name" id="cate_name" lay-verify="required" autocomplete="off"
+                           placeholder="" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <label class="layui-form-label">图片</label>
+                <div class="layui-input-block">
+                    <input type="hidden" name="pic" id="pic" lay-verify="required" autocomplete="off"
+                           placeholder="" class="layui-input">
+                    <a href="javascript:;" class="layui-btn" id="upload-pic">
+                        <i class="layui-icon layui-icon-upload"></i>上传
+                    </a>
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">排序</label>
+                <div class="layui-input-block">
+                    <input type="number" name="sort" id="sort" lay-verify="required" autocomplete="off"
+                           placeholder="" class="layui-input" value="0">
+                </div>
+            </div>
+
+            <div class="layui-form-item">
+                <label class="layui-form-label">是否推荐</label>
+                <div class="layui-input-block">
+                    <input type="checkbox" name="is_show" lay-skin="switch" lay-text="ON|OFF" checked>
+                </div>
+            </div>
+            <button type="button" class="layui-btn">提交</button>
+        </form>
+    </div>
+</div>
+<script>
+    layui.use(['layer','jquery','form','table','upload'], function () {
+        let layer = layui.layer;
+        let table = layui.table;
+        let $ = layui.jquery;
+        let form = layui.form;
+        let upload = layui.upload;
+        $("#goods_category-add >button.layui-btn").on("click", function(){
+            form.render();
+            gg_request('post', '/goods_category/api/add',
+                JSON.stringify(form.val("goods_category-add")),
+                function (res) {
+                    console.log(res)
+                    if(res.code === 0){
+                        table.reload("goods_category-table", {
+                            url : '/goods_category/api/list'
+                        })
+                        layer.close(layerIndex);
+                    }else{
+                        layer.msg(res.msg)
+                    }
+                });
+        });
+
+        //执行实例
+        upload.render({
+            elem: '#upload-pic', //绑定元素
+            url: '/upload/api/pic', //上传接口
+            accept: 'images',
+            field: 'pic_file',
+            size: 10240,
+            done: function(res){
+                if(res.code === 0){
+                    $('#pic').val(res.data)
+
+                }else{
+                    layer.msg(res.msg)
+                }
+            },
+            error: function(){
+                layer.msg("上传失败")
+            }
+        });
+
+        $(function(){
+            //初始化pid参数
+            gg_request('get', '/goods_category/api/all', {}, function (res) {
+                if(res.code === 0){
+                    $.each(res.data,function (i) {
+                        $('#pid').append('<option value="' + res.data[i].id + '">' + res.data[i].cate_name + '</option>')
+                    });
+                    // form.render('select', 'pid');
+                    form.render();
+                }else{
+                    layer.msg(res.msg)
+                }
+            });
+        });
+    });
+</script>
+{{end}}

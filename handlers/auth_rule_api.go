@@ -7,7 +7,6 @@ import (
 	"github.com/lvxin0315/gg/models"
 	"github.com/lvxin0315/gg/params"
 	"github.com/lvxin0315/gg/services"
-	"github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -51,6 +50,7 @@ func AuthRuleAddApi(c *gin.Context) {
 	}
 }
 
+//获取所有顶级菜单
 func AuthRuleAllListApi(c *gin.Context) {
 	output := ggOutput(c)
 	authRuleModel := new(models.AuthRule)
@@ -86,7 +86,6 @@ func AuthRuleUpdateApi(c *gin.Context) {
 }
 
 func MenuApi(c *gin.Context) {
-	logrus.Info("MMMMMMMMMMMM")
 	authRuleModelList, err := services.GetAuthRuleListWithChildren()
 	if err != nil {
 		setGGError(c, err)

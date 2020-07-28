@@ -50,7 +50,9 @@ func UpdateOne(model interface{}) error {
 func GetAllList(model interface{}, data interface{}) error {
 	db := databases.NewDB()
 	err := db.Model(model).
-		Find(data).Error
+		Find(data, map[string]interface{}{
+			"pid": 0,
+		}).Error
 	if !checkError("GetAllList", err) {
 		return err
 	}

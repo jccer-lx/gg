@@ -1,0 +1,81 @@
+{{define "goods_category/list.tpl"}}
+    <style>
+        .goods_category-small-pic{
+            width: 28px;
+            height: 28px;
+        }
+    </style>
+    <table id="goods_category-table" lay-filter="goods_category-table" lay-skin="" lay-size=""></table>
+    <script type="text/html" id="tool-goods_category-table">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="tool-goods_category-ctrl">
+        <div class="layui-btn-container">
+            {{/*        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>*/}}
+            <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
+        </div>
+    </script>
+
+    <script type="text/html" id="picTpl">
+        <img src={{"{{d.pic}}"}}>
+    </script>
+
+    <script>
+        layui.use(['table', 'layer', 'jquery'], function () {
+            var table = layui.table;
+            var layer = layui.layer;
+            var $ = layui.jquery;
+            table.render({
+                toolbar: '#tool-goods_category-table',
+                elem: '#goods_category-table',
+                url: '/goods_category/api/list', //数据接口
+                page: true, //开启分页
+                cols: [[
+                    {"field": "p_cate_name", "title": "上级", "sort": "true"},
+                    {"field": "cate_name", "title": "分类名", "sort": "true", "edit": "text"},
+                    {"field": "sort", "title": "排序", "sort": "true"},
+                    {
+                        "field": "pic", "title": "图片", "templet": function (d) {
+                            return '<img class="goods_category-small-pic" src="' + d.pic + '">'
+                        }
+                    },
+                    {"field": "is_show", "title": "是否推荐"},
+                ]]
+            });
+            //监听事件
+            table.on('toolbar(goods_category-table)', function (obj) {
+                switch (obj.event) {
+                    case 'add':
+                        $.get("/goods_category/view/add", function (content) {
+                            layerIndex = layer.open({
+                                type: 1,
+                                anim: 5,
+                                title: "新增",
+                                shadeClose: true, //开启遮罩关闭
+                                content: content,
+                                maxmin: true,
+                                area: ['60vw', '60vh'],
+                            });
+                            // layer.full(addIndex);
+                        })
+                        break;
+                }
+            });
+
+            table.on('edit(goods_category-table)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
+                gg_request('put', '/goods_category/api/edit/' + obj.data.id, JSON.stringify(obj.data), function (res) {
+                    if (res.code !== 0) {
+                        layer.msg(res.msg)
+                        table.reload("goods_category-table", {
+                            url: '/goods_category/api/list'
+                        })
+                    }
+                });
+
+            });
+        });
+    </script>
+{{end}}

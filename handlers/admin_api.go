@@ -26,6 +26,7 @@ func (p *loginApiParams) NewParams() params.GGParams {
 	return &loginApiParams{}
 }
 
+//管理员列表
 func AdminListApi(c *gin.Context) {
 	output := ggOutput(c)
 	//分页参数
@@ -47,6 +48,7 @@ func AdminListApi(c *gin.Context) {
 	output.Count = pagination.Count
 }
 
+//新增管理员
 func AdminAddApi(c *gin.Context) {
 	adminModel := new(models.Admin)
 	adminParams := c.Keys["params"].(*params.AdminAddApiParams)
@@ -82,6 +84,7 @@ func AdminGetApi(c *gin.Context) {
 	adminModel.Salt = ""
 }
 
+//更新管理员
 func AdminUpdateApi(c *gin.Context) {
 	output := ggOutput(c)
 	id := helper.String2Uint(c.Param("id"))
