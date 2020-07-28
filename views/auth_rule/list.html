@@ -3,6 +3,7 @@
     <script type="text/html" id="tool-auth_rule-table">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">删除</button>
         </div>
     </script>
 
@@ -50,6 +51,8 @@
                             // layer.full(addIndex);
                         })
                         break;
+                    case 'del':
+                        console.log(obj)
                 }
             });
 

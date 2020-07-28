@@ -44,9 +44,13 @@ func InitRouter(engine *gin.Engine) {
 	goodsCategory := engine.Group("/goods_category")
 	goodsCategory.GET("/view/list", handlers.GGView)
 	goodsCategory.GET("/view/add", handlers.GGView)
+	goodsCategory.GET("/view/show_pic/:id", handlers.GGView)
 
 	goodsCategory.GET("/api/list", handlers.GoodsCategoryListApi)
 	goodsCategory.GET("/api/all", handlers.GoodsCategoryAllListApi)
 	goodsCategory.POST("/api/add", handlers.GoodsCategoryAddApi)
 	goodsCategory.PUT("/api/edit/:id", handlers.GoodsCategoryUpdateApi)
+	goodsCategory.PUT("/api/show_pic/:id", handlers.GoodsCategoryUpdatePicApi)
+	goodsCategory.GET("/api/get/:id", handlers.GoodsCategoryGetApi)
+	goodsCategory.DELETE("/api/delete", handlers.GoodsCategoryDeleteApi)
 }
