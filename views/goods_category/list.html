@@ -13,115 +13,41 @@
         </div>
     </script>
 
-    <script type="text/html" id="tool-goods_category-ctrl">
-        <div class="layui-btn-container">
-            {{/*        <button class="layui-btn layui-btn-sm" lay-event="update">编辑</button>*/}}
-            <button class="layui-btn layui-btn-sm" lay-event="delete">删除</button>
-        </div>
-    </script>
-
     <script type="text/html" id="picTpl">
         <img src={{"{{d.pic}}"}}>
     </script>
 
     <script>
-        layui.use(['table', 'layer', 'jquery'], function () {
-            var table = layui.table;
-            var layer = layui.layer;
-            var $ = layui.jquery;
-            table.render({
-                toolbar: '#tool-goods_category-table',
-                elem: '#goods_category-table',
-                url: '/goods_category/api/list', //数据接口
-                page: true, //开启分页
-                cols: [[
-                    {"type": "checkbox"},
-                    {"field": "p_cate_name", "title": "上级", "sort": "true"},
-                    {"field": "cate_name", "title": "分类名", "sort": "true", "edit": "text"},
-                    {"field": "sort", "title": "排序", "sort": "true"},
+        layui.use(['jquery'], function () {
+            let $ = layui.jquery;
+            let gg_table_option = {
+                table_name: 'goods_category',
+                cols :[[
+                    {type: "checkbox"},
+                    {field: "p_cate_name", title: "上级", sort: "true"},
+                    {field: "cate_name", title: "分类名", sort: "true", edit: "text"},
+                    {field: "sort", title: "排序", sort: "true"},
                     {
-                        "field": "pic", "title": "图片", "templet": function (d) {
+                        field: "pic", title: "图片", templet: function (d) {
                             return '<img class="goods_category-small-pic" src="' + d.pic + '">'
-                        },"event":"show_pic",
-                    },
-                    {"field": "is_show", "title": "是否推荐"},
-                ]]
-            });
-            //监听事件
-            table.on('toolbar(goods_category-table)', function (obj) {
-                switch (obj.event) {
-                    case 'add':
-                        gg_request("get", "/goods_category/view/add", {}, function (content) {
-                            layerIndex = layer.open({
-                                type: 1,
-                                anim: 5,
-                                title: "新增",
-                                shadeClose: true, //开启遮罩关闭
-                                content: content,
-                                maxmin: true,
-                                area: ['60vw', '60vh'],
-                            });
-                            // layer.full(addIndex);
-                        })
-                        break;
-                    case 'del':
-                        layer.confirm('确定删除？', {
-                            btn: ['yes','no'] //按钮
-                        }, function(){
-                            let checkStatus = table.checkStatus('goods_category-table');
-                            let ids = [];
-                            $.each(checkStatus.data, function (i, item) {
-                                ids.push(item.id)
+                        },event:"show_pic", event_func: function (data) {
+                            $.get('/goods_category/view/show_pic/' + data.id, function (content) {
+                                layerIndex = layer.open({
+                                    type: 1,
+                                    anim: 5,
+                                    title: "图片",
+                                    shadeClose: true, //开启遮罩关闭
+                                    content: content,
+                                    maxmin: true,
+                                    area: ['60vw', '60vh'],
+                                });
                             })
-                            gg_request("delete", '/goods_category/api/delete',JSON.stringify({ids:ids}), function (res) {
-                                if(res.code === 0){
-                                    table.reload("goods_category-table", {
-                                        url: '/goods_category/api/list'
-                                    })
-                                    layer.msg('成功');
-                                }else{
-                                    layer.msg(res.msg);
-                                }
-                            });
-
-                        },function(){
-
-                        });
-                }
-            });
-
-            table.on('edit(goods_category-table)', function (obj) { //注：edit是固定事件名，test是table原始容器的属性 lay-filter="对应的值"
-                gg_request('put', '/goods_category/api/edit/' + obj.data.id, JSON.stringify(obj.data), function (res) {
-                    if (res.code !== 0) {
-                        layer.msg(res.msg)
-                        table.reload("goods_category-table", {
-                            url: '/goods_category/api/list'
-                        })
-                    }
-                });
-
-            });
-
-            table.on('tool(goods_category-table)', function (obj) {
-                let data = obj.data; //获得当前行数据
-                let layEvent = obj.event; //获得 lay-event 对应的值（也可以是表头的 event 参数对应的值）
-                switch (layEvent) {
-                    case "show_pic":
-                        $.get("/goods_category/view/show_pic/" + data.id, function (content) {
-                            layerIndex = layer.open({
-                                type: 1,
-                                anim: 5,
-                                title: "图片",
-                                shadeClose: true, //开启遮罩关闭
-                                content: content,
-                                maxmin: true,
-                                area: ['60vw', '60vh'],
-                            });
-                            // layer.full(addIndex);
-                        })
-                        break;
-                }
-            });
+                        }
+                    },
+                    {field: "is_show", title: "是否推荐"},
+                ]],
+            }
+            gg_table(gg_table_option);
         });
     </script>
 {{end}}

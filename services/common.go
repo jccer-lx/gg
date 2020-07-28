@@ -32,17 +32,17 @@ func GetList(model interface{}, pagination *helper.Pagination) error {
 }
 
 func GetOne(model interface{}, where map[string]interface{}) error {
-	err := databases.NewDB().Find(model, where).Error
+	err := databases.NewDB().Model(model).Find(model, where).Error
 	return err
 }
 
 func SaveOne(model interface{}) error {
-	err := databases.NewDB().Save(model).Error
+	err := databases.NewDB().Model(model).Save(model).Error
 	return err
 }
 
 func UpdateOne(model interface{}) error {
-	err := databases.NewDB().Update(model).Error
+	err := databases.NewDB().Model(model).Update(model).Error
 	return err
 }
 

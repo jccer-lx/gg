@@ -28,6 +28,11 @@
                         <i class="layui-icon layui-icon-upload"></i>上传
                     </a>
                 </div>
+                <div class="layui-input-block">
+                    <div class="layui-col-lg10">
+                        <img id="s-pic" src="">
+                    </div>
+                </div>
             </div>
 
             <div class="layui-form-item">
@@ -51,47 +56,12 @@
 <script>
     layui.use(['layer','jquery','form','table','upload'], function () {
         let layer = layui.layer;
-        let table = layui.table;
         let $ = layui.jquery;
         let form = layui.form;
-        let upload = layui.upload;
-        $("#goods_category-add >button.layui-btn").on("click", function(){
-            form.render();
-            gg_request('post', '/goods_category/api/add',
-                JSON.stringify(form.val("goods_category-add")),
-                function (res) {
-                    console.log(res)
-                    if(res.code === 0){
-                        table.reload("goods_category-table", {
-                            url : '/goods_category/api/list'
-                        })
-                        layer.close(layerIndex);
-                    }else{
-                        layer.msg(res.msg)
-                    }
-                });
-        });
-
-        //执行实例
-        upload.render({
-            elem: '#upload-pic', //绑定元素
-            url: '/upload/api/pic', //上传接口
-            accept: 'images',
-            field: 'pic_file',
-            size: 10240,
-            done: function(res){
-                if(res.code === 0){
-                    $('#pic').val(res.data)
-
-                }else{
-                    layer.msg(res.msg)
-                }
-            },
-            error: function(){
-                layer.msg("上传失败")
-            }
-        });
-
+        gg_add_form('goods_category')
+        gg_upload_pic(function (res) {
+            $('#s-pic').attr("src", res.data)
+        })
         $(function(){
             //初始化pid参数
             gg_request('get', '/goods_category/api/all', {}, function (res) {

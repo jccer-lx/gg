@@ -1,24 +1,21 @@
 {{define "goods_category/show_pic.tpl"}}
-    <style>
-        #s-pic{
-            width: 80%;
-        }
-    </style>
     <div class="layui-form-item">
         <label class="layui-form-label">分类图片</label>
         <div class="layui-input-block">
+            <div class="layui-col-lg10">
+                <img id="s-pic" src="">
+            </div>
+        </div>
+        <div class="layui-input-block">
             <form class="layui-form" action="" lay-filter="goods_category-add" id="goods_category-add">
                 <div class="layui-form-item">
-                    <div class="layui-input-block">
-                        <img id="s-pic" src="">
-                        <input type="hidden" name="id" id="id" lay-verify="required" autocomplete="off"
-                               placeholder="" class="layui-input" value="{{.ID}}">
-                        <input type="hidden" name="pic" id="pic" lay-verify="required" autocomplete="off"
-                               placeholder="" class="layui-input">
-                        <a href="javascript:;" class="layui-btn" id="upload-pic">
-                            <i class="layui-icon layui-icon-upload"></i>上传
-                        </a>
-                    </div>
+                    <input type="hidden" name="id" id="id" lay-verify="required" autocomplete="off"
+                           placeholder="" class="layui-input" value="{{.ID}}">
+                    <input type="hidden" name="pic" id="pic" lay-verify="required" autocomplete="off"
+                           placeholder="" class="layui-input">
+                    <a href="javascript:;" class="layui-btn" id="upload-pic">
+                        <i class="layui-icon layui-icon-upload"></i>上传
+                    </a>
                 </div>
                 <button type="button" class="layui-btn">提交</button>
             </form>
