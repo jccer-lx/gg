@@ -59,4 +59,11 @@ func InitRouter(engine *gin.Engine) {
 	goodsCategory.PUT("/api/show_pic/:id", handlers.GoodsCategoryUpdatePicApi)
 	goodsCategory.GET("/api/get/:id", handlers.GoodsCategoryGetApi)
 	goodsCategory.DELETE("/api/delete", handlers.GoodsCategoryDeleteApi)
+
+	//商品
+	goods := engine.Group("/goods")
+	goods.GET("/view/list", handlers.GGView)
+	goods.GET("/view/add", handlers.GGView)
+
+	goods.GET("/api/list", handlers.GoodsListApi)
 }

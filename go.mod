@@ -4,7 +4,6 @@ go 1.14
 
 require (
 	github.com/gin-contrib/sessions v0.0.3
-	github.com/gin-gonic/contrib v0.0.0-20191209060500-d6e26eeaa607 // indirect
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-playground/locales v0.13.0
 	github.com/go-playground/universal-translator v0.17.0
@@ -13,7 +12,7 @@ require (
 	github.com/jinzhu/configor v1.2.0
 	github.com/jinzhu/gorm v1.9.13
 	github.com/json-iterator/go v1.1.10 // indirect
-	github.com/lvxin0315/golayui v0.0.0-20200721071427-3bd5020bdc16
+	github.com/lvxin0315/golayui v0.0.0-20200729024427-cd9aaca268ac
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/satori/go.uuid v1.2.0

@@ -61,6 +61,7 @@ func getGGToken(c *gin.Context) string {
 
 //通用图片上传
 func UploadPic(c *gin.Context) {
+	output := ggOutput(c)
 	fileList, err := c.MultipartForm()
 	if err != nil {
 		setGGError(c, err)
@@ -76,12 +77,27 @@ func UploadPic(c *gin.Context) {
 		setGGError(c, fmt.Errorf("pic不能为空"))
 		return
 	}
-	savePath := fmt.Sprintf("%s/%s", saveDir, fileList.File["pic_file"][0].Filename)
-	err = c.SaveUploadedFile(fileList.File["pic_file"][0], savePath)
-	if err != nil {
-		setGGError(c, err)
-		return
+	//单图上传
+	if len(fileList.File["pic_file"]) == 1 {
+		savePath := fmt.Sprintf("%s/%s", saveDir, fileList.File["pic_file"][0].Filename)
+		err = c.SaveUploadedFile(fileList.File["pic_file"][0], savePath)
+		if err != nil {
+			setGGError(c, err)
+			return
+		}
+		output.Data = "/" + savePath
+	} else {
+		//多图
+		var savePathList []string
+		for _, picFile := range fileList.File["pic_file"] {
+			savePath := fmt.Sprintf("%s/%s", saveDir, picFile.Filename)
+			err = c.SaveUploadedFile(picFile, savePath)
+			if err != nil {
+				setGGError(c, err)
+				return
+			}
+			savePathList = append(savePathList, "/"+savePath)
+		}
+		output.Data = savePathList
 	}
-	output := ggOutput(c)
-	output.Data = "/" + savePath
 }

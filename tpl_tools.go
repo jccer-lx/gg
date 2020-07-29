@@ -17,7 +17,7 @@ type field struct {
 
 func main() {
 	databases.InitMysqlDB()
-	m := model.Admin{}
+	m := model.Goods{}
 	os.MkdirAll(m.TableName(), 0777)
 	th, fh := makeHtml(m)
 	ioutil.WriteFile(fmt.Sprintf("%s/table.html", m.TableName()), []byte(th), 0777)

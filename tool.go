@@ -9,7 +9,7 @@ import (
 func main() {
 	databases.InitMysqlDB()
 	tableList := []interface{}{
-		models.SystemLog{},
+		models.Goods{},
 	}
 
 	for i, t := range tableList {

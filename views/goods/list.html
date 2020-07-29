@@ -1,0 +1,56 @@
+{{define "goods/list.tpl"}}
+    <table id="goods-table" lay-filter="goods-table" lay-skin="" lay-size=""></table>
+    <script type="text/html" id="tool-goods-table">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">删除</button>
+        </div>
+    </script>
+
+    <script>
+        layui.use(['jquery'], function () {
+            let $ = layui.jquery;
+            let gg_table_option = {
+                table_name: 'goods',
+                cols: [[{field:"id",title:"ID",sort:"true"},
+                    {field:"admin_id",title:"AdminId",sort:"true"},
+                    {field:"image",title:"Image",sort:"true"},
+                    {field:"slider_image",title:"SliderImage",sort:"true"},
+                    {field:"name",title:"Name",sort:"true"},
+                    {field:"main_info",title:"MainInfo"},
+                    {field:"keyword",title:"Keyword",sort:"true"},
+                    {field:"bar_code",title:"BarCode",sort:"true"},
+                    {field:"category_id",title:"CategoryId",sort:"true"},
+                    {field:"price",title:"Price",sort:"true"},
+                    {field:"vip_price",title:"VipPrice",sort:"true"},
+                    {field:"ot_price",title:"OtPrice",sort:"true"},
+                    {field:"postage",title:"Postage",sort:"true"},
+                    {field:"unit_name",title:"UnitName",sort:"true"},
+                    {field:"sort",title:"Sort",sort:"true"},
+                    {field:"sales",title:"Sales",sort:"true"},
+                    {field:"stock",title:"Stock",sort:"true"},
+                    {field:"is_show",title:"IsShow",sort:"true"},
+                    {field:"is_hot",title:"IsHot",sort:"true"},
+                    {field:"is_benefit",title:"IsBenefit",sort:"true"},
+                    {field:"is_best",title:"IsBest",sort:"true"},
+                    {field:"is_new",title:"IsNew",sort:"true"},
+                    {field:"is_postage",title:"IsPostage",sort:"true"},
+                    {field:"give_integral",title:"GiveIntegral",sort:"true"},
+                    {field:"cost",title:"Cost",sort:"true"},
+                    {field:"is_sec_kill",title:"IsSecKill",sort:"true"},
+                    {field:"is_bargain",title:"IsBargain",sort:"true"},
+                    {field:"is_good",title:"IsGood",sort:"true",event:"is-good", event_func(data){
+                            console.log(data)
+                        },templet: function (d) {
+                            return `<input type="checkbox" name="switch" lay-skin="switch">`
+                        },},
+                    {field:"virtual_sales",title:"VirtualSales",sort:"true"},
+                    {field:"browse",title:"Browse",sort:"true"},
+                    {field:"code_path",title:"CodePath",sort:"true"},
+                    {field:"video_link",title:"VideoLink",sort:"true"},
+                    {field:"temp_id",title:"TempId",sort:"true"}]],
+            }
+            gg_table(gg_table_option);
+        });
+    </script>
+{{end}}

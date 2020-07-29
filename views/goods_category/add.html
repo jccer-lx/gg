@@ -59,8 +59,9 @@
         let $ = layui.jquery;
         let form = layui.form;
         gg_add_form('goods_category')
-        gg_upload_pic(function (res) {
+        gg_upload_pic('#upload-pic',false,function (res) {
             $('#s-pic').attr("src", res.data)
+            $('#pic').val(res.data)
         })
         $(function(){
             //初始化pid参数
