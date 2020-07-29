@@ -37,7 +37,7 @@ func AuthRuleListApi(c *gin.Context) {
 
 func AuthRuleAddApi(c *gin.Context) {
 	authRuleModel := new(models.AuthRule)
-	authRuleParams := c.Keys["params"].(*params.AuthRuleParams)
+	authRuleParams := ggParams(c).(*params.AuthRuleParams)
 	authRuleModel.Name = authRuleParams.Name
 	authRuleModel.Title = authRuleParams.Title
 	authRuleModel.Pid = helper.JsonNumber2Uint(authRuleParams.Pid)
@@ -71,7 +71,7 @@ func AuthRuleUpdateApi(c *gin.Context) {
 		return
 	}
 	authRuleModel := new(models.AuthRule)
-	authRuleUpdateParams := c.Keys["params"].(*params.AuthRuleUpdateParams)
+	authRuleUpdateParams := ggParams(c).(*params.AuthRuleUpdateParams)
 	authRuleModel.ID = id
 	authRuleModel.Name = authRuleUpdateParams.Name
 	authRuleModel.Title = authRuleUpdateParams.Title

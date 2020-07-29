@@ -23,7 +23,8 @@ func InitRouter(engine *gin.Engine) {
 
 	//附件
 	upload := engine.Group("/upload")
-	upload.POST("/api/pic", handlers.UploadPic)
+	upload.POST("/api/pic", handlers.UploadPicApi)
+	upload.POST("/api/layedit_pic", handlers.LayEditUploadPicApi)
 
 	//管理员
 	admin := engine.Group("/admin")
@@ -66,4 +67,5 @@ func InitRouter(engine *gin.Engine) {
 	goods.GET("/view/add", handlers.GGView)
 
 	goods.GET("/api/list", handlers.GoodsListApi)
+	goods.POST("/api/add", handlers.GoodsAddApi)
 }

@@ -52,7 +52,7 @@ func GoodsCategoryAllListApi(c *gin.Context) {
 
 func GoodsCategoryAddApi(c *gin.Context) {
 	goodsCategoryModel := new(models.GoodsCategory)
-	goodsCategoryParams := c.Keys["params"].(*params.GoodsCategoryParams)
+	goodsCategoryParams := ggParams(c).(*params.GoodsCategoryParams)
 	goodsCategoryModel.CateName = goodsCategoryParams.CateName
 	goodsCategoryModel.Pic = goodsCategoryParams.Pic
 	goodsCategoryModel.Pid = helper.JsonNumber2Uint(goodsCategoryParams.Pid)
@@ -78,7 +78,7 @@ func GoodsCategoryUpdateApi(c *gin.Context) {
 		return
 	}
 	goodsCategoryModel := new(models.GoodsCategory)
-	goodsCategoryUpdateParams := c.Keys["params"].(*params.GoodsCategoryUpdateParams)
+	goodsCategoryUpdateParams := ggParams(c).(*params.GoodsCategoryUpdateParams)
 	goodsCategoryModel.ID = id
 	goodsCategoryModel.CateName = goodsCategoryUpdateParams.CateName
 	goodsCategoryModel.Pic = goodsCategoryUpdateParams.Pic
@@ -116,7 +116,7 @@ func GoodsCategoryUpdatePicApi(c *gin.Context) {
 		setGGError(c, fmt.Errorf("参数异常"))
 		return
 	}
-	goodsCategoryUpdatePicParams := c.Keys["params"].(*params.GoodsCategoryUpdatePicParams)
+	goodsCategoryUpdatePicParams := ggParams(c).(*params.GoodsCategoryUpdatePicParams)
 	goodsCategoryModel := new(models.GoodsCategory)
 	goodsCategoryModel.ID = id
 	goodsCategoryModel.Pic = goodsCategoryUpdatePicParams.Pic
@@ -130,7 +130,7 @@ func GoodsCategoryUpdatePicApi(c *gin.Context) {
 }
 
 func GoodsCategoryDeleteApi(c *gin.Context) {
-	goodsCategoryDeleteParams := c.Keys["params"].(*params.GoodsCategoryDeleteParams)
+	goodsCategoryDeleteParams := ggParams(c).(*params.GoodsCategoryDeleteParams)
 	goodsCategoryModel := new(models.GoodsCategory)
 	err := services.DeleteByIds(goodsCategoryModel, goodsCategoryDeleteParams.IDList)
 	if err != nil {

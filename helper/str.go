@@ -80,6 +80,24 @@ func JsonNumber2Int64(jn json.Number) int64 {
 	return i
 }
 
+func JsonNumber2Float64(jn json.Number) float64 {
+	i, err := jn.Float64()
+	if err != nil {
+		logrus.Error("JsonNumber2Float64 error:", err)
+		panic(err)
+		return 0.00
+	}
+	return i
+}
+
+func Switch2Int(switchStr string) int {
+	if switchStr == "on" {
+		return 1
+	} else {
+		return 0
+	}
+}
+
 //uuid
 func UUidV4() string {
 	v := uuid.NewV4()

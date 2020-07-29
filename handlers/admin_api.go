@@ -51,7 +51,7 @@ func AdminListApi(c *gin.Context) {
 //新增管理员
 func AdminAddApi(c *gin.Context) {
 	adminModel := new(models.Admin)
-	adminParams := c.Keys["params"].(*params.AdminAddApiParams)
+	adminParams := ggParams(c).(*params.AdminAddApiParams)
 	adminModel.Username = adminParams.Username
 	adminModel.Nickname = adminParams.Nickname
 	adminModel.Password = adminParams.Password
@@ -93,7 +93,7 @@ func AdminUpdateApi(c *gin.Context) {
 		return
 	}
 	adminModel := new(models.Admin)
-	adminParams := c.Keys["params"].(*params.AdminUpdateApiParams)
+	adminParams := ggParams(c).(*params.AdminUpdateApiParams)
 	adminModel.ID = id
 	adminModel.Nickname = adminParams.Nickname
 	adminModel.Email = adminParams.Email
@@ -108,7 +108,7 @@ func AdminUpdateApi(c *gin.Context) {
 //登录
 func LoginApi(c *gin.Context) {
 	output := ggOutput(c)
-	loginParams := c.Keys["params"].(*loginApiParams)
+	loginParams := ggParams(c).(*loginApiParams)
 	adminModel, err := services.Login(loginParams.Username, loginParams.Password)
 	if err != nil {
 		setGGError(c, err)

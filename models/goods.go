@@ -3,13 +3,13 @@ package models
 type Goods struct {
 	Model
 	AdminId         uint    `gorm:"column:admin_id;NOT NULL" json:"admin_id"`                                   // 管理员
-	Image           string  `gorm:"column:image;NOT NULL" json:"image"`                                         // 商品图片
+	MainImage       string  `gorm:"column:main_image;NOT NULL" json:"main_image"`                               // 商品图片
 	SliderImageJson string  `gorm:"column:slider_image_json;NOT NULL" json:"slider_image_json"`                 // 轮播图
 	Name            string  `gorm:"column:name;NOT NULL" json:"name"`                                           // 商品名称
 	MainInfo        string  `gorm:"column:main_info;NOT NULL" json:"main_info"`                                 // 商品简介
 	Keyword         string  `gorm:"column:keyword;NOT NULL" json:"keyword"`                                     // 关键字
 	BarCode         string  `gorm:"column:bar_code;NOT NULL" json:"bar_code"`                                   // 商品条码（一维码）
-	CategoryId      string  `gorm:"column:category_id;NOT NULL" json:"category_id"`                             // 分类id
+	CategoryId      uint    `gorm:"column:category_id;NOT NULL" json:"category_id"`                             // 分类id
 	Price           float64 `gorm:"column:price;type:decimal(10,2);default:0.00;NOT NULL" json:"price"`         // 商品价格
 	VipPrice        float64 `gorm:"column:vip_price;type:decimal(10,2);default:0.00;NOT NULL" json:"vip_price"` // 会员价格
 	OtPrice         float64 `gorm:"column:ot_price;type:decimal(10,2);default:0.00;NOT NULL" json:"ot_price"`   // 市场价
@@ -24,7 +24,7 @@ type Goods struct {
 	IsBest          int     `gorm:"column:is_best;default:0;NOT NULL" json:"is_best"`                           // 是否精品
 	IsNew           int     `gorm:"column:is_new;default:0;NOT NULL" json:"is_new"`                             // 是否新品
 	IsPostage       int     `gorm:"column:is_postage;default:0;NOT NULL" json:"is_postage"`                     // 是否包邮
-	GiveIntegral    string  `gorm:"column:give_integral;NOT NULL" json:"give_integral"`                         // 获得积分
+	GiveIntegral    int     `gorm:"column:give_integral;NOT NULL" json:"give_integral"`                         // 获得积分
 	Cost            float64 `gorm:"column:cost;type:decimal(10,2);NOT NULL" json:"cost"`                        // 成本价
 	IsSecKill       int     `gorm:"column:is_sec_kill;default:0;NOT NULL" json:"is_sec_kill"`                   // 秒杀状态 0 未开启 1已开启
 	IsBargain       int     `gorm:"column:is_bargain" json:"is_bargain"`                                        // 砍价状态 0未开启 1开启

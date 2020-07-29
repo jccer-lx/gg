@@ -138,7 +138,7 @@ function gg_upload_pic(elem, multiple, done) {
     });
 }
 
-function gg_add_form(form_name) {
+function gg_add_form(form_name, beforeSubmit) {
     layui.use(['layer', 'jquery', 'form', 'table', 'upload'], function () {
         let layer = layui.layer;
         let table = layui.table;
@@ -148,6 +148,9 @@ function gg_add_form(form_name) {
         let viewPath = '/' + form_name + '/view';
         $('#' + form_name + '-add >button.layui-btn').on("click", function () {
             form.render();
+            if(beforeSubmit !== undefined){
+                beforeSubmit();
+            }
             gg_request('post', apiPath + '/add',
                 JSON.stringify(form.val(form_name + '-add')),
                 function (res) {

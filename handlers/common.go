@@ -49,6 +49,14 @@ func ggOutput(c *gin.Context) *helper.Output {
 	return c.Keys["output"].(*helper.Output)
 }
 
+//通用的获取params
+func ggParams(c *gin.Context) params.GGParams {
+	if c.Keys["params"] == nil {
+		return nil
+	}
+	return c.Keys["params"].(params.GGParams)
+}
+
 //通用的设置返回error
 func setGGError(c *gin.Context, err error) {
 	middlewares.SetGGError(c, err)
@@ -60,7 +68,7 @@ func getGGToken(c *gin.Context) string {
 }
 
 //通用图片上传
-func UploadPic(c *gin.Context) {
+func UploadPicApi(c *gin.Context) {
 	output := ggOutput(c)
 	fileList, err := c.MultipartForm()
 	if err != nil {
@@ -99,5 +107,35 @@ func UploadPic(c *gin.Context) {
 			savePathList = append(savePathList, "/"+savePath)
 		}
 		output.Data = savePathList
+	}
+}
+
+//通用富文本上传图片
+func LayEditUploadPicApi(c *gin.Context) {
+	output := ggOutput(c)
+	fileList, err := c.MultipartForm()
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	if fileList.File["file"] == nil || len(fileList.File["file"]) == 0 {
+		setGGError(c, fmt.Errorf("pic不能为空"))
+		return
+	}
+	saveDir := fmt.Sprintf("assets/uploads/%d", time.Now().UnixNano())
+	err = helper.CreateDir(saveDir)
+	if err != nil {
+		setGGError(c, fmt.Errorf("pic不能为空"))
+		return
+	}
+	savePath := fmt.Sprintf("%s/%s", saveDir, fileList.File["file"][0].Filename)
+	err = c.SaveUploadedFile(fileList.File["file"][0], savePath)
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	output.Data = map[string]string{
+		"src":   "/" + savePath,
+		"title": fileList.File["file"][0].Filename,
 	}
 }

@@ -7,8 +7,8 @@ import (
 	"github.com/lvxin0315/gg/models"
 )
 
-func GetGoodsCategoryList(GoodsCategoryModel *models.GoodsCategory, pagination *helper.Pagination) error {
-	err := GetList(GoodsCategoryModel, pagination)
+func GetGoodsCategoryList(goodsCategoryModel *models.GoodsCategory, pagination *helper.Pagination) error {
+	err := GetList(goodsCategoryModel, pagination)
 	if err != nil {
 		return err
 	}
@@ -37,15 +37,15 @@ func FindGoodsCategoryById(id uint) (*models.GoodsCategory, error) {
 	return goodsCategoryModel, nil
 }
 
-func AddGoodsCategory(GoodsCategoryModel *models.GoodsCategory) error {
+func AddGoodsCategory(goodsCategoryModel *models.GoodsCategory) error {
 	//验证pid存在
-	if GoodsCategoryModel.Pid > 0 {
-		_, err := FindGoodsCategoryById(GoodsCategoryModel.Pid)
+	if goodsCategoryModel.Pid > 0 {
+		_, err := FindGoodsCategoryById(goodsCategoryModel.Pid)
 		if err != nil {
 			return fmt.Errorf("上级分类不存在")
 		}
 	}
 	//填充默认值
 	//GoodsCategoryModel.IsShow = models.GoodsCategoryIsShowTrue
-	return databases.NewDB().Save(GoodsCategoryModel).Error
+	return databases.NewDB().Save(goodsCategoryModel).Error
 }

@@ -1,0 +1,275 @@
+{{define "goods/add.tpl"}}
+    <div class="layui-form-item">
+        <label class="layui-form-label">LabelTitle</label>
+        <div class="layui-input-block">
+            <form class="layui-form" action="" lay-filter="goods-add" id="goods-add">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" id="name" lay-verify="required" autocomplete="off"
+                               placeholder="Name" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">主图</label>
+                    <div class="layui-input-block">
+                        <input type="hidden" name="main_image" id="main_image" lay-verify="required" autocomplete="off"
+                               class="layui-input">
+                        <a href="javascript:;" class="layui-btn" id="main_image_upload">
+                            上传
+                        </a>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    {{/*                    <label class="layui-form-label"></label>*/}}
+                    <div class="layui-input-block">
+                        <div class="layui-col-lg2">
+                            <img id="main_image_show" src="" class="full-pic">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">轮播图</label>
+                    <div class="layui-input-block">
+                        <input type="hidden" name="slider_image">
+                        <a href="javascript:;" class="layui-btn" id="slider_image_json_upload">
+                            上传
+                        </a>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" id="slider_image_json_upload_show">
+                        <div class="layui-col-lg2">
+                            <img src="" class="full-pic">
+                        </div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品简介</label>
+                    <div class="layui-input-block">
+                        <textarea placeholder="MainInfo" name="main_info" id="main_info"
+                                  class="layui-textarea" style="display: none;"></textarea>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">关键字</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="keyword" id="keyword" lay-verify="required" autocomplete="off"
+                               placeholder="Keyword" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">商品条码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="bar_code" id="bar_code" lay-verify="required" autocomplete="off"
+                               placeholder="BarCode" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">分类</label>
+                    <div class="layui-input-block">
+                        <select name="category_id" id="category_id" lay-filter="category_id">
+                            <option value="0"></option>
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">商品价格</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="number" name="price" id="price" lay-verify="required" autocomplete="off"
+                                   class="layui-input" value="0.00">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">会员价格</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="number" name="vip_price" id="vip_price" lay-verify="required"
+                                   autocomplete="off"
+                                   class="layui-input" value="0.00">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">市场价</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="number" name="ot_price" id="ot_price" lay-verify="required" autocomplete="off"
+                                   class="layui-input" value="0.00">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">成本价</label>
+                        <div class="layui-input-inline">
+                            <input type="number" name="cost" id="cost" lay-verify="required" autocomplete="off"
+                                   class="layui-input" value="0.00">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮费</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="postage" id="postage" lay-verify="required" autocomplete="off"
+                               placeholder="Postage" class="layui-input" value="0.00">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">单位名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="unit_name" id="unit_name" lay-verify="required" autocomplete="off"
+                               placeholder="UnitName" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">排序</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="sort" id="sort" lay-verify="required" autocomplete="off"
+                               placeholder="Sort" class="layui-input" value="0">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">销量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="sales" id="sales" lay-verify="required" autocomplete="off"
+                               placeholder="Sales" class="layui-input" value="0">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">库存</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="stock" id="stock" lay-verify="required" autocomplete="off"
+                               placeholder="Stock" class="layui-input" value="0">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上架</label>
+                    <div class="layui-input-block">
+                        <input type="checkbox" name="is_show" id="is_show" lay-skin="switch">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否热卖</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_hot" id="is_hot" lay-skin="switch">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否优惠</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_benefit" id="is_benefit" lay-skin="switch">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否精品</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_best" id="is_best" lay-skin="switch">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否新品</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_new" id="is_new" lay-skin="switch">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否包邮</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_postage" id="is_postage" lay-skin="switch">
+                        </div>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label">是否优品推荐</label>
+                        <div class="layui-input-inline">
+                            <input type="checkbox" name="is_good" id="is_good" lay-skin="switch">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">获得积分</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="give_integral" id="give_integral" lay-verify="required"
+                               autocomplete="off" placeholder="GiveIntegral" class="layui-input" value="0">
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label">虚拟销量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="virtual_sales" id="virtual_sales" lay-verify="required"
+                               autocomplete="off" placeholder="VirtualSales" class="layui-input" value="0">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">浏览量</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="browse" id="browse" lay-verify="required" autocomplete="off"
+                               placeholder="Browse" class="layui-input" value="0">
+                    </div>
+                </div>
+                <button id="btnId" type="button" class="layui-btn   ">提交</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        layui.use(['layer', 'jquery', 'form', 'table', 'upload', 'layedit'], function () {
+            let layer = layui.layer;
+            let $ = layui.jquery;
+            let form = layui.form;
+            let upload = layui.upload;
+            let layedit = layui.layedit;
+            let slider_image = []
+            let index = layedit.build('main_info', {
+                uploadImage: {url: '/upload/api/layedit_pic', type: 'post'}
+            }); //建立编辑器
+
+            gg_add_form('goods',function () {
+                layedit.sync(index)
+            })
+
+            gg_upload_pic('#main_image_upload', false, function (res) {
+                if (res.code === 0) {
+                    $('#main_image').val(res.data);
+                    $('#main_image_show').attr('src', res.data);
+                } else {
+                    layer.msg(res.msg)
+                }
+            })
+
+            gg_upload_pic("#slider_image_json_upload", true, function (res) {
+                if (res.code === 0) {
+                    let html = '<div class="layui-col-lg2">' +
+                        '<img src="' + res.data + '" class="full-pic">' +
+                        // '<input type="hidden" name="slider_image[]" value="' + res.data + '">' +
+                        '</div>';
+                    slider_image.push(res.data)
+                    $('#slider_image_json_upload_show').append(html)
+                    form.val("goods-add", {
+                        slider_image:slider_image,
+                    });
+                    form.render();
+                } else {
+                    layer.msg(res.msg)
+                }
+            })
+
+            $(function () {
+                //初始化分类参数
+                gg_request('get', '/goods_category/api/all', {}, function (res) {
+                    if(res.code === 0){
+                        $.each(res.data,function (i) {
+                            $('#category_id').append('<option value="' + res.data[i].id + '">' + res.data[i].cate_name + '</option>')
+                        });
+                        form.render();
+                    }else{
+                        layer.msg(res.msg)
+                    }
+                });
+                form.render();
+            });
+        });
+    </script>
+{{end}}
