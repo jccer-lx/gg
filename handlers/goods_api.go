@@ -13,6 +13,7 @@ import (
 
 func init() {
 	params.InitParams("github.com/lvxin0315/gg/handlers.GoodsAddApi", &params.GoodsAddParams{})
+	params.InitParams("github.com/lvxin0315/gg/handlers.UpdateGoodsForFieldApi", &params.UpdateGoodsForFieldParams{})
 }
 
 func GoodsListApi(c *gin.Context) {
@@ -85,4 +86,14 @@ func _sliderImageJson(str string) string {
 		return ""
 	}
 	return string(b)
+}
+
+//根据字段修改数据
+func UpdateGoodsForFieldApi(c *gin.Context) {
+	updateGoodsForFieldParams := ggParams(c).(*params.UpdateGoodsForFieldParams)
+	err := services.UpdateGoodsForField(updateGoodsForFieldParams.ID, updateGoodsForFieldParams.Field, updateGoodsForFieldParams.Data)
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
 }

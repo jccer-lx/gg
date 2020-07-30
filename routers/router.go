@@ -68,4 +68,5 @@ func InitRouter(engine *gin.Engine) {
 
 	goods.GET("/api/list", handlers.GoodsListApi)
 	goods.POST("/api/add", handlers.GoodsAddApi)
+	goods.PUT("/api/update_for_field", handlers.UpdateGoodsForFieldApi)
 }

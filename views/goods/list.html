@@ -1,5 +1,8 @@
 {{define "goods/list.tpl"}}
-    <table id="goods-table" lay-filter="goods-table" lay-skin="" lay-size=""></table>
+    <form lay-filter="goods-table-form">
+        <table id="goods-table" lay-filter="goods-table" lay-skin="" lay-size=""></table>
+    </form>
+
     <script type="text/html" id="tool-goods-table">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
@@ -8,48 +11,71 @@
     </script>
 
     <script>
-        layui.use(['jquery'], function () {
+        layui.use(['jquery','form','table','element'], function () {
             let $ = layui.jquery;
+            let form = layui.form;
+            let table = layui.table;
+            let element = layui.element;
             let gg_table_option = {
                 table_name: 'goods',
-                cols: [[{field:"id",title:"ID",sort:"true"},
+                cols: [[
                     {field:"name",title:"商品名",sort:"true"},
-                    {field:"admin_id",title:"管理员",sort:"true"},
+                    {field:"admin_id",title:"管理员",sort:"true",hide:true},
                     {field:"main_image",title:"主图",sort:"true"},
-                    {field:"slider_image",title:"轮播图",sort:"true"},
-                    {field:"keyword",title:"关键词",sort:"true"},
-                    {field:"bar_code",title:"BarCode",sort:"true"},
-                    {field:"category_id",title:"CategoryId",sort:"true"},
-                    {field:"price",title:"Price",sort:"true"},
-                    {field:"vip_price",title:"VipPrice",sort:"true"},
-                    {field:"ot_price",title:"OtPrice",sort:"true"},
-                    {field:"postage",title:"Postage",sort:"true"},
-                    {field:"unit_name",title:"UnitName",sort:"true"},
-                    {field:"sort",title:"Sort",sort:"true"},
-                    {field:"sales",title:"Sales",sort:"true"},
-                    {field:"stock",title:"Stock",sort:"true"},
-                    {field:"is_show",title:"IsShow",sort:"true"},
-                    {field:"is_hot",title:"IsHot",sort:"true"},
-                    {field:"is_benefit",title:"IsBenefit",sort:"true"},
-                    {field:"is_best",title:"IsBest",sort:"true"},
-                    {field:"is_new",title:"IsNew",sort:"true"},
-                    {field:"is_postage",title:"IsPostage",sort:"true"},
-                    {field:"give_integral",title:"GiveIntegral",sort:"true"},
-                    {field:"cost",title:"Cost",sort:"true"},
-                    {field:"is_sec_kill",title:"IsSecKill",sort:"true"},
-                    {field:"is_bargain",title:"IsBargain",sort:"true"},
-                    {field:"is_good",title:"IsGood",sort:"true",event:"is-good", event_func(data){
+                    {field:"slider_image",title:"轮播图",sort:"true",hide:true},
+                    {field:"keyword",title:"关键词",sort:"true",hide:true},
+                    {field:"bar_code",title:"商品条码",sort:"true"},
+                    {field:"category_id",title:"分类id",sort:"true"},
+                    {field:"price",title:"商品价格",sort:"true"},
+                    {field:"vip_price",title:"会员价格",sort:"true",hide:true},
+                    {field:"ot_price",title:"市场价",sort:"true",hide:true},
+                    {field:"postage",title:"邮费",sort:"true",hide:true},
+                    {field:"unit_name",title:"单位名",sort:"true",hide:true},
+                    {field:"sort",title:"排序",sort:"true",hide:true},
+                    {field:"sales",title:"销量",sort:"true"},
+                    {field:"stock",title:"库存",sort:"true"},
+                    {field:"is_show",title:"状态",sort:"true",event_func(data){
                             console.log(data)
                         },templet: function (d) {
-                            return `<input type="checkbox" name="switch" lay-skin="switch">`
+                            let checked = ""
+                            if(d.is_show === 1){
+                                checked = "checked"
+                            }
+                            return '<input class="gg-switch" data-id="' + d.id + '" data-field="is_show" type="checkbox" name="switch" ' + checked + ' lay-skin="switch" lay-event="gg-switch" lay-filter="gg-switch" >'
                         },},
-                    {field:"virtual_sales",title:"VirtualSales",sort:"true"},
-                    {field:"browse",title:"Browse",sort:"true"},
-                    {field:"code_path",title:"CodePath",sort:"true"},
-                    {field:"video_link",title:"VideoLink",sort:"true"},
-                    {field:"temp_id",title:"TempId",sort:"true"}]],
+                    {field:"is_hot",title:"是否热卖",sort:"true",hide:true},
+                    {field:"is_benefit",title:"是否优惠",sort:"true",hide:true},
+                    {field:"is_best",title:"是否精品",sort:"true",hide:true},
+                    {field:"is_new",title:"是否新品",sort:"true",hide:true},
+                    {field:"is_postage",title:"是否包邮",sort:"true",hide:true},
+                    {field:"give_integral",title:"获得积分",sort:"true",hide:true},
+                    {field:"cost",title:"成本价",sort:"true",hide:true},
+                    {field:"is_good",title:"是否优品推荐",sort:"true",event:"is-good", event_func(data){
+                            console.log(data)
+                        },templet: function (d) {
+                            return `<input class="gg-switch" data-id="" type="checkbox" name="switch" lay-skin="switch">`
+                        },hide:true},
+                    {field:"virtual_sales",title:"虚拟销量",sort:"true",hide:true},
+                    {field:"browse",title:"浏览量",sort:"true"}
+                    ]],
             }
             gg_table(gg_table_option);
+
+            $(function(){
+                form.render();
+                form.on('switch(gg-switch)', function (data) {
+                    gg_request('put', '/goods/api/update_for_field', JSON.stringify({
+                        id:$(data.elem).data("id"),
+                        field:$(data.elem).data("field"),
+                        data:data.elem.checked === true ? 1 : 0
+                    }), function (res) {
+                        if(res.code !== 0){
+                            table.reload()
+                            layer.msg(res.msg)
+                        }
+                    })
+                });
+            });
         });
     </script>
 {{end}}

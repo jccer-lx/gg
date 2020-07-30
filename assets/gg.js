@@ -32,8 +32,8 @@ function gg_table(gg_table_option) {
         let $ = layui.jquery;
         let apiPath = '/' + gg_table_option.table_name + '/api';
         let viewPath = '/' + gg_table_option.table_name + '/view';
-        console.log(apiPath);
-        console.log('#tool-' + gg_table_option.table_name + '-table');
+        // console.log(apiPath);
+        // console.log('#tool-' + gg_table_option.table_name + '-table');
         table.render({
             toolbar: '#tool-' + gg_table_option.table_name + '-table',
             elem: '#' + gg_table_option.table_name + '-table',

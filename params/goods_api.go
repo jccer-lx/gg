@@ -34,3 +34,13 @@ type GoodsAddParams struct {
 func (p *GoodsAddParams) NewParams() GGParams {
 	return new(GoodsAddParams)
 }
+
+type UpdateGoodsForFieldParams struct {
+	ID    uint        `json:"id" validate:"required"`
+	Field string      `json:"field" validate:"required"`
+	Data  interface{} `json:"data"`
+}
+
+func (p *UpdateGoodsForFieldParams) NewParams() GGParams {
+	return new(UpdateGoodsForFieldParams)
+}

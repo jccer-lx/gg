@@ -24,3 +24,11 @@ func AddGoods(goods *models.Goods) error {
 	}
 	return databases.NewDB().Save(goods).Error
 }
+
+//更新指定字段
+func UpdateGoodsForField(id uint, field string, data interface{}) error {
+	goodsModel := new(models.Goods)
+	goodsModel.ID = id
+	err := databases.NewDB().Model(goodsModel).Where("id = ?", id).Update(field, data).Error
+	return err
+}
