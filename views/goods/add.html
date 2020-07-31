@@ -23,7 +23,7 @@
                 <div class="layui-form-item">
                     {{/*                    <label class="layui-form-label"></label>*/}}
                     <div class="layui-input-block">
-                        <div class="layui-col-lg2">
+                        <div class="layui-col-lg2 layui-col-md2">
                             <img id="main_image_show" src="" class="full-pic">
                         </div>
                     </div>
@@ -39,7 +39,7 @@
                 </div>
                 <div class="layui-form-item">
                     <div class="layui-input-block" id="slider_image_json_upload_show">
-                        <div class="layui-col-lg2">
+                        <div class="layui-col-lg2 layui-col-md2">
                             <img src="" class="full-pic">
                         </div>
                     </div>
@@ -241,7 +241,7 @@
 
             gg_upload_pic("#slider_image_json_upload", true, function (res) {
                 if (res.code === 0) {
-                    let html = '<div class="layui-col-lg2">' +
+                    let html = '<div class="layui-col-lg2 layui-col-md2">' +
                         '<img src="' + res.data + '" class="full-pic">' +
                         // '<input type="hidden" name="slider_image[]" value="' + res.data + '">' +
                         '</div>';

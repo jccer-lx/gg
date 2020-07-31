@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lvxin0315/gg/helper"
 	"github.com/lvxin0315/gg/models"
@@ -14,6 +15,7 @@ import (
 func init() {
 	params.InitParams("github.com/lvxin0315/gg/handlers.GoodsAddApi", &params.GoodsAddParams{})
 	params.InitParams("github.com/lvxin0315/gg/handlers.UpdateGoodsForFieldApi", &params.UpdateGoodsForFieldParams{})
+	params.InitParams("github.com/lvxin0315/gg/handlers.GoodsUpdateApi", &params.GoodsUpdateParams{})
 }
 
 func GoodsListApi(c *gin.Context) {
@@ -40,35 +42,35 @@ func GoodsListApi(c *gin.Context) {
 func GoodsAddApi(c *gin.Context) {
 	output := ggOutput(c)
 	goodsModel := new(models.Goods)
-	goodsAddParams := ggParams(c).(*params.GoodsAddParams)
-	goodsModel.Name = goodsAddParams.Name
-	goodsModel.MainInfo = goodsAddParams.MainInfo
-	goodsModel.MainImage = goodsAddParams.MainImage
-	goodsModel.SliderImageJson = _sliderImageJson(goodsAddParams.SliderImage)
+	goodsUpdateParams := ggParams(c).(*params.GoodsAddParams)
+	goodsModel.Name = goodsUpdateParams.Name
+	goodsModel.MainInfo = goodsUpdateParams.MainInfo
+	goodsModel.MainImage = goodsUpdateParams.MainImage
+	goodsModel.SliderImageJson = _sliderImageJson(goodsUpdateParams.SliderImage)
 	adminId, _ := services.GetAdminIdByToken(c.Keys["token"].(string))
 	goodsModel.AdminId = adminId
-	goodsModel.Keyword = goodsAddParams.Keyword
-	goodsModel.BarCode = goodsAddParams.BarCode
-	goodsModel.CategoryId = helper.JsonNumber2Uint(goodsAddParams.CategoryId)
-	goodsModel.Price = helper.JsonNumber2Float64(goodsAddParams.Price)
-	goodsModel.VipPrice = helper.JsonNumber2Float64(goodsAddParams.VipPrice)
-	goodsModel.OtPrice = helper.JsonNumber2Float64(goodsAddParams.OtPrice)
-	goodsModel.Postage = helper.JsonNumber2Float64(goodsAddParams.Postage)
-	goodsModel.UnitName = goodsAddParams.UnitName
-	goodsModel.Sort = helper.JsonNumber2Int(goodsAddParams.Sort)
-	goodsModel.Sales = helper.JsonNumber2Int(goodsAddParams.Sales)
-	goodsModel.Stock = helper.JsonNumber2Int(goodsAddParams.Stock)
-	goodsModel.IsShow = helper.Switch2Int(goodsAddParams.IsShow)
-	goodsModel.IsHot = helper.Switch2Int(goodsAddParams.IsHot)
-	goodsModel.IsBenefit = helper.Switch2Int(goodsAddParams.IsBenefit)
-	goodsModel.IsBest = helper.Switch2Int(goodsAddParams.IsBest)
-	goodsModel.IsNew = helper.Switch2Int(goodsAddParams.IsNew)
-	goodsModel.IsPostage = helper.Switch2Int(goodsAddParams.IsPostage)
-	goodsModel.GiveIntegral = helper.JsonNumber2Int(goodsAddParams.GiveIntegral)
-	goodsModel.Cost = helper.JsonNumber2Float64(goodsAddParams.Cost)
-	goodsModel.IsGood = helper.Switch2Int(goodsAddParams.IsGood)
-	goodsModel.VirtualSales = helper.JsonNumber2Int(goodsAddParams.VirtualSales)
-	goodsModel.Browse = helper.JsonNumber2Int(goodsAddParams.Browse)
+	goodsModel.Keyword = goodsUpdateParams.Keyword
+	goodsModel.BarCode = goodsUpdateParams.BarCode
+	goodsModel.CategoryId = helper.JsonNumber2Uint(goodsUpdateParams.CategoryId)
+	goodsModel.Price = helper.JsonNumber2Float64(goodsUpdateParams.Price)
+	goodsModel.VipPrice = helper.JsonNumber2Float64(goodsUpdateParams.VipPrice)
+	goodsModel.OtPrice = helper.JsonNumber2Float64(goodsUpdateParams.OtPrice)
+	goodsModel.Postage = helper.JsonNumber2Float64(goodsUpdateParams.Postage)
+	goodsModel.UnitName = goodsUpdateParams.UnitName
+	goodsModel.Sort = helper.JsonNumber2Int(goodsUpdateParams.Sort)
+	goodsModel.Sales = helper.JsonNumber2Int(goodsUpdateParams.Sales)
+	goodsModel.Stock = helper.JsonNumber2Int(goodsUpdateParams.Stock)
+	goodsModel.IsShow = helper.Switch2Int(goodsUpdateParams.IsShow)
+	goodsModel.IsHot = helper.Switch2Int(goodsUpdateParams.IsHot)
+	goodsModel.IsBenefit = helper.Switch2Int(goodsUpdateParams.IsBenefit)
+	goodsModel.IsBest = helper.Switch2Int(goodsUpdateParams.IsBest)
+	goodsModel.IsNew = helper.Switch2Int(goodsUpdateParams.IsNew)
+	goodsModel.IsPostage = helper.Switch2Int(goodsUpdateParams.IsPostage)
+	goodsModel.GiveIntegral = helper.JsonNumber2Int(goodsUpdateParams.GiveIntegral)
+	goodsModel.Cost = helper.JsonNumber2Float64(goodsUpdateParams.Cost)
+	goodsModel.IsGood = helper.Switch2Int(goodsUpdateParams.IsGood)
+	goodsModel.VirtualSales = helper.JsonNumber2Int(goodsUpdateParams.VirtualSales)
+	goodsModel.Browse = helper.JsonNumber2Int(goodsUpdateParams.Browse)
 	err := services.AddGoods(goodsModel)
 	if err != nil {
 		setGGError(c, err)
@@ -96,4 +98,55 @@ func UpdateGoodsForFieldApi(c *gin.Context) {
 		setGGError(c, err)
 		return
 	}
+}
+
+//商品部分信息编辑，给可文本信息编辑内容
+func GoodsUpdateApi(c *gin.Context) {
+	output := ggOutput(c)
+	id := helper.String2Uint(c.Param("id"))
+	if id <= 0 {
+		setGGError(c, fmt.Errorf("参数异常"))
+		return
+	}
+	goodsModel := new(models.Goods)
+	goodsModel.ID = id
+	goodsUpdateParams := ggParams(c).(*params.GoodsUpdateParams)
+	goodsModel.Name = goodsUpdateParams.Name
+	goodsModel.Keyword = goodsUpdateParams.Keyword
+	goodsModel.BarCode = goodsUpdateParams.BarCode
+	goodsModel.Price = helper.JsonNumber2Float64(goodsUpdateParams.Price)
+	goodsModel.VipPrice = helper.JsonNumber2Float64(goodsUpdateParams.VipPrice)
+	goodsModel.OtPrice = helper.JsonNumber2Float64(goodsUpdateParams.OtPrice)
+	goodsModel.Postage = helper.JsonNumber2Float64(goodsUpdateParams.Postage)
+	goodsModel.UnitName = goodsUpdateParams.UnitName
+	goodsModel.Sort = helper.JsonNumber2Int(goodsUpdateParams.Sort)
+	goodsModel.Sales = helper.JsonNumber2Int(goodsUpdateParams.Sales)
+	goodsModel.Stock = helper.JsonNumber2Int(goodsUpdateParams.Stock)
+	goodsModel.GiveIntegral = helper.JsonNumber2Int(goodsUpdateParams.GiveIntegral)
+	goodsModel.Cost = helper.JsonNumber2Float64(goodsUpdateParams.Cost)
+	goodsModel.VirtualSales = helper.JsonNumber2Int(goodsUpdateParams.VirtualSales)
+	goodsModel.Browse = helper.JsonNumber2Int(goodsUpdateParams.Browse)
+	err := services.UpdateOne(goodsModel)
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	output.Data = goodsModel
+}
+
+func GoodsGetApi(c *gin.Context) {
+	output := ggOutput(c)
+	id := helper.String2Uint(c.Param("id"))
+	if id <= 0 {
+		setGGError(c, fmt.Errorf("参数异常"))
+		return
+	}
+	goodsModel := new(models.Goods)
+	err := services.GetOne(goodsModel, map[string]interface{}{
+		"id": id,
+	})
+	if err != nil {
+		setGGError(c, err)
+	}
+	output.Data = goodsModel
 }

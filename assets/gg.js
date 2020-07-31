@@ -170,3 +170,12 @@ function gg_add_form(form_name, beforeSubmit) {
         }
     });
 }
+
+
+function gg_switch_tpl(field, d) {
+    let checked = ""
+    if(d[field] === 1){
+        checked = "checked"
+    }
+    return '<input class="gg-switch" data-id="' + d.id + '" data-field="'+ field +'" type="checkbox" name="switch" ' + checked + ' lay-skin="switch" lay-event="gg-switch" lay-filter="gg-switch" >'
+}

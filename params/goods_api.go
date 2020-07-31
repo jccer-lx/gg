@@ -44,3 +44,25 @@ type UpdateGoodsForFieldParams struct {
 func (p *UpdateGoodsForFieldParams) NewParams() GGParams {
 	return new(UpdateGoodsForFieldParams)
 }
+
+type GoodsUpdateParams struct {
+	Name         string      `json:"name" validate:"required,min=1,max=20"`
+	Keyword      string      `json:"keyword"`
+	BarCode      string      `json:"bar_code"`
+	Price        json.Number `json:"price" validate:"required"`
+	VipPrice     json.Number `json:"vip_price"`
+	OtPrice      json.Number `json:"ot_price"`
+	Postage      json.Number `json:"postage"`
+	UnitName     string      `json:"unit_name"`
+	Sort         json.Number `json:"sort"`
+	Sales        json.Number `json:"sales"`
+	Stock        json.Number `json:"stock"`
+	GiveIntegral json.Number `json:"give_integral"`
+	Cost         json.Number `json:"cost"`
+	VirtualSales json.Number `json:"virtual_sales"`
+	Browse       json.Number `json:"browse"`
+}
+
+func (p *GoodsUpdateParams) NewParams() GGParams {
+	return new(GoodsUpdateParams)
+}

@@ -1,13 +1,16 @@
-{{define "goods_category/show_pic.tpl"}}
+{{define "goods/show_main_image.tpl"}}
     <div class="layui-form-item">
-        <label class="layui-form-label">分类图片</label>
+        <label class="layui-form-label">主图</label>
         <div class="layui-input-block">
-            <div class="layui-col-lg2 layui-col-md2">
-                <img id="s-pic" src="">
-            </div>
-        </div>
-        <div class="layui-input-block">
-            <form class="layui-form" action="" lay-filter="goods_category-add" id="goods_category-add">
+            <form class="layui-form" action="" lay-filter="goods-add" id="goods-add">
+                <div class="layui-form-item">
+                    {{/*                    <label class="layui-form-label"></label>*/}}
+                    <div class="layui-input-block">
+                        <div class="layui-col-lg2 layui-col-md2">
+                            <img id="s-pic" src="" class="full-pic">
+                        </div>
+                    </div>
+                </div>
                 <div class="layui-form-item">
                     <input type="hidden" name="id" id="id" lay-verify="required" autocomplete="off"
                            placeholder="" class="layui-input" value="{{.ID}}">
@@ -28,15 +31,20 @@
             let $ = layui.jquery;
             let form = layui.form;
             let upload = layui.upload;
-            $("#goods_category-add >button.layui-btn").on("click", function(){
+            $("#goods-add >button.layui-btn").on("click", function(){
                 form.render();
-                gg_request('put', '/goods_category/api/show_pic/' + {{.ID}},
-                    JSON.stringify(form.val("goods_category-add")),
+                let data = form.val("goods-add");
+                gg_request('put', '/goods/api/update_for_field',
+                    JSON.stringify({
+                        id : parseInt(data.id),
+                        field : "main_image",
+                        data : $("#pic").val(),
+                    }),
                     function (res) {
                         console.log(res)
                         if(res.code === 0){
-                            table.reload("goods_category-table", {
-                                url : '/goods_category/api/list'
+                            table.reload("goods-table", {
+                                url : '/goods/api/list'
                             })
                             layer.close(layerIndex);
                         }else{
@@ -67,7 +75,7 @@
 
             $(function(){
                 //初始化pid参数
-                gg_request('get', '/goods_category/api/get/{{.ID}}', {}, function (res) {
+                gg_request('get', '/goods/api/get/{{.ID}}', {}, function (res) {
                     console.log(res.data)
                     if(res.code === 0){
                         console.log(res.data.pic)

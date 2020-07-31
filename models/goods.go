@@ -4,9 +4,9 @@ type Goods struct {
 	Model
 	AdminId         uint    `gorm:"column:admin_id;NOT NULL" json:"admin_id"`                                   // 管理员
 	MainImage       string  `gorm:"column:main_image;NOT NULL" json:"main_image"`                               // 商品图片
-	SliderImageJson string  `gorm:"column:slider_image_json;NOT NULL" json:"slider_image_json"`                 // 轮播图
+	SliderImageJson string  `gorm:"column:slider_image_json;NOT NULL;type:text" json:"slider_image_json"`       // 轮播图
 	Name            string  `gorm:"column:name;NOT NULL" json:"name"`                                           // 商品名称
-	MainInfo        string  `gorm:"column:main_info;NOT NULL" json:"main_info"`                                 // 商品简介
+	MainInfo        string  `gorm:"column:main_info;NOT NULL;type:text" json:"main_info"`                       // 商品简介
 	Keyword         string  `gorm:"column:keyword;NOT NULL" json:"keyword"`                                     // 关键字
 	BarCode         string  `gorm:"column:bar_code;NOT NULL" json:"bar_code"`                                   // 商品条码（一维码）
 	CategoryId      uint    `gorm:"column:category_id;NOT NULL" json:"category_id"`                             // 分类id

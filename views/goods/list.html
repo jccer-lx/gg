@@ -1,8 +1,13 @@
 {{define "goods/list.tpl"}}
-    <form lay-filter="goods-table-form">
-        <table id="goods-table" lay-filter="goods-table" lay-skin="" lay-size=""></table>
-    </form>
+    <style>
+        .goods-small-main_image {
+            width: 28px;
+            height: 28px;
+        }
+    </style>
+    <table id="goods-table" lay-filter="goods-table" lay-skin="" lay-size="">
 
+    </table>
     <script type="text/html" id="tool-goods-table">
         <div class="layui-btn-container">
             <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
@@ -11,7 +16,7 @@
     </script>
 
     <script>
-        layui.use(['jquery','form','table','element'], function () {
+        layui.use(['jquery', 'form', 'table', 'element'], function () {
             let $ = layui.jquery;
             let form = layui.form;
             let table = layui.table;
@@ -19,57 +24,88 @@
             let gg_table_option = {
                 table_name: 'goods',
                 cols: [[
-                    {field:"name",title:"商品名",sort:"true"},
-                    {field:"admin_id",title:"管理员",sort:"true",hide:true},
-                    {field:"main_image",title:"主图",sort:"true"},
-                    {field:"slider_image",title:"轮播图",sort:"true",hide:true},
-                    {field:"keyword",title:"关键词",sort:"true",hide:true},
-                    {field:"bar_code",title:"商品条码",sort:"true"},
-                    {field:"category_id",title:"分类id",sort:"true"},
-                    {field:"price",title:"商品价格",sort:"true"},
-                    {field:"vip_price",title:"会员价格",sort:"true",hide:true},
-                    {field:"ot_price",title:"市场价",sort:"true",hide:true},
-                    {field:"postage",title:"邮费",sort:"true",hide:true},
-                    {field:"unit_name",title:"单位名",sort:"true",hide:true},
-                    {field:"sort",title:"排序",sort:"true",hide:true},
-                    {field:"sales",title:"销量",sort:"true"},
-                    {field:"stock",title:"库存",sort:"true"},
-                    {field:"is_show",title:"状态",sort:"true",event_func(data){
-                            console.log(data)
-                        },templet: function (d) {
-                            let checked = ""
-                            if(d.is_show === 1){
-                                checked = "checked"
-                            }
-                            return '<input class="gg-switch" data-id="' + d.id + '" data-field="is_show" type="checkbox" name="switch" ' + checked + ' lay-skin="switch" lay-event="gg-switch" lay-filter="gg-switch" >'
-                        },},
-                    {field:"is_hot",title:"是否热卖",sort:"true",hide:true},
-                    {field:"is_benefit",title:"是否优惠",sort:"true",hide:true},
-                    {field:"is_best",title:"是否精品",sort:"true",hide:true},
-                    {field:"is_new",title:"是否新品",sort:"true",hide:true},
-                    {field:"is_postage",title:"是否包邮",sort:"true",hide:true},
-                    {field:"give_integral",title:"获得积分",sort:"true",hide:true},
-                    {field:"cost",title:"成本价",sort:"true",hide:true},
-                    {field:"is_good",title:"是否优品推荐",sort:"true",event:"is-good", event_func(data){
-                            console.log(data)
-                        },templet: function (d) {
-                            return `<input class="gg-switch" data-id="" type="checkbox" name="switch" lay-skin="switch">`
-                        },hide:true},
-                    {field:"virtual_sales",title:"虚拟销量",sort:"true",hide:true},
-                    {field:"browse",title:"浏览量",sort:"true"}
-                    ]],
+                    {field: "name", title: "商品名", sort: "true", edit: "text"},
+                    {field: "admin_id", title: "管理员", sort: "true", hide: true},
+                    {field: "main_image", title: "主图", sort: "true", templet: function (d) {
+                            return '<img class="goods-small-main_image" src="' + d.main_image + '">'
+                        },event:"show_pic", event_func: function (obj) {
+                            let data = obj.data; //获得当前行数据
+                            $.get('/goods/view/show_main_image/' + data.id, function (content) {
+                                layerIndex = layer.open({
+                                    type: 1,
+                                    anim: 5,
+                                    title: "图片",
+                                    shadeClose: true, //开启遮罩关闭
+                                    content: content,
+                                    maxmin: true,
+                                    area: ['60vw', '60vh'],
+                                });
+                            })
+                        }},
+                    {field: "slider_image", title: "轮播图", sort: "true", hide: true},
+                    {field: "keyword", title: "关键词", sort: "true", hide: true, edit: "text"},
+                    {field: "bar_code", title: "商品条码", sort: "true", edit: "text"},
+                    {field: "category_id", title: "分类id", sort: "true"},
+                    {field: "price", title: "商品价格", sort: "true", edit: "text"},
+                    {field: "vip_price", title: "会员价格", sort: "true", hide: true, edit: "text"},
+                    {field: "ot_price", title: "市场价", sort: "true", hide: true, edit: "text"},
+                    {field: "postage", title: "邮费", sort: "true", hide: true, edit: "text"},
+                    {field: "unit_name", title: "单位名", sort: "true", hide: true, edit: "text"},
+                    {field: "sort", title: "排序", sort: "true", hide: true, edit: "text"},
+                    {field: "sales", title: "销量", sort: "true", edit: "text"},
+                    {field: "stock", title: "库存", sort: "true", edit: "text"},
+                    {
+                        field: "is_show", title: "状态", sort: "true", templet: function (d) {
+                            return gg_switch_tpl("is_show", d);
+                        },
+                    },
+                    {
+                        field: "is_hot", title: "是否热卖", sort: "true", hide: true, templet: function (d) {
+                            return gg_switch_tpl("is_hot", d);
+                        },
+                    },
+                    {
+                        field: "is_benefit", title: "是否优惠", sort: "true", hide: true, templet: function (d) {
+                            return gg_switch_tpl("is_benefit", d);
+                        },
+                    },
+                    {
+                        field: "is_best", title: "是否精品", sort: "true", hide: true, templet: function (d) {
+                            return gg_switch_tpl("is_best", d);
+                        },
+                    },
+                    {
+                        field: "is_new", title: "是否新品", sort: "true", hide: true, templet: function (d) {
+                            return gg_switch_tpl("is_new", d);
+                        },
+                    },
+                    {
+                        field: "is_postage", title: "是否包邮", sort: "true", hide: true, templet: function (d) {
+                            return gg_switch_tpl("is_postage", d);
+                        },
+                    },
+                    {field: "give_integral", title: "获得积分", sort: "true", hide: true, edit: "text"},
+                    {field: "cost", title: "成本价", sort: "true", hide: true, edit: "text"},
+                    {
+                        field: "is_good", title: "是否优品推荐", sort: "true", templet: function (d) {
+                            return gg_switch_tpl("is_good", d);
+                        }, hide: true
+                    },
+                    {field: "virtual_sales", title: "虚拟销量", sort: "true", hide: true, edit: "text"},
+                    {field: "browse", title: "浏览量", sort: "true", edit: "text"}
+                ]],
             }
             gg_table(gg_table_option);
 
-            $(function(){
+            $(function () {
                 form.render();
                 form.on('switch(gg-switch)', function (data) {
                     gg_request('put', '/goods/api/update_for_field', JSON.stringify({
-                        id:$(data.elem).data("id"),
-                        field:$(data.elem).data("field"),
-                        data:data.elem.checked === true ? 1 : 0
+                        id: $(data.elem).data("id"),
+                        field: $(data.elem).data("field"),
+                        data: data.elem.checked === true ? 1 : 0
                     }), function (res) {
-                        if(res.code !== 0){
+                        if (res.code !== 0) {
                             table.reload()
                             layer.msg(res.msg)
                         }

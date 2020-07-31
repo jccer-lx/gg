@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/lvxin0315/gg/databases"
 	"github.com/lvxin0315/gg/models"
+	"github.com/sirupsen/logrus"
 )
 
 func AddGoods(goods *models.Goods) error {
@@ -27,6 +28,9 @@ func AddGoods(goods *models.Goods) error {
 
 //更新指定字段
 func UpdateGoodsForField(id uint, field string, data interface{}) error {
+	logrus.Info("id: ", id)
+	logrus.Info("field: ", field)
+	logrus.Info("data: ", data)
 	goodsModel := new(models.Goods)
 	goodsModel.ID = id
 	err := databases.NewDB().Model(goodsModel).Where("id = ?", id).Update(field, data).Error
