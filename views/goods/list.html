@@ -3,6 +3,7 @@
         .goods-small-main_image {
             width: 28px;
             height: 28px;
+            padding: 0 2px;
         }
     </style>
     <table id="goods-table" lay-filter="goods-table" lay-skin="" lay-size="">
@@ -20,7 +21,6 @@
             let $ = layui.jquery;
             let form = layui.form;
             let table = layui.table;
-            let element = layui.element;
             let gg_table_option = {
                 table_name: 'goods',
                 cols: [[
@@ -28,7 +28,7 @@
                     {field: "admin_id", title: "管理员", sort: "true", hide: true},
                     {field: "main_image", title: "主图", sort: "true", templet: function (d) {
                             return '<img class="goods-small-main_image" src="' + d.main_image + '">'
-                        },event:"show_pic", event_func: function (obj) {
+                        },event:"main_image", event_func: function (obj) {
                             let data = obj.data; //获得当前行数据
                             $.get('/goods/view/show_main_image/' + data.id, function (content) {
                                 layerIndex = layer.open({
@@ -42,7 +42,27 @@
                                 });
                             })
                         }},
-                    {field: "slider_image", title: "轮播图", sort: "true", hide: true},
+                    {field: "slider_image_json", title: "轮播图", weight:200, sort: "true", hide: true,templet: function (d) {
+                            let html = ""
+                            let data = JSON.parse(d.slider_image_json)
+                            $.each(data, function (i) {
+                                html += '<img class="goods-small-main_image" src="' + data[i] + '">'
+                            })
+                            return html
+                        },event:"slider_image_json", event_func: function (obj) {
+                            let data = obj.data; //获得当前行数据
+                            $.get('/goods/view/show_slider_image/' + data.id, function (content) {
+                                layerIndex = layer.open({
+                                    type: 1,
+                                    anim: 5,
+                                    title: "轮播图",
+                                    shadeClose: true, //开启遮罩关闭
+                                    content: content,
+                                    maxmin: true,
+                                    area: ['60vw', '60vh'],
+                                });
+                            })
+                        }},
                     {field: "keyword", title: "关键词", sort: "true", hide: true, edit: "text"},
                     {field: "bar_code", title: "商品条码", sort: "true", edit: "text"},
                     {field: "category_id", title: "分类id", sort: "true"},

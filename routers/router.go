@@ -66,6 +66,7 @@ func InitRouter(engine *gin.Engine) {
 	goods.GET("/view/list", handlers.GGView)
 	goods.GET("/view/add", handlers.GGView)
 	goods.GET("/view/show_main_image/:id", handlers.GGView)
+	goods.GET("/view/show_slider_image/:id", handlers.GGView)
 
 	goods.GET("/api/list", handlers.GoodsListApi)
 	goods.POST("/api/add", handlers.GoodsAddApi)

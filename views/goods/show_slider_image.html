@@ -1,0 +1,105 @@
+{{define "goods/show_slider_image.tpl"}}
+    <div class="layui-form-item">
+        <label class="layui-form-label">轮播图</label>
+        <div class="layui-input-block">
+            <form class="layui-form" action="" lay-filter="goods-add" id="goods-add">
+                <div class="layui-form-item">
+                    {{/*                    <label class="layui-form-label"></label>*/}}
+                    <div class="layui-input-block" id="slider_image_json_upload_show">
+
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <input type="hidden" name="id" id="id" lay-verify="required" autocomplete="off"
+                           placeholder="" class="layui-input" value="{{.ID}}">
+                    <input type="hidden" name="slider_image">
+                    <a href="javascript:;" class="layui-btn" id="slider_image_json_upload">
+                        上传
+                    </a>
+                </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block" id="slider_image_json_upload_show">
+                        <div class="layui-col-lg2 layui-col-md2">
+                            <img src="" class="full-pic">
+                        </div>
+                    </div>
+                </div>
+                <button type="button" class="layui-btn">提交</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        layui.use(['layer','jquery','form','table','upload'], function () {
+            let layer = layui.layer;
+            let table = layui.table;
+            let $ = layui.jquery;
+            let form = layui.form;
+            let upload = layui.upload;
+            let slider_image = []
+            $("#goods-add >button.layui-btn").on("click", function(){
+                form.render();
+                let data = form.val("goods-add");
+                gg_request('put', '/goods/api/update_for_field',
+                    JSON.stringify({
+                        id : parseInt(data.id),
+                        field : "slider_image_json",
+                        data : JSON.stringify(slider_image),
+                    }),
+                    function (res) {
+                        console.log(res)
+                        if(res.code === 0){
+                            table.reload("goods-table", {
+                                url : '/goods/api/list'
+                            })
+                            layer.close(layerIndex);
+                        }else{
+                            layer.msg(res.msg)
+                        }
+                    });
+            });
+
+            $("#slider_image_json_upload").on("click", function () {
+                $('#slider_image_json_upload_show').html("")
+                slider_image = []
+            });
+
+            gg_upload_pic("#slider_image_json_upload", true, function (res) {
+                if (res.code === 0) {
+                    let html = '<div class="layui-col-lg2 layui-col-md2">' +
+                        '<img src="' + res.data + '" class="full-pic">' +
+                        // '<input type="hidden" name="slider_image[]" value="' + res.data + '">' +
+                        '</div>';
+                    slider_image.push(res.data)
+                    $('#slider_image_json_upload_show').append(html)
+                    form.val("goods-add", {
+                        slider_image:slider_image,
+                    });
+                    form.render();
+                } else {
+                    layer.msg(res.msg)
+                }
+            })
+
+            $(function(){
+                //初始化pid参数
+                gg_request('get', '/goods/api/get/{{.ID}}', {}, function (res) {
+                    console.log(res.data)
+                    if(res.code === 0){
+                        let html = '';
+                        let data = JSON.parse(res.data.slider_image_json)
+                        console.log(data)
+                        $.each(data, function (i) {
+                            html += '<div class="layui-col-lg2 layui-col-md2">' +
+                                '<img src="' + data[i] + '" class="full-pic">' +
+                                // '<input type="hidden" name="slider_image[]" value="' + res.data + '">' +
+                                '</div>';
+                        })
+                        $("#slider_image_json_upload_show").html(html);
+                    }else{
+                        layer.msg(res.msg)
+                    }
+                });
+            });
+        });
+    </script>
+{{end}}
