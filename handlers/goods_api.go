@@ -43,34 +43,17 @@ func GoodsAddApi(c *gin.Context) {
 	output := ggOutput(c)
 	goodsModel := new(models.Goods)
 	goodsUpdateParams := ggParams(c).(*params.GoodsAddParams)
-	goodsModel.Name = goodsUpdateParams.Name
-	goodsModel.MainInfo = goodsUpdateParams.MainInfo
-	goodsModel.MainImage = goodsUpdateParams.MainImage
+	helper.ReflectiveStructToStructWithJson(goodsModel, goodsUpdateParams)
 	goodsModel.SliderImageJson = _sliderImageJson(goodsUpdateParams.SliderImage)
 	adminId, _ := services.GetAdminIdByToken(c.Keys["token"].(string))
 	goodsModel.AdminId = adminId
-	goodsModel.Keyword = goodsUpdateParams.Keyword
-	goodsModel.BarCode = goodsUpdateParams.BarCode
-	goodsModel.CategoryId = helper.JsonNumber2Uint(goodsUpdateParams.CategoryId)
-	goodsModel.Price = helper.JsonNumber2Float64(goodsUpdateParams.Price)
-	goodsModel.VipPrice = helper.JsonNumber2Float64(goodsUpdateParams.VipPrice)
-	goodsModel.OtPrice = helper.JsonNumber2Float64(goodsUpdateParams.OtPrice)
-	goodsModel.Postage = helper.JsonNumber2Float64(goodsUpdateParams.Postage)
-	goodsModel.UnitName = goodsUpdateParams.UnitName
-	goodsModel.Sort = helper.JsonNumber2Int(goodsUpdateParams.Sort)
-	goodsModel.Sales = helper.JsonNumber2Int(goodsUpdateParams.Sales)
-	goodsModel.Stock = helper.JsonNumber2Int(goodsUpdateParams.Stock)
 	goodsModel.IsShow = helper.Switch2Int(goodsUpdateParams.IsShow)
 	goodsModel.IsHot = helper.Switch2Int(goodsUpdateParams.IsHot)
 	goodsModel.IsBenefit = helper.Switch2Int(goodsUpdateParams.IsBenefit)
 	goodsModel.IsBest = helper.Switch2Int(goodsUpdateParams.IsBest)
 	goodsModel.IsNew = helper.Switch2Int(goodsUpdateParams.IsNew)
 	goodsModel.IsPostage = helper.Switch2Int(goodsUpdateParams.IsPostage)
-	goodsModel.GiveIntegral = helper.JsonNumber2Int(goodsUpdateParams.GiveIntegral)
-	goodsModel.Cost = helper.JsonNumber2Float64(goodsUpdateParams.Cost)
 	goodsModel.IsGood = helper.Switch2Int(goodsUpdateParams.IsGood)
-	goodsModel.VirtualSales = helper.JsonNumber2Int(goodsUpdateParams.VirtualSales)
-	goodsModel.Browse = helper.JsonNumber2Int(goodsUpdateParams.Browse)
 	err := services.AddGoods(goodsModel)
 	if err != nil {
 		setGGError(c, err)
@@ -111,21 +94,7 @@ func GoodsUpdateApi(c *gin.Context) {
 	goodsModel := new(models.Goods)
 	goodsModel.ID = id
 	goodsUpdateParams := ggParams(c).(*params.GoodsUpdateParams)
-	goodsModel.Name = goodsUpdateParams.Name
-	goodsModel.Keyword = goodsUpdateParams.Keyword
-	goodsModel.BarCode = goodsUpdateParams.BarCode
-	goodsModel.Price = helper.JsonNumber2Float64(goodsUpdateParams.Price)
-	goodsModel.VipPrice = helper.JsonNumber2Float64(goodsUpdateParams.VipPrice)
-	goodsModel.OtPrice = helper.JsonNumber2Float64(goodsUpdateParams.OtPrice)
-	goodsModel.Postage = helper.JsonNumber2Float64(goodsUpdateParams.Postage)
-	goodsModel.UnitName = goodsUpdateParams.UnitName
-	goodsModel.Sort = helper.JsonNumber2Int(goodsUpdateParams.Sort)
-	goodsModel.Sales = helper.JsonNumber2Int(goodsUpdateParams.Sales)
-	goodsModel.Stock = helper.JsonNumber2Int(goodsUpdateParams.Stock)
-	goodsModel.GiveIntegral = helper.JsonNumber2Int(goodsUpdateParams.GiveIntegral)
-	goodsModel.Cost = helper.JsonNumber2Float64(goodsUpdateParams.Cost)
-	goodsModel.VirtualSales = helper.JsonNumber2Int(goodsUpdateParams.VirtualSales)
-	goodsModel.Browse = helper.JsonNumber2Int(goodsUpdateParams.Browse)
+	helper.ReflectiveStructToStructWithJson(goodsModel, goodsUpdateParams)
 	err := services.UpdateOne(goodsModel)
 	if err != nil {
 		setGGError(c, err)

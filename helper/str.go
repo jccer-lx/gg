@@ -33,7 +33,7 @@ func String2Uint(str string) uint {
 	i, err := strconv.Atoi(str)
 	if err != nil {
 		logrus.Error("String2Uint error:", err)
-		panic(err)
+		//panic(err)
 		return 0
 	}
 	return uint(i)
@@ -44,7 +44,29 @@ func String2Int(str string) int {
 	i, err := strconv.Atoi(str)
 	if err != nil {
 		logrus.Error("String2Int error:", err)
-		panic(err)
+		//panic(err)
+		return 0
+	}
+	return i
+}
+
+//string -> float64
+func String2Float64(str string) float64 {
+	f, err := strconv.ParseFloat(str, 64)
+	if err != nil {
+		logrus.Error("String2Float64 error:", err)
+		//panic(err)
+		return 0
+	}
+	return f
+}
+
+//string -> int64
+func String2Int64(str string) int64 {
+	i, err := strconv.ParseInt(str, 10, 64)
+	if err != nil {
+		logrus.Error("String2Int error:", err)
+		//panic(err)
 		return 0
 	}
 	return i
@@ -54,7 +76,7 @@ func JsonNumber2Uint(jn json.Number) uint {
 	i, err := jn.Int64()
 	if err != nil {
 		logrus.Error("JsonNumber2Uint error:", err)
-		panic(err)
+		//panic(err)
 		return 0
 	}
 	return uint(i)
@@ -64,7 +86,7 @@ func JsonNumber2Int(jn json.Number) int {
 	i, err := jn.Int64()
 	if err != nil {
 		logrus.Error("JsonNumber2Int error:", err)
-		panic(err)
+		//panic(err)
 		return 0
 	}
 	return int(i)
@@ -74,7 +96,7 @@ func JsonNumber2Int64(jn json.Number) int64 {
 	i, err := jn.Int64()
 	if err != nil {
 		logrus.Error("JsonNumber2Int64 error:", err)
-		panic(err)
+		//panic(err)
 		return 0
 	}
 	return i
@@ -84,7 +106,7 @@ func JsonNumber2Float64(jn json.Number) float64 {
 	i, err := jn.Float64()
 	if err != nil {
 		logrus.Error("JsonNumber2Float64 error:", err)
-		panic(err)
+		//panic(err)
 		return 0.00
 	}
 	return i

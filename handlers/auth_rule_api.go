@@ -38,11 +38,7 @@ func AuthRuleListApi(c *gin.Context) {
 func AuthRuleAddApi(c *gin.Context) {
 	authRuleModel := new(models.AuthRule)
 	authRuleParams := ggParams(c).(*params.AuthRuleParams)
-	authRuleModel.Name = authRuleParams.Name
-	authRuleModel.Title = authRuleParams.Title
-	authRuleModel.Pid = helper.JsonNumber2Uint(authRuleParams.Pid)
-	authRuleModel.Remark = authRuleParams.Remark
-	authRuleModel.Weigh = helper.JsonNumber2Int(authRuleParams.Weigh)
+	helper.ReflectiveStructToStructWithJson(authRuleModel, authRuleParams)
 	err := services.AddAuthRule(authRuleModel)
 	if err != nil {
 		setGGError(c, err)
@@ -72,11 +68,8 @@ func AuthRuleUpdateApi(c *gin.Context) {
 	}
 	authRuleModel := new(models.AuthRule)
 	authRuleUpdateParams := ggParams(c).(*params.AuthRuleUpdateParams)
+	helper.ReflectiveStructToStructWithJson(authRuleModel, authRuleUpdateParams)
 	authRuleModel.ID = id
-	authRuleModel.Name = authRuleUpdateParams.Name
-	authRuleModel.Title = authRuleUpdateParams.Title
-	authRuleModel.Remark = authRuleUpdateParams.Remark
-	authRuleModel.Weigh = helper.JsonNumber2Int(authRuleUpdateParams.Weigh)
 	err := services.UpdateOne(authRuleModel)
 	if err != nil {
 		setGGError(c, err)
