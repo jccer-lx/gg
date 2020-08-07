@@ -73,4 +73,10 @@ func InitRouter(engine *gin.Engine) {
 	goods.PUT("/api/edit/:id", handlers.GoodsUpdateApi)
 	goods.PUT("/api/update_for_field", handlers.UpdateGoodsForFieldApi)
 	goods.GET("/api/get/:id", handlers.GoodsGetApi)
+
+	//jd商品
+	jdGoods := engine.Group("/jd_goods")
+	jdGoods.GET("/view/list", handlers.GGView)
+
+	jdGoods.GET("/api/list", handlers.JdGoodsListApi)
 }

@@ -11,7 +11,7 @@ import (
 
 //通过weight生成对应的基础模板
 func main() {
-	t := models.Goods{}
+	t := models.JdItemModel{}
 	fieldList, err := getStructFields(t)
 	if err != nil {
 		panic(err)

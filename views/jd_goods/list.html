@@ -1,0 +1,50 @@
+{{define "jd_goods/list.tpl"}}
+    <style>
+        .jd_goods-small-main_image {
+            width: 28px;
+            height: 28px;
+            padding: 0 2px;
+        }
+    </style>
+    <table id="jd_goods-table" lay-filter="jd_goods-table" lay-skin="" lay-size="">
+
+    </table>
+    <script type="text/html" id="tool-jd_goods-table">
+
+    </script>
+
+    <script>
+        layui.use(['jquery', 'form', 'table', 'element'], function () {
+            let $ = layui.jquery;
+            let form = layui.form;
+            let table = layui.table;
+            let gg_table_option = {
+                table_name: 'jd_goods',
+                cols: [[
+                    {field:"sku_id",title:"SkuID",sort:"true"},
+                    {field:"brand_id",title:"BrandID",sort:"true",hide: true},
+                    {field:"brand_name",title:"品牌",sort:"true"},
+                    {field:"p_name",title:"PName",sort:"true",hide: true},
+                    {field:"sku_name",title:"SkuName",sort:"true",hide: true},
+                    {field:"product_area",title:"产地",sort:"true"},
+                    {field:"sale_unit",title:"单位",sort:"true"},
+                    {field:"category_json",title:"CategoryJson",sort:"true",hide: true},
+                    {field:"length",title:"包装长mm",sort:"true"},
+                    {field:"width",title:"包装宽mm",sort:"true"},
+                    {field:"height",title:"包装高mm",sort:"true"},
+                    {field:"sale_prop_json",title:"SalePropJson",sort:"true",hide: true},
+                    {field:"sale_prop_seq_json",title:"SalePropSeqJson",sort:"true",hide: true},
+                    {field:"new_color_size_json",title:"NewColorSizeJson",sort:"true",hide: true},
+                    {field:"price_l",title:"划线价",sort:"true"},
+                    {field:"price_m",title:"市场价"},
+                    {field:"price_o_p",title:"原价",sort:"true"},
+                    {field:"price_p",title:"现价",sort:"true"},
+                    {field:"stock_state",title:"StockState",sort:"true",hide: true},
+                    {field:"stock_state_name",title:"库存状态",sort:"true"},
+                    {field:"stock_area_json",title:"StockAreaJson",sort:"true",hide: true}]]
+            }
+            gg_table(gg_table_option);
+
+        });
+    </script>
+{{end}}
