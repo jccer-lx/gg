@@ -9,6 +9,7 @@ require (
 	github.com/go-playground/universal-translator v0.17.0
 	github.com/go-playground/validator/v10 v10.3.0
 	github.com/golang/protobuf v1.4.2 // indirect
+	github.com/gorilla/websocket v1.4.2
 	github.com/jinzhu/configor v1.2.0
 	github.com/jinzhu/gorm v1.9.13
 	github.com/json-iterator/go v1.1.10 // indirect

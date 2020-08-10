@@ -79,4 +79,19 @@ func InitRouter(engine *gin.Engine) {
 	jdGoods.GET("/view/list", handlers.GGView)
 
 	jdGoods.GET("/api/list", handlers.JdGoodsListApi)
+
+	//wsTable
+	wsTable := engine.Group("/ws_table")
+	wsTable.GET("/view/list", handlers.GGView)
+	wsTable.GET("/view/add", handlers.GGView)
+	wsTable.GET("/view/wt/:id", handlers.GGView)
+	//ws
+	wsTable.GET("/wst", handlers.WsTable)
+
+	wsTable.GET("/api/list", handlers.WsTableListApi)
+	wsTable.POST("/api/add", handlers.WsTableAddApi)
+
+	wsTable.GET("/api/wt_data/:id", handlers.WsTableDataApi)
+	wsTable.GET("/api/get_wt_fields/:id", handlers.WsTableFieldsApi)
+
 }

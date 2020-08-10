@@ -1,0 +1,29 @@
+{{define "ws_table/list.tpl"}}
+    <table id="ws_table-table" lay-filter="ws_table-table" lay-skin="" lay-size="">
+
+    </table>
+    <script type="text/html" id="tool-ws_table-table">
+        <div class="layui-btn-container">
+            <button class="layui-btn layui-btn-sm" lay-event="add">添加</button>
+{{/*            <button class="layui-btn layui-btn-sm layui-btn-danger" lay-event="del">删除</button>*/}}
+        </div>
+    </script>
+
+    <script>
+        layui.use(['jquery', 'form', 'table', 'element'], function () {
+            let $ = layui.jquery;
+            let form = layui.form;
+            let table = layui.table;
+            let gg_table_option = {
+                table_name: 'ws_table',
+                cols: [[
+                    {field:"id",title:"id",sort:"true"},
+                    {field:"title",title:"标题",sort:"true"},
+                    {field:"ctrl",title:"操作",templet: function (d) {
+                            return '<a class="" href="/ws_table/view/wt/' + d.id +'" target="_blank">详情</a>'
+                        }}]]
+            }
+            gg_table(gg_table_option);
+        });
+    </script>
+{{end}}

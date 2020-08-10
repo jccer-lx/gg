@@ -1,0 +1,159 @@
+{{define "ws_table/wt.tpl"}}
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+        <title>gg</title>
+        <link rel="stylesheet" href="/assets/layui/css/layui.css">
+        <link rel="stylesheet" href="/assets/gg.css">
+        {{/*        <link rel="stylesheet" href="/assets/layui/css/gg.css">*/}}
+        <style>
+            .lock-table-col{
+                border: #eb7350 1px solid;
+                background-color: #eb7350;
+            }
+        </style>
+    </head>
+    <body class="layui-layout-body">
+    <table id="wt-table" lay-filter="wt-table" lay-skin="" lay-size="">
+
+    </table>
+    <script type="text/html" id="tool-ws_table-table">
+
+    </script>
+
+    <script src="/assets/layui/layui.all.js"></script>
+    <script src="/assets/layer/layer.js"></script>
+    <script>
+        layui.use(['jquery', 'form', 'table', 'element'], function () {
+            let $ = layui.jquery;
+            let form = layui.form;
+            let table = layui.table;
+            let ws = null;
+            let wsMessage = {
+                ctrl : 0, //0:普通消息，1:锁表，2: 解锁， 3.修改数据
+                event_key : "",
+                row_num : 0, //行号
+                latest_data : "", //最新数据
+                data_id : 0, //数据id
+            }
+            //初始化字段
+            $.get("/ws_table/api/get_wt_fields/{{.ID}}", function (res) {
+                table.render({
+                    // toolbar: '#tool-' + gg_table_option.table_name + '-table',
+                    elem: '#wt-table',
+                    url: '/ws_table/api/wt_data/{{.ID}}',
+                    page: false, //开启分页
+                    cols: [res.data],
+                });
+            })
+
+            table.on('edit(wt-table)', function (obj) {
+                let data = {
+                    ctrl : 3,
+                    event_key : obj.field,
+                    row_num : obj.tr[0].sectionRowIndex,
+                    latest_data : obj.value,
+                    data_id : obj.data.id,
+                }
+                ws.send(JSON.stringify(data));
+            });
+
+            table.on('tool(wt-table)', function (obj) {
+                // console.log(obj.event)
+                // console.log(obj)
+                // console.log(obj.event)
+                let rowNum = obj.tr[0].sectionRowIndex
+                sendLockTableCol(obj.event, rowNum)
+                let colInput = $('td[lay-event='+obj.event+']').find("input")
+                colInput.on("focusout", function () {
+                    sendUnLockTableCol(obj.event, rowNum)
+                })
+            });
+
+            //发送锁表消息
+            function sendLockTableCol(eventKey, rowNum) {
+                ws.send(JSON.stringify({
+                    ctrl : 1,
+                    event_key : eventKey,
+                    row_num : rowNum,
+                }));
+            }
+            //发送解锁表消息
+            function sendUnLockTableCol(eventKey, rowNum) {
+                ws.send(JSON.stringify({
+                    ctrl : 2,
+                    event_key : eventKey,
+                    row_num : rowNum,
+                }));
+            }
+
+            //锁定表格
+            function lockTableCol(wtMessage){
+                let colObj = $('tr[data-index="'+wtMessage.row_num+'"] td[lay-event='+wtMessage.event_key+']')
+                colObj.addClass("lock-table-col")
+                colObj.attr('data-edit',"")
+            }
+            //解锁表格
+            function unLockTableCol(wtMessage){
+                let colObj = $('tr[data-index="'+wtMessage.row_num+'"] td[lay-event='+wtMessage.event_key+']')
+                colObj.removeClass("lock-table-col")
+                colObj.attr('data-edit',"text")
+            }
+            //修改表格值
+            function changeTableCol(wtMessage){
+                let colObj = $('tr[data-index="'+wtMessage.row_num+'"] td[lay-event='+wtMessage.event_key+'] div')
+                colObj.html(wtMessage.latest_data);
+            }
+
+
+            $(function () {
+                $.get("/ws_table/api/get_wt_fields/{{.ID}}", function (res) {
+                    table.render({
+                        // toolbar: '#tool-' + gg_table_option.table_name + '-table',
+                        elem: '#wt-table',
+                        url: '/ws_table/api/wt_data/{{.ID}}',
+                        page: false, //开启分页
+                        cols: [res.data],
+                    });
+                    table.reload();
+                })
+
+                ws = new WebSocket("ws://127.0.0.1:8088/ws_table/wst"); //创建WebSocket连接
+                ws.onopen = function(){
+                    //当WebSocket创建成功时，触发onopen事件
+                    console.log("open");
+                }
+                ws.onmessage = function(e){
+                    let wtMessage = JSON.parse(e.data)
+                    console.log(wtMessage)
+                    switch (wtMessage.ctrl) {
+                        case 1:
+                            lockTableCol(wtMessage);
+                            break
+                        case 2:
+                            unLockTableCol(wtMessage);
+                            break
+                        case 3:
+                            changeTableCol(wtMessage);
+                            break
+                        default:
+                            console.log(wtMessage)
+                    }
+                }
+                ws.onclose = function(e){
+                    //当客户端收到服务端发送的关闭连接请求时，触发onclose事件
+                    console.log("close");
+                }
+                ws.onerror = function(e){
+                    //如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
+                    console.log(e);
+                }
+            })
+        });
+    </script>
+
+    </body>
+    </html>
+{{end}}

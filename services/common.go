@@ -79,3 +79,15 @@ func GetAdminIdByToken(token string) (uint, error) {
 	}
 	return adminModel.ID, nil
 }
+
+//修改某个字段
+func SetField(tableName string, id uint, data map[string]interface{}) error {
+	db := databases.NewDB()
+	err := db.Table(tableName).Where(map[string]interface{}{
+		"id": id,
+	}).Update(data).Error
+	if !checkError("SetField", err) {
+		return err
+	}
+	return nil
+}

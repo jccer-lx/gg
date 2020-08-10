@@ -21,6 +21,7 @@ func SessionMiddleware(c *gin.Context) {
 	logrus.Info("token:", token)
 	if token == nil {
 		redirectMiddleware(c)
+		return
 	}
 	//session，具体是把token放到keys里
 	c.Keys["token"] = token.(string)

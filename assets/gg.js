@@ -2,7 +2,7 @@ var cache = []
 var layerIndex;
 
 // jquery ajax
-function gg_request(type, url, data, successCallback) {
+function JSONgg_request(type, url, data, successCallback) {
     layui.use(['layer', 'jquery'], function () {
         let layer = layui.layer;
         let $ = layui.jquery;
