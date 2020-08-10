@@ -1,3 +1,4 @@
 vendor/
 assets/uploads/
 !assets/uploads/README.md
+.idea
