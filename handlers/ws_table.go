@@ -76,13 +76,18 @@ func WsTable(c *gin.Context) {
 		if err != nil {
 			break
 		}
-		fmt.Println(t)
-		fmt.Println(string(reply))
+		if t != websocket.TextMessage {
+			logrus.Info("message type != 1")
+			continue
+		}
+		//fmt.Println(t)
+		//fmt.Println(string(reply))
 		//json -> struct
 		wstM := new(wstMessage)
 		err = json.Unmarshal(reply, wstM)
 		if err != nil {
-			break
+			logrus.Error("json.Unmarshal(reply, wstM) ", err)
+			continue
 		}
 		go wsTableMessage(u, wstM)
 	}

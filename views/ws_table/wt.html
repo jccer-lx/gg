@@ -38,6 +38,7 @@
                 latest_data : "", //最新数据
                 data_id : 0, //数据id
             }
+            let lockCol = {}; //锁col记录
             //初始化字段
             $.get("/ws_table/api/get_wt_fields/{{.ID}}", function (res) {
                 table.render({
@@ -65,6 +66,9 @@
                 // console.log(obj)
                 // console.log(obj.event)
                 let rowNum = obj.tr[0].sectionRowIndex
+                if(lockCol[rowNum+":"+obj.event] === true){
+                    return
+                }
                 sendLockTableCol(obj.event, rowNum)
                 let colInput = $('td[lay-event='+obj.event+']').find("input")
                 colInput.on("focusout", function () {
@@ -79,6 +83,7 @@
                     event_key : eventKey,
                     row_num : rowNum,
                 }));
+                lockCol[rowNum+":"+eventKey] = true
             }
             //发送解锁表消息
             function sendUnLockTableCol(eventKey, rowNum) {
@@ -87,10 +92,12 @@
                     event_key : eventKey,
                     row_num : rowNum,
                 }));
+                lockCol[rowNum+":"+eventKey] = false
             }
 
             //锁定表格
             function lockTableCol(wtMessage){
+                lockCol[wtMessage.row_num+":"+wtMessage.event_key] = true
                 let colObj = $('tr[data-index="'+wtMessage.row_num+'"] td[lay-event='+wtMessage.event_key+']')
                 colObj.addClass("lock-table-col")
                 colObj.attr('data-edit',"")
@@ -100,6 +107,7 @@
                 let colObj = $('tr[data-index="'+wtMessage.row_num+'"] td[lay-event='+wtMessage.event_key+']')
                 colObj.removeClass("lock-table-col")
                 colObj.attr('data-edit',"text")
+                lockCol[wtMessage.row_num+":"+wtMessage.event_key] = false
             }
             //修改表格值
             function changeTableCol(wtMessage){
@@ -120,7 +128,7 @@
                     table.reload();
                 })
 
-                ws = new WebSocket("ws://127.0.0.1:8088/ws_table/wst"); //创建WebSocket连接
+                ws = new WebSocket("ws://" + window.location.host + "/ws_table/wst"); //创建WebSocket连接
                 ws.onopen = function(){
                     //当WebSocket创建成功时，触发onopen事件
                     console.log("open");
