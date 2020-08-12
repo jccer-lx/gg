@@ -32,9 +32,9 @@ func redirectMiddleware(c *gin.Context) {
 	if isAjax(c) {
 		output := new(helper.Output)
 		output.UnLogin()
-		c.JSON(http.StatusPermanentRedirect, output)
+		c.JSON(http.StatusTemporaryRedirect, output)
 	} else {
-		c.Redirect(http.StatusPermanentRedirect, "/public/view/login")
+		c.Redirect(http.StatusTemporaryRedirect, "/public/view/login")
 	}
 	c.Abort()
 }

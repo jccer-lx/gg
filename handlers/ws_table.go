@@ -15,6 +15,9 @@ import (
 var clientConnList = make(map[string]*websocket.Conn)
 var sendAllClientMessageChan = make(chan *sendAllClientMessage)
 
+//消息序号
+var messageNo = 0
+
 type sendAllClientMessage struct {
 	Sender    string
 	WsMessage []byte
@@ -26,6 +29,7 @@ type wstMessage struct {
 	RowNum     int    `json:"row_num"`
 	LatestData string `json:"latest_data"`
 	DataId     uint   `json:"data_id"`
+	MessageId  int    `json:"message_id"`
 }
 
 const (
@@ -120,6 +124,9 @@ func wsTableMessage(sender string, wstM *wstMessage) {
 
 //广播内容(排除发送者)
 func sendAllClientWithoutSender(sender string, wstM *wstMessage) {
+	//消息序号
+	messageNo++
+	wstM.MessageId = messageNo
 	wstMByte, err := json.Marshal(wstM)
 	if err != nil {
 		return

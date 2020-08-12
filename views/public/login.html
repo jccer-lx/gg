@@ -78,7 +78,7 @@
                         if(res.code !== 0){
                             layer.msg(res.msg)
                         }else{
-                            window.location.href = "/"
+                            window.location.href = "/?time=" + (new Date()).valueOf();
                         }
                     }
                 })

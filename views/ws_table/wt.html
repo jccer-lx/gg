@@ -9,13 +9,75 @@
         <link rel="stylesheet" href="/assets/gg.css">
         {{/*        <link rel="stylesheet" href="/assets/layui/css/gg.css">*/}}
         <style>
-            .lock-table-col{
-                border: #eb7350 1px solid;
-                background-color: #eb7350;
+            .lock0-table-col{
+                background-color: #f7d5fe;
             }
+            .lock1-table-col{
+                background-color: #ffe5f3;
+            }
+            .lock2-table-col{
+                background-color: #d2ebc6;
+            }
+            .lock3-table-col{
+                background-color: #9cd4d8;
+            }
+            .lock4-table-col{
+                background-color: #cbb9ff;
+            }
+            .lock5-table-col{
+                background-color: #ffe792;
+            }
+            .lock6-table-col{
+                background-color: #deedad;
+            }
+            .lock7-table-col{
+                background-color: #d3d3f5;
+            }
+            .lock8-table-col{
+                background-color: #d8e6da;
+            }
+            .lock9-table-col{
+                background-color: #fbe0dc;
+            }
+            .lock10-table-col{
+                background-color: #e3f4d0;
+            }
+            .lock11-table-col{
+                background-color: #bcd6e5;
+            }
+            .lock12-table-col{
+                background-color: #b8a2ff;
+            }
+            .lock13-table-col{
+                background-color: #fffdba;
+            }
+            .lock14-table-col{
+                background-color: #abcf53;
+            }
+            .lock15-table-col{
+                background-color: #aab6e1;
+            }
+            .lock16-table-col{
+                background-color: #c9c4c0;
+            }
+            .lock17-table-col{
+                background-color: #ffbdce;
+            }
+            .lock18-table-col{
+                background-color: #dcf8ec;
+            }
+            .lock19-table-col{
+                background-color: #bcdaf2;
+            }
+
         </style>
     </head>
     <body class="layui-layout-body">
+    <script type="text/html" id="tool-ws-table">
+        <div class="layui-btn-container">
+
+        </div>
+    </script>
     <table id="wt-table" lay-filter="wt-table" lay-skin="" lay-size="">
 
     </table>
@@ -37,12 +99,13 @@
                 row_num : 0, //行号
                 latest_data : "", //最新数据
                 data_id : 0, //数据id
+                message_id : "", //消息id
             }
             let lockCol = {}; //锁col记录
             //初始化字段
             $.get("/ws_table/api/get_wt_fields/{{.ID}}", function (res) {
                 table.render({
-                    // toolbar: '#tool-' + gg_table_option.table_name + '-table',
+                    toolbar: '#tool-ws-table',
                     elem: '#wt-table',
                     url: '/ws_table/api/wt_data/{{.ID}}',
                     page: false, //开启分页
@@ -99,13 +162,13 @@
             function lockTableCol(wtMessage){
                 lockCol[wtMessage.row_num+":"+wtMessage.event_key] = true
                 let colObj = $('tr[data-index="'+wtMessage.row_num+'"] td[lay-event='+wtMessage.event_key+']')
-                colObj.addClass("lock-table-col")
+                colObj.addClass("lock" + wtMessage.message_id % 20 + "-table-col")
                 colObj.attr('data-edit',"")
             }
             //解锁表格
             function unLockTableCol(wtMessage){
                 let colObj = $('tr[data-index="'+wtMessage.row_num+'"] td[lay-event='+wtMessage.event_key+']')
-                colObj.removeClass("lock-table-col")
+                colObj.removeClass()
                 colObj.attr('data-edit',"text")
                 lockCol[wtMessage.row_num+":"+wtMessage.event_key] = false
             }
@@ -119,7 +182,7 @@
             $(function () {
                 $.get("/ws_table/api/get_wt_fields/{{.ID}}", function (res) {
                     table.render({
-                        // toolbar: '#tool-' + gg_table_option.table_name + '-table',
+                        toolbar: '#tool-ws-table',
                         elem: '#wt-table',
                         url: '/ws_table/api/wt_data/{{.ID}}',
                         page: false, //开启分页
