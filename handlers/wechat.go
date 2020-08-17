@@ -99,44 +99,37 @@ func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
 func InitMenu() {
 	officialAccount := officialAccount()
 	m := officialAccount.GetMenu()
-	//我的
+	//1.我的
 	myBtn := new(menu.Button)
-	//充值
+	//1-1.个人信息
+	userInfoBtn := new(menu.Button)
+	userInfoBtn.SetViewButton("个人信息", "http://www.baidu.com")
+	//1-2.交易信息
+	transactionBtn := new(menu.Button)
+	transactionBtn.SetViewButton("交易信息", "http://www.baidu.com")
+	//1-3.余额查询
+	moneyBtn := new(menu.Button)
+	moneyBtn.SetClickButton("余额查询", "money")
+	//1-4.充值
+	rechargeBtn := new(menu.Button)
+	rechargeBtn.SetViewButton("充值", "http://www.baidu.com")
 	myBtn.SetSubButton("我的", []*menu.Button{
-		//个人信息
-		{
-			Name: "个人信息",
-			URL:  "http://www.baidu.com",
-		},
-		{
-			Name: "交易信息",
-			URL:  "http://www.baidu.com",
-		},
-		{
-			Name: "余额查询",
-			Key:  "money",
-		},
-		{
-			Name: "充值",
-			URL:  "http://www.baidu.com",
-		},
+		userInfoBtn,
+		transactionBtn,
+		moneyBtn,
+		rechargeBtn,
 	})
-
-	//付款
+	//2.付款
 	payBtn := new(menu.Button)
-	payBtn.Name = "付款"
-	payBtn.URL = "http://www.baidu.com"
-
-	//系统
+	payBtn.SetViewButton("付款", "http://www.baidu.com")
+	//3.系统
 	systemBtn := new(menu.Button)
-	//关于我们
+	//3-1.关于我们
 	aboutBtn := new(menu.Button)
-	aboutBtn.Name = "关于我们"
-	aboutBtn.URL = "http://www.baidu.com"
-	//商家绑定
+	aboutBtn.SetViewButton("关于我们", "http://www.baidu.com")
+	//3-2.商家绑定
 	storeBtn := new(menu.Button)
 	storeBtn.SetScanCodePushButton("商家绑定", "store")
-
 	//保存到菜单
 	err := m.SetMenu([]*menu.Button{
 		myBtn,
