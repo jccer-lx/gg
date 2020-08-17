@@ -99,56 +99,49 @@ func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
 func InitMenu() {
 	officialAccount := officialAccount()
 	m := officialAccount.GetMenu()
-	//选择题快捷键
-	choiceBtn := new(menu.Button)
-	choiceABtn := new(menu.Button)
-	choiceBBtn := new(menu.Button)
-	choiceCBtn := new(menu.Button)
-	choiceDBtn := new(menu.Button)
-	choiceEBtn := new(menu.Button)
-	choiceBtn.SetSubButton("选择键", []*menu.Button{
-		choiceABtn,
-		choiceBBtn,
-		choiceCBtn,
-		choiceDBtn,
-		choiceEBtn,
+	//我的
+	myBtn := new(menu.Button)
+	//充值
+	myBtn.SetSubButton("我的", []*menu.Button{
+		//个人信息
+		{
+			Name: "个人信息",
+			URL:  "http://www.baidu.com",
+		},
+		{
+			Name: "交易信息",
+			URL:  "http://www.baidu.com",
+		},
+		{
+			Name: "余额查询",
+			Key:  "money",
+		},
+		{
+			Name: "充值",
+			URL:  "http://www.baidu.com",
+		},
 	})
-	choiceABtn.SetClickButton("选项A", WxOptionA)
-	choiceBBtn.SetClickButton("选项B", WxOptionB)
-	choiceCBtn.SetClickButton("选项C", WxOptionC)
-	choiceDBtn.SetClickButton("选项D", WxOptionD)
-	choiceEBtn.SetClickButton("选项E", WxOptionE)
-	//判断题快捷键
-	//judgeBtn := new(menu.Button)
-	//judgeTrueBtn := new(menu.Button)
-	//judgeFalseBtn := new(menu.Button)
-	//judgeBtn.SetSubButton("判断键", []*menu.Button{
-	//	judgeTrueBtn,
-	//	judgeFalseBtn,
-	//})
-	//judgeTrueBtn.SetClickButton("对", WxJudgeTrue)
-	//judgeFalseBtn.SetClickButton("错", WxJudgeFalse)
-	//题目纠错
-	correctionBtn := new(menu.Button)
-	correctionBtn.SetClickButton("题目纠错", WxCorrection)
-	//其他
-	otherBtn := new(menu.Button)
-	//开始答题
-	beginBtn := new(menu.Button)
-	beginBtn.SetClickButton("答题", WxBegin)
-	//我的战绩
-	myScore := new(menu.Button)
-	myScore.SetClickButton("我的战绩", WxMyScore)
-	otherBtn.SetSubButton("我的", []*menu.Button{
-		beginBtn,
-		myScore,
-	})
+
+	//付款
+	payBtn := new(menu.Button)
+	payBtn.Name = "付款"
+	payBtn.URL = "http://www.baidu.com"
+
+	//系统
+	systemBtn := new(menu.Button)
+	//关于我们
+	aboutBtn := new(menu.Button)
+	aboutBtn.Name = "关于我们"
+	aboutBtn.URL = "http://www.baidu.com"
+	//商家绑定
+	storeBtn := new(menu.Button)
+	storeBtn.SetScanCodePushButton("商家绑定", "store")
+
 	//保存到菜单
 	err := m.SetMenu([]*menu.Button{
-		choiceBtn,
-		//judgeBtn,
-		correctionBtn,
-		otherBtn,
+		myBtn,
+		payBtn,
+		systemBtn,
 	})
 	if err != nil {
 		logrus.Error("m.SetMenu:", err)
