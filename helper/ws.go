@@ -35,7 +35,6 @@ type ReadMessageCallbackFunc = func(ggWS *GGWebsocket, ggWSC *GGWebsocketClient,
 //群发消息体
 type ggMessage struct {
 	MessageType int         `json:"-"`
-	MessageId   int64       `json:"message_id"`
 	Data        interface{} `json:"data"`
 	ClientId    string      `json:"client_id"`
 	IsSystem    bool        `json:"is_system"`
@@ -138,7 +137,7 @@ func (ggWS *GGWebsocket) DeleteClient(ggWSC *GGWebsocketClient) {
 }
 
 //广播
-func (ggWS *GGWebsocket) BroadcastByte(message []byte) {
+func (ggWS *GGWebsocket) BroadcastByte(message []byte) int64 {
 	//消息序号
 	ggWS.messageId++
 	m := new(ggSysMessage)
@@ -151,28 +150,26 @@ func (ggWS *GGWebsocket) BroadcastByte(message []byte) {
 				client.clientId, ggWS.messageId, err)
 		}
 	}
+	return ggWS.messageId
 }
 
 //广播interface{}
-func (ggWS *GGWebsocket) BroadcastInterface(messageData interface{}) error {
-	//消息序号
-	ggWS.messageId++
+func (ggWS *GGWebsocket) BroadcastInterface(messageData interface{}) (int64, error) {
 	m := new(ggMessage)
 	m.MessageType = websocket.TextMessage
-	m.MessageId = ggWS.messageId
 	m.IsSystem = false
 	m.Data = messageData
 	m.SendTime = time.Now()
 	b, err := json.Marshal(m)
 	if err != nil {
-		return err
+		return ggWS.messageId, err
 	}
 	ggWS.BroadcastByte(b)
-	return nil
+	return ggWS.messageId, nil
 }
 
 //广播（排除发送者）
-func (ggWS *GGWebsocket) BroadcastByteWithoutSender(clientId string, message []byte) {
+func (ggWS *GGWebsocket) BroadcastByteWithoutSender(clientId string, message []byte) int64 {
 	//消息序号
 	ggWS.messageId++
 	m := new(ggSysMessage)
@@ -188,24 +185,22 @@ func (ggWS *GGWebsocket) BroadcastByteWithoutSender(clientId string, message []b
 				client.clientId, ggWS.messageId, err)
 		}
 	}
+	return ggWS.messageId
 }
 
 //广播interface{}（排除发送者）
-func (ggWS *GGWebsocket) BroadcastInterfaceWithoutSender(clientId string, messageData interface{}) error {
-	//消息序号
-	ggWS.messageId++
+func (ggWS *GGWebsocket) BroadcastInterfaceWithoutSender(clientId string, messageData interface{}) (int64, error) {
 	m := new(ggMessage)
 	m.MessageType = websocket.TextMessage
-	m.MessageId = ggWS.messageId
 	m.IsSystem = false
 	m.Data = messageData
 	m.SendTime = time.Now()
 	b, err := json.Marshal(m)
 	if err != nil {
-		return err
+		return 0, err
 	}
-	ggWS.BroadcastByteWithoutSender(clientId, b)
-	return nil
+	messageId := ggWS.BroadcastByteWithoutSender(clientId, b)
+	return messageId, nil
 }
 
 //初始化ws

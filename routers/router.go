@@ -94,4 +94,15 @@ func InitRouter(engine *gin.Engine) {
 	wsTable.GET("/api/wt_data/:id", handlers.WsTableDataApi)
 	wsTable.GET("/api/get_wt_fields/:id", handlers.WsTableFieldsApi)
 
+	//plane
+	plane := engine.Group("/plane")
+	plane.GET("/view/list", handlers.GGView)
+
+	plane.GET("/api/list", handlers.PlaneListApi)
+	plane.GET("/api/user_plane_col_list", handlers.GetUserAllPlaneListApi)
+	plane.POST("/api/plane_coordinate", handlers.PlaneCoordinateApi)
+	plane.POST("/api/save_plane", handlers.SavePlaneApi)
+
+	plane.GET("/ws_plane", handlers.PlaneWs)
+
 }

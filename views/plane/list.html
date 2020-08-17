@@ -1,0 +1,227 @@
+{{define "plane/list.tpl"}}
+    <style>
+        tr, td {
+            height: 42px;
+        }
+
+        #plane-col tbody tr:hover, #plane-col .layui-table-click{
+            background-color: #FFFFFF
+        }
+
+        #plane-col tbody td:hover {
+            background-color: #F2F2F2
+        }
+
+        .show-plane {
+            background-color: #ffe792;
+        }
+
+        .save-plane {
+            background-color: #ffa192;
+        }
+
+    </style>
+    <script type="text/html" id="tool-plane-table">
+        <div class="layui-btn-container">
+
+        </div>
+    </script>
+        <div class="layui-fluid">
+            <div class="layui-col-lg5 layui-col-md5" id="plane-col">
+                <table id="plane-table" lay-filter="plane-table" lay-skin="" lay-size="">
+
+                </table>
+            </div>
+            <div class="layui-col-lg7 layui-col-md7">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设置</label>
+                    <div class="layui-input-block">
+                        <div class="layui-form" lay-filter="show-plane">
+                            <div class="layui-form-item">
+                                <label class="layui-form-label">机头方向</label>
+                                <div class="layui-input-block">
+                                    <input type="radio" name="direction" lay-filter="direction" value="up" title="上" checked>
+                                    <input type="radio" name="direction" lay-filter="direction" value="down" title="下">
+                                    <input type="radio" name="direction" lay-filter="direction" value="left" title="左">
+                                    <input type="radio" name="direction" lay-filter="direction" value="right" title="右">
+                                </div>
+                            </div>
+                            <div class="layui-form-item">
+                                <div class="layui-input-block">
+                                    <button class="layui-btn" id="save-plane">确定</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    <script>
+        layui.use(['jquery', 'form', 'table', 'element'], function () {
+            let $ = layui.jquery;
+            let form = layui.form;
+            let table = layui.table;
+            let ws = null;
+            let wsMessage = {
+                ctrl: 0, //0:普通消息，1:锁表，2: 解锁， 3.修改数据
+                event_key: "",
+                row_num: 0, //行号
+                latest_data: "", //最新数据
+                data_id: 0, //数据id
+                message_id: "", //消息id
+            }
+            let stage = 1;//1-设置，2-开始
+
+            //设置时，机头方向
+            let show_plane_direction = "up";
+            //设置时，当前x，y
+            let show_plane_x = "";
+            let show_plane_y = 0;
+
+            table.render({
+                toolbar: '#tool-plane-table',
+                elem: '#plane-table',
+                url: '/plane/api/list',
+                page: false, //开启分页
+
+                cols: [[
+                    {field: "id", title: "Num", width: 52},
+                    {field: "A", title: "A", event: "A", width: 43},
+                    {field: "B", title: "B", event: "B", width: 43},
+                    {field: "C", title: "C", event: "C", width: 43},
+                    {field: "D", title: "D", event: "D", width: 43},
+                    {field: "E", title: "E", event: "E", width: 43},
+                    {field: "F", title: "F", event: "F", width: 43},
+                    {field: "G", title: "G", event: "G", width: 43},
+                    {field: "H", title: "H", event: "H", width: 43},
+                    {field: "I", title: "I", event: "I", width: 43},
+                    {field: "J", title: "J", event: "J", width: 43},
+                    {field: "K", title: "K", event: "K", width: 43},
+                    {field: "L", title: "L", event: "L", width: 43},
+                    {field: "M", title: "M", event: "M", width: 43},
+                    {field: "N", title: "N", event: "N", width: 43},
+                ]],
+            });
+
+            table.on('edit(plane-table)', function (obj) {
+                let data = {
+                    ctrl: 3,
+                    event_key: obj.field,
+                    row_num: obj.tr[0].sectionRowIndex,
+                    latest_data: obj.value,
+                    data_id: obj.data.id,
+                }
+                // ws.send(JSON.stringify(data));
+            });
+
+            table.on('tool(plane-table)', function (obj) {
+                let tdx = obj.event;
+                let tdy = obj.data.id
+                console.log(obj)
+                console.log(tdx, tdy)
+                if(stage === 1) {
+                    gg_request("post", "/plane/api/plane_coordinate",
+                        JSON.stringify({x:tdx, y: tdy, direction: show_plane_direction}),
+                        function (res) {
+                        if(res.code === 0) {
+                            cleanShowPlane()
+                            $.each(res.data, function (i) {
+                                let coordinate = res.data[i]
+                                col(coordinate.x, coordinate.y).addClass("show-plane");
+                            })
+                            show_plane_x = tdx
+                            show_plane_y = tdy
+                        }else{
+                            layer.msg(res.msg)
+                        }
+                    })
+                }
+            });
+
+            function col(x, y) {
+                return $('tr[data-index="'+(y)+'"] td[lay-event="'+x+'"]')
+            }
+
+            function cleanShowPlane(){
+                $(".show-plane").removeClass("show-plane")
+            }
+
+            form.on('radio(direction)', function(data){
+                show_plane_direction = data.value;
+            });
+
+            //
+            $(function () {
+                form.render();
+
+                gg_request("get", "/plane/api/user_plane_col_list", {},function (res) {
+                    if(res.code === 0) {
+                        $.each(res.data, function (i) {
+                            let coordinate = res.data[i]
+                            col(coordinate.x, coordinate.y).addClass("save-plane");
+                        })
+                    }
+                })
+
+                $('#save-plane').on("click", function () {
+                    if(show_plane_x === "" || show_plane_y === 0) {
+                        layer.msg("请先设置飞机")
+                        return
+                    }
+                    gg_request("post", "/plane/api/save_plane",
+                        JSON.stringify({x:show_plane_x, y: show_plane_y, direction: show_plane_direction}),
+                        function (res) {
+                            if(res.code === 0) {
+                                cleanShowPlane()
+                                $.each(res.data, function (i) {
+                                    let coordinate = res.data[i]
+                                    col(coordinate.x, coordinate.y).addClass("save-plane");
+                                })
+                                show_plane_x = ""
+                                show_plane_y = 0
+                            } else {
+                                layer.msg(res.msg)
+                            }
+                        })
+                });
+                let wsUrl = "ws://" + window.location.host + "/plane/ws_plane"
+                ws = new WebSocket(wsUrl); //创建WebSocket连接
+                ws.onopen = function(){
+                    //当WebSocket创建成功时，触发onopen事件
+                    console.log("open");
+                }
+                ws.onmessage = function(e){
+                    let wtMessage = JSON.parse(e.data)
+                    console.log(wtMessage)
+                    // switch (wtMessage.ctrl) {
+                    //     case 1:
+                    //         lockTableCol(wtMessage);
+                    //         break
+                    //     case 2:
+                    //         unLockTableCol(wtMessage);
+                    //         break
+                    //     case 3:
+                    //         changeTableCol(wtMessage);
+                    //         break
+                    //     default:
+                    //         console.log(wtMessage)
+                    // }
+                }
+                ws.onclose = function(e){
+                    //当客户端收到服务端发送的关闭连接请求时，触发onclose事件
+                    console.log("close");
+                }
+                ws.onerror = function(e){
+                    //如果出现连接、处理、接收、发送数据失败的时候触发onerror事件
+                    console.log(e);
+                    setTimeout(function(){
+                        ws = new WebSocket(wsUrl);
+                    }, 3000)
+
+                }
+            })
+        });
+    </script>
+{{end}}
