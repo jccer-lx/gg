@@ -130,6 +130,9 @@ func InitMenu() {
 	//3-2.商家绑定
 	storeBtn := new(menu.Button)
 	storeBtn.SetScanCodePushButton("商家绑定", "store")
+	//3-3.商家收款
+	collectBtn := new(menu.Button)
+	collectBtn.SetScanCodePushButton("商家收款", "collect")
 	systemBtn.SetSubButton("系统", []*menu.Button{
 		aboutBtn,
 		storeBtn,
