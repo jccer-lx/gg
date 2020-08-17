@@ -130,6 +130,10 @@ func InitMenu() {
 	//3-2.商家绑定
 	storeBtn := new(menu.Button)
 	storeBtn.SetScanCodePushButton("商家绑定", "store")
+	systemBtn.SetSubButton("系统", []*menu.Button{
+		aboutBtn,
+		storeBtn,
+	})
 	//保存到菜单
 	err := m.SetMenu([]*menu.Button{
 		myBtn,
