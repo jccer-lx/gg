@@ -14,15 +14,7 @@ func main() {
 
 func createTable() {
 	tableModels := []interface{}{
-		//models.QuestionCategory{},
-		//models.ChoiceQuestion{},
-		//models.MultipleChoiceQuestion{},
-		//models.FillInQuestion{},
-		//models.JudgmentQuestion{},
-		//models.QuestionBank{},
-		//models.User{},
-		//models.QuestionBankCorrection{},
-		models.AnswerRecord{},
+		models.WechatUserInfo{},
 	}
 	//databases.NewDB().DropTable(tableModels...)
 	databases.NewDB().CreateTable(tableModels...)

@@ -1,10 +1,8 @@
 package handlers
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/lvxin0315/gg/etc"
-	"github.com/lvxin0315/gg/services"
 	"github.com/silenceper/wechat/v2"
 	wxCache "github.com/silenceper/wechat/v2/cache"
 	"github.com/silenceper/wechat/v2/officialaccount"
@@ -15,25 +13,6 @@ import (
 )
 
 var oa *officialaccount.OfficialAccount
-
-const (
-	WxOptionA    = "A"
-	WxOptionB    = "B"
-	WxOptionC    = "C"
-	WxOptionD    = "D"
-	WxOptionE    = "E"
-	WxJudgeTrue  = "对"
-	WxJudgeFalse = "错"
-	WxBegin      = "wx_begin"      //开始答题
-	WxMyScore    = "wx_my_score"   //我的战绩
-	WxCorrection = "wx_correction" //题目纠错
-)
-
-//返回消息格式
-const (
-	AnswerErrMessageTpl = `答案：%s
-解析：%s`
-)
 
 //微信接口
 func WeChat(c *gin.Context) {
@@ -70,40 +49,38 @@ func officialAccount() *officialaccount.OfficialAccount {
 		}
 		oa = wc.GetOfficialAccount(cfg)
 	}
+
 	return oa
 }
 
 //消息处理
 func wxMessageFunc(msg wxMessage.MixMessage) *wxMessage.Reply {
-	//记录openid
-	_, _ = services.SaveOpenid(string(msg.FromUserName))
-	reply := wxMessage.Reply{
-		MsgType: wxMessage.MsgTypeText,
-		MsgData: wxMessage.NewText("暂时不能处理"),
-	}
 
 	switch msg.MsgType {
 	case wxMessage.MsgTypeText: //文本类型
-		logrus.Debug("MsgTypeText")
-		msgTypeText(msg, &reply)
+
 	case wxMessage.MsgTypeEvent: //事件类型
-		logrus.Debug("MsgTypeEvent")
-		msgTypeEvent(msg, &reply)
+
 	}
-	logrus.Debug("reply.MsgType:", reply.MsgType)
-	logrus.Debug("reply.MsgData:", reply.MsgData)
-	return &reply
+
+	return nil
 }
 
 //初始化自定义菜单
 func InitMenu() {
 	officialAccount := officialAccount()
-	m := officialAccount.GetMenu()
+	//url处理
+	ggOauth := officialAccount.GetOauth()
+	hostName := etc.Config.Host
+	userInfoUrl, err := ggOauth.GetRedirectURL(hostName+"/v/wx/user_info", "snsapi_userinfo", "")
+	checkMenuError(err)
+	//菜单设置
+	ggMenu := officialAccount.GetMenu()
 	//1.我的
 	myBtn := new(menu.Button)
 	//1-1.个人信息
 	userInfoBtn := new(menu.Button)
-	userInfoBtn.SetViewButton("个人信息", "http://www.baidu.com")
+	userInfoBtn.SetViewButton("个人信息", userInfoUrl)
 	//1-2.交易信息
 	transactionBtn := new(menu.Button)
 	transactionBtn.SetViewButton("交易信息", "http://www.baidu.com")
@@ -129,35 +106,27 @@ func InitMenu() {
 	aboutBtn.SetViewButton("关于我们", "http://www.baidu.com")
 	//3-2.商家绑定
 	storeBtn := new(menu.Button)
-	storeBtn.SetScanCodePushButton("商家绑定", "store")
+	storeBtn.SetScanCodeWaitMsgButton("商家绑定", "store")
 	//3-3.商家收款
 	collectBtn := new(menu.Button)
-	collectBtn.SetScanCodePushButton("商家收款", "collect")
+	collectBtn.SetScanCodeWaitMsgButton("商家收款", "collect")
 	systemBtn.SetSubButton("系统", []*menu.Button{
 		aboutBtn,
 		storeBtn,
+		collectBtn,
 	})
 	//保存到菜单
-	err := m.SetMenu([]*menu.Button{
+	err = ggMenu.SetMenu([]*menu.Button{
 		myBtn,
 		payBtn,
 		systemBtn,
 	})
-	if err != nil {
-		logrus.Error("m.SetMenu:", err)
-	}
+	checkMenuError(err)
 }
 
 //文本消息处理
 func msgTypeText(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
-	//判断是不是答题内容
-	for _, item := range []string{WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse} {
-		if msg.Content == item {
-			//答题内容判断
-			checkQuestion(msg, reply, item)
-			return
-		}
-	}
+
 }
 
 //事件处理
@@ -177,83 +146,13 @@ func msgTypeEvent(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 //菜单点击事件
 func eventClick(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
 	switch msg.EventKey {
-	case WxOptionA, WxOptionB, WxOptionC, WxOptionD, WxOptionE, WxJudgeTrue, WxJudgeFalse:
-		//答题状态
-		checkQuestion(msg, reply, msg.EventKey)
-	case WxBegin: //开始答题
-		reply.MsgType = wxMessage.MsgTypeText
-		reply.MsgData = wxMessage.NewText("开始答题")
 
-	case WxMyScore: //我的战绩
-		reply.MsgType = wxMessage.MsgTypeText
-		reply.MsgData = wxMessage.NewText("我的战绩")
-
-	case WxCorrection: //题目纠错
-		correctionQuestion(msg, reply)
 	}
 }
 
-//发送客服文本消息
-func sendManagerTextMessage(openid string, text string) error {
-	manager := wxMessage.NewMessageManager(officialAccount().GetContext())
-	//构造文本消息
-	customerMessage := wxMessage.NewCustomerTextMessage(openid, text)
-	return manager.Send(customerMessage)
-}
-
-//发送下一题题目信息
-func sendNextQuestionContent(reply *wxMessage.Reply, wxQuestionService *services.WxQuestionService) {
-	nextQuestionStr, err := wxQuestionService.NextQuestion()
+func checkMenuError(err error) {
 	if err != nil {
-		logrus.Error("sendQuestionContent error:", err)
+		logrus.Error("checkMenuError:", err)
+		panic(err)
 	}
-	reply.MsgType = wxMessage.MsgTypeText
-	reply.MsgData = wxMessage.NewText(nextQuestionStr)
-}
-
-/*
-判断答题情况
-@param string item 回答的答案
-*/
-func checkQuestion(msg wxMessage.MixMessage, reply *wxMessage.Reply, item string) {
-	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
-	res, questionBank, err := wxQuestionService.Answer(item)
-	if !res {
-		//第一种情况：报错。显示日志
-		if err != nil && err != services.AnswerNotStartedErr {
-			logrus.Error("services.Answer error:", err)
-		}
-		//第二种情况：未开始。什么都不干
-		//if err == services.AnswerNotStartedErr {
-		//
-		//}
-		//第三种情况：就是普通的回答错误。通过客服消息，给用户返回解析
-		if err == nil {
-			err = sendManagerTextMessage(string(msg.FromUserName),
-				fmt.Sprintf(AnswerErrMessageTpl,
-					questionBank.Question.GetAnswer(),
-					questionBank.Question.GetAnalysis()))
-			if err != nil {
-				logrus.Error("sendManagerTextMessage", err)
-			}
-		}
-	}
-	//发送下一题
-	sendNextQuestionContent(reply, wxQuestionService)
-}
-
-//题目纠错
-func correctionQuestion(msg wxMessage.MixMessage, reply *wxMessage.Reply) {
-	wxQuestionService := services.NewWxQuestionService(string(msg.FromUserName))
-	err := wxQuestionService.Correction()
-	if err != nil {
-		logrus.Error("wxQuestionService.Correction error:", err)
-	}
-	//感谢反馈
-	err = sendManagerTextMessage(string(msg.FromUserName), "感谢反馈")
-	if err != nil {
-		logrus.Error("sendManagerTextMessage error:", err)
-	}
-	//发送下一题
-	sendNextQuestionContent(reply, wxQuestionService)
 }

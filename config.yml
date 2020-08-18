@@ -1,8 +1,10 @@
 appname: test
 port: 8088
 
+host: http://gugong.demoto.cn
+
 db:
-  name:     q
+  name:     hyzx
   user:     root
   password: root
   port:     3306
@@ -14,7 +16,7 @@ memDB:
   name: one
 
 wx:
-  appID:
-  appSecret:
-  token:
+  appID:  wx54175bbcec40ae45
+  appSecret:  ed8803049662b0d8fdb6f6b56074d46a
+  token:  4NHuXDxABeNvycENLoysTTzD
   encodingAESKey:

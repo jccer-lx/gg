@@ -7,8 +7,10 @@ import (
 
 func InitRouter(engine *gin.Engine) {
 	//微信
-	engine.Any("/wx", handlers.WeChat)
-
-	v1 := engine.Group("/v1")
-	v1.Any("/ping", handlers.Pong)
+	engine.POST("/wx", handlers.WeChat)
+	//页面路由
+	view := engine.Group("/v")
+	//微信应用
+	view.GET("/wx/user_info", handlers.UserInfoView)
+	view.GET("/user/openid/:openid", handlers.UserInfoByOpenid)
 }

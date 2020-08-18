@@ -14,6 +14,10 @@ import (
 func main() {
 	engine := gin.Default()
 	logrus.SetLevel(logrus.DebugLevel)
+	//静态资源
+	engine.Static("/assets", "assets")
+	//view
+	engine.LoadHTMLGlob("views/**/*")
 	//加载路由
 	routers.InitRouter(engine)
 	//中间件-跨域
