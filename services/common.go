@@ -5,6 +5,7 @@ import (
 	"github.com/lvxin0315/gg/helper"
 	"github.com/lvxin0315/gg/models"
 	"github.com/sirupsen/logrus"
+	"strings"
 )
 
 func checkError(tag string, err error) bool {
@@ -16,12 +17,16 @@ func checkError(tag string, err error) bool {
 }
 
 //带分页列表
-func GetList(model interface{}, pagination *helper.Pagination) error {
+func GetList(model interface{}, pagination *helper.Pagination, orderBy ...string) error {
 	db := databases.NewDB()
+	orderBySql := "id DESC"
+	if len(orderBy) > 0 {
+		orderBySql = strings.Join(orderBy, ",")
+	}
 	err := db.Model(model).
 		Offset(pagination.Limit * (pagination.Page - 1)).
 		Limit(pagination.Limit).
-		Order("id DESC").
+		Order(orderBySql).
 		Find(pagination.Data).Error
 	if !checkError("GetList", err) {
 		return err

@@ -28,24 +28,9 @@ func (p *loginApiParams) NewParams() params.GGParams {
 
 //管理员列表
 func AdminListApi(c *gin.Context) {
-	output := ggOutput(c)
-	//分页参数
 	pagination := new(helper.Pagination)
-	err := c.ShouldBind(pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	adminModel := new(models.Admin)
-	var adminList []*models.Admin
-	pagination.Data = &adminList
-	err = services.GetList(adminModel, pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	output.Data = adminList
-	output.Count = pagination.Count
+	pagination.Data = &[]models.Admin{}
+	ggList(c, &models.Admin{}, pagination)
 }
 
 //新增管理员

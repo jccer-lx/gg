@@ -15,24 +15,9 @@ func init() {
 }
 
 func AuthRuleListApi(c *gin.Context) {
-	output := ggOutput(c)
-	//分页参数
 	pagination := new(helper.Pagination)
-	err := c.ShouldBind(pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	authRuleModel := new(models.AuthRule)
-	var authRuleList []*models.AuthRule
-	pagination.Data = &authRuleList
-	err = services.GetAuthRuleList(authRuleModel, pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	output.Data = authRuleList
-	output.Count = pagination.Count
+	pagination.Data = &[]models.AuthRule{}
+	ggList(c, &models.AuthRule{}, pagination)
 }
 
 func AuthRuleAddApi(c *gin.Context) {

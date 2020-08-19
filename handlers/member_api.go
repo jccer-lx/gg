@@ -23,24 +23,9 @@ func (p *addMoneyApiParams) NewParams() params.GGParams {
 }
 
 func MemberListApi(c *gin.Context) {
-	output := ggOutput(c)
-	memberModel := new(models.Member)
-	//分页参数
 	pagination := new(helper.Pagination)
-	err := c.ShouldBind(pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	var memberList []*models.Member
-	pagination.Data = &memberList
-	err = services.GetList(memberModel, pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	output.Data = memberList
-	output.Count = pagination.Count
+	pagination.Data = &[]models.Member{}
+	ggList(c, &models.Member{}, pagination)
 }
 
 //添加余额

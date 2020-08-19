@@ -6,6 +6,7 @@ import (
 	"github.com/lvxin0315/gg/helper"
 	"github.com/lvxin0315/gg/middlewares"
 	"github.com/lvxin0315/gg/params"
+	"github.com/lvxin0315/gg/services"
 	"net/http"
 	"time"
 )
@@ -66,6 +67,24 @@ func setGGError(c *gin.Context, err error) {
 //通过的获取token
 func getGGToken(c *gin.Context) string {
 	return c.Keys["token"].(string)
+}
+
+//通用的列表
+func ggList(c *gin.Context, model interface{}, pagination *helper.Pagination, orderBy ...string) {
+	output := ggOutput(c)
+	//分页参数
+	err := c.ShouldBind(pagination)
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	err = services.GetList(model, pagination, orderBy...)
+	if err != nil {
+		setGGError(c, err)
+		return
+	}
+	output.Data = pagination.Data
+	output.Count = pagination.Count
 }
 
 //通用图片上传

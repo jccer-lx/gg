@@ -24,24 +24,9 @@ type WsTableField struct {
 
 //ws表格列表api
 func WsTableListApi(c *gin.Context) {
-	output := ggOutput(c)
-	wsTableModel := new(models.WsTable)
-	//分页参数
 	pagination := new(helper.Pagination)
-	err := c.ShouldBind(pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	var wsTableList []*models.WsTable
-	pagination.Data = &wsTableList
-	err = services.GetList(wsTableModel, pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	output.Data = wsTableList
-	output.Count = pagination.Count
+	pagination.Data = &[]models.WsTable{}
+	ggList(c, &models.WsTable{}, pagination)
 }
 
 //添加ws表格api

@@ -19,24 +19,9 @@ func init() {
 }
 
 func GoodsListApi(c *gin.Context) {
-	output := ggOutput(c)
-	goodsModel := new(models.Goods)
-	//分页参数
 	pagination := new(helper.Pagination)
-	err := c.ShouldBind(pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	var goodsList []*models.Goods
-	pagination.Data = &goodsList
-	err = services.GetList(goodsModel, pagination)
-	if err != nil {
-		setGGError(c, err)
-		return
-	}
-	output.Data = goodsList
-	output.Count = pagination.Count
+	pagination.Data = &[]models.Goods{}
+	ggList(c, &models.Goods{}, pagination)
 }
 
 func GoodsAddApi(c *gin.Context) {
