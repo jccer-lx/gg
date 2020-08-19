@@ -18,9 +18,16 @@ func UserInfoByOpenid(c *gin.Context) {
 		ErrorPage(c, err)
 		return
 	}
+	//用户的支付码
+	paymentCodeModel, err := services.PayCode(userModel.Id)
+	if err != nil {
+		ErrorPage(c, err)
+		return
+	}
 	data := make(map[string]interface{})
 	data["Openid"] = userModel.Openid
 	data["Score"] = userModel.Score
 	data["Money"] = userModel.Money
+	data["QrCodePath"] = paymentCodeModel.QrCodePath
 	c.HTML(http.StatusOK, "user/user_info.tpl", data)
 }

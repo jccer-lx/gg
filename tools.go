@@ -14,7 +14,7 @@ func main() {
 
 func createTable() {
 	tableModels := []interface{}{
-		models.WechatUserInfo{},
+		models.PaymentCode{},
 	}
 	//databases.NewDB().DropTable(tableModels...)
 	databases.NewDB().CreateTable(tableModels...)
