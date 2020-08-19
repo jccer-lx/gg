@@ -32,7 +32,7 @@
                             return '<img class="goods_category-small-pic" src="' + d.pic + '">'
                         },event:"show_pic", event_func: function (obj) {
                             let data = obj.data; //获得当前行数据
-                            $.get('/goods_category/view/show_pic/' + data.id, function (content) {
+                            $.get('/view/goods_category/show_pic/' + data.id, function (content) {
                                 layerIndex = layer.open({
                                     type: 1,
                                     anim: 5,

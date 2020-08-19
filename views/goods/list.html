@@ -30,7 +30,7 @@
                             return '<img class="goods-small-main_image" src="' + d.main_image + '">'
                         },event:"main_image", event_func: function (obj) {
                             let data = obj.data; //获得当前行数据
-                            $.get('/goods/view/show_main_image/' + data.id, function (content) {
+                            $.get('/view/goods/show_main_image/' + data.id, function (content) {
                                 layerIndex = layer.open({
                                     type: 1,
                                     anim: 5,
@@ -51,7 +51,7 @@
                             return html
                         },event:"slider_image_json", event_func: function (obj) {
                             let data = obj.data; //获得当前行数据
-                            $.get('/goods/view/show_slider_image/' + data.id, function (content) {
+                            $.get('/view/goods/show_slider_image/' + data.id, function (content) {
                                 layerIndex = layer.open({
                                     type: 1,
                                     anim: 5,

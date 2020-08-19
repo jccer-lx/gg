@@ -36,7 +36,7 @@
             table.on('toolbar(admin-table)', function (obj) {
                 switch (obj.event) {
                     case 'add':
-                        $.get("/admin/view/add", function (content) {
+                        $.get("/view/admin/add", function (content) {
                             layerIndex = layer.open({
                                 type: 1,
                                 // skin: 'layui-layer-demo', //样式类名

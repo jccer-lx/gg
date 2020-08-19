@@ -7,7 +7,6 @@ import (
 	"github.com/lvxin0315/gg/middlewares"
 	"github.com/lvxin0315/gg/params"
 	"net/http"
-	"strings"
 	"time"
 )
 
@@ -33,15 +32,17 @@ func ggBindParams(c *gin.Context, data params.GGParams) error {
 
 //通用的view
 func GGView(c *gin.Context) {
-	uriList := strings.Split(c.Request.RequestURI, "/")
-	if len(uriList) < 3 || uriList[2] != "view" {
+	module := c.Param("module")
+	action := c.Param("action")
+	if module == "" || action == "" {
+		errorView(c)
 		return
 	}
-	//参数[id]
+	//所有参数
 	data := map[string]interface{}{
 		"ID": c.Param("id"),
 	}
-	c.HTML(http.StatusOK, fmt.Sprintf("%s/%s.tpl", uriList[1], uriList[3]), data)
+	c.HTML(http.StatusOK, fmt.Sprintf("%s/%s.tpl", module, action), data)
 }
 
 //通用的获取output

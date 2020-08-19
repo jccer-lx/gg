@@ -31,7 +31,7 @@ function gg_table(gg_table_option) {
         var layer = layui.layer;
         let $ = layui.jquery;
         let apiPath = '/' + gg_table_option.table_name + '/api';
-        let viewPath = '/' + gg_table_option.table_name + '/view';
+        let viewPath = '/view/' + gg_table_option.table_name;
         // console.log(apiPath);
         // console.log('#tool-' + gg_table_option.table_name + '-table');
         table.render({
@@ -138,14 +138,14 @@ function gg_upload_pic(elem, multiple, done) {
     });
 }
 
-function gg_add_form(form_name, beforeSubmit) {
+function gg_add_form(form_name, beforeSubmit, afterSubmit) {
     layui.use(['layer', 'jquery', 'form', 'table', 'upload'], function () {
         let layer = layui.layer;
         let table = layui.table;
         let $ = layui.jquery;
         let form = layui.form;
         let apiPath = '/' + form_name + '/api';
-        let viewPath = '/' + form_name + '/view';
+        let viewPath = '/view/' + form_name;
         $('#' + form_name + '-add >button.layui-btn').on("click", function () {
             form.render();
             if(beforeSubmit !== undefined){
@@ -157,6 +157,9 @@ function gg_add_form(form_name, beforeSubmit) {
                     if (res.code === 0) {
                         tableReload()
                         layer.close(layerIndex);
+                        if(afterSubmit !== undefined){
+                            afterSubmit();
+                        }
                     } else {
                         layer.msg(res.msg)
                     }

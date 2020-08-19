@@ -1,0 +1,55 @@
+{{define "member/recharge.tpl"}}
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <form class="layui-form" lay-filter="money-add" id="money-add">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">金额</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="money" id="money" lay-verify="required" autocomplete="off"
+                               placeholder="0.00" class="layui-input">
+                        <input type="hidden" name="member_id" value="{{.ID}}">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-btn-container">
+                        <button type="button" class="layui-btn gg-money">10</button>
+                        <button type="button" class="layui-btn gg-money">20</button>
+                        <button type="button" class="layui-btn gg-money">50</button>
+                        <button type="button" class="layui-btn gg-money">100</button>
+                    </div>
+                </div>
+
+                <div class="layui-form-item">
+                    <label class="layui-form-label"></label>
+                    <div class="layui-btn-container">
+                        <button type="button" class="layui-btn gg-money">200</button>
+                        <button type="button" class="layui-btn gg-money">500</button>
+                        <button type="button" class="layui-btn gg-money">1000</button>
+                        <button type="button" class="layui-btn gg-money">2000</button>
+                    </div>
+                </div>
+
+                <button id="btnId" type="button" class="layui-btn">提交</button>
+            </form>
+        </div>
+    </div>
+    <script>
+        layui.use(['layer', 'jquery', 'form', 'table', 'upload'], function () {
+            let table = layui.table;
+            let $ = layui.jquery;
+            let form = layui.form;
+
+            gg_add_form('money',function() {},function () {
+                table.reload('member-table')
+            })
+
+            $(function () {
+                form.render();
+                $(".gg-money").on('click', function () {
+                    $('#money').val($(this).html())
+                });
+            });
+        });
+    </script>
+{{end}}

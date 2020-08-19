@@ -25,7 +25,7 @@ func (v *GGValidationError) GetErrMsgList() []string {
 }
 
 func Check(data interface{}) error {
-	logrus.Info("reflect.TypeOf(data):", reflect.TypeOf(data))
+	logrus.Info("参数接收结构:", reflect.TypeOf(data))
 	ggValidationError := new(GGValidationError)
 	err := validate.Struct(data)
 	if err != nil {

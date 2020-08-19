@@ -9,7 +9,7 @@ import (
 func main() {
 	databases.InitMysqlDB()
 	tableList := []interface{}{
-		models.WsTableData{},
+		models.Member{},
 	}
 
 	for i, t := range tableList {

@@ -34,7 +34,7 @@ func redirectMiddleware(c *gin.Context) {
 		output.UnLogin()
 		c.JSON(http.StatusTemporaryRedirect, output)
 	} else {
-		c.Redirect(http.StatusTemporaryRedirect, "/public/view/login")
+		c.Redirect(http.StatusTemporaryRedirect, "/view/public/login")
 	}
 	c.Abort()
 }

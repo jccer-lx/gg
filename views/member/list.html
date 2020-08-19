@@ -1,0 +1,35 @@
+{{define "member/list.tpl"}}
+    <table id="member-table" lay-filter="member-table" lay-skin="" lay-size=""></table>
+    <script>
+        layui.use(['table', 'layer', 'jquery'], function () {
+            let $ = layui.jquery;
+            let member_table_option = {
+                table_name: 'member',
+                cols: [[
+                    {field: "username", title: "账号"},
+                    {field: "mobile", title: "手机号", edit: "text"},
+                    {field: "nickname", title: "昵称"},
+                    {field: "openid", title: "Openid"},
+                    {field: "unionid", title: "Unionid"},
+                    {field: "money", title: "余额", sort: "true", event:"yue", event_func: yueFunc},
+                ]]
+            };
+            gg_table(member_table_option)
+
+            function yueFunc(obj){
+                let data = obj.data; //获得当前行数据
+                $.get('/view/member/recharge/' + data.id, function (content) {
+                    layerIndex = layer.open({
+                        type: 1,
+                        anim: 5,
+                        title: "充值",
+                        shadeClose: true, //开启遮罩关闭
+                        content: content,
+                        maxmin: true,
+                        area: ['60vw', '60vh'],
+                    });
+                })
+            }
+        });
+    </script>
+{{end}}

@@ -38,7 +38,7 @@
             table.on('toolbar(auth_rule-table)', function (obj) {
                 switch (obj.event) {
                     case 'add':
-                        $.get("/auth_rule/view/add", function (content) {
+                        $.get("/view/auth_rule/add", function (content) {
                             layerIndex = layer.open({
                                 type: 1,
                                 anim: 5,
