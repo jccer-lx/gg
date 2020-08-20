@@ -1,9 +1,10 @@
 {{define "member/recharge.tpl"}}
+    {{template "layout/window_header.tpl"}}
     <div class="layui-form-item">
         <div class="layui-input-block">
             <form class="layui-form" lay-filter="money-add" id="money-add">
                 <div class="layui-form-item">
-                    <label class="layui-form-label">金额</label>
+                    <label class="layui-form-label">金额:</label>
                     <div class="layui-input-block">
                         <input type="number" name="money" id="money" lay-verify="required" autocomplete="off"
                                placeholder="0.00" class="layui-input">
@@ -29,11 +30,16 @@
                         <button type="button" class="layui-btn gg-money">2000</button>
                     </div>
                 </div>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button id="btnId" type="button" class="layui-btn">提交</button>
+                    </div>
+                </div>
 
-                <button id="btnId" type="button" class="layui-btn">提交</button>
             </form>
         </div>
     </div>
+    {{template "layout/window_footer.tpl"}}
     <script>
         layui.use(['layer', 'jquery', 'form', 'table', 'upload'], function () {
             let table = layui.table;

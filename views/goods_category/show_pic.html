@@ -1,6 +1,6 @@
 {{define "goods_category/show_pic.tpl"}}
+    {{template "layout/window_header.tpl"}}
     <div class="layui-form-item">
-        <label class="layui-form-label">分类图片</label>
         <div class="layui-input-block">
             <div class="layui-col-lg2 layui-col-md2">
                 <img id="s-pic" src="">
@@ -17,10 +17,11 @@
                         <i class="layui-icon layui-icon-upload"></i>上传
                     </a>
                 </div>
-                <button type="button" class="layui-btn">提交</button>
+                <button type="button" class="layui-btn" id="sub">提交</button>
             </form>
         </div>
     </div>
+    {{template "layout/window_footer.tpl"}}
     <script>
         layui.use(['layer','jquery','form','table','upload'], function () {
             let layer = layui.layer;

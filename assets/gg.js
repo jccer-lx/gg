@@ -146,7 +146,7 @@ function gg_add_form(form_name, beforeSubmit, afterSubmit) {
         let form = layui.form;
         let apiPath = '/' + form_name + '/api';
         let viewPath = '/view/' + form_name;
-        $('#' + form_name + '-add >button.layui-btn').on("click", function () {
+        $('#sub').on("click", function () {
             form.render();
             if(beforeSubmit !== undefined){
                 beforeSubmit();

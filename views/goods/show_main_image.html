@@ -1,16 +1,16 @@
 {{define "goods/show_main_image.tpl"}}
+    {{template "layout/window_header.tpl"}}
     <div class="layui-form-item">
-        <label class="layui-form-label">主图</label>
+        <div class="layui-form-item">
+            {{/*                    <label class="layui-form-label"></label>*/}}
+            <div class="layui-input-block">
+                <div class="layui-col-lg4 layui-col-md4">
+                    <img id="s-pic" src="" class="full-pic">
+                </div>
+            </div>
+        </div>
         <div class="layui-input-block">
             <form class="layui-form" action="" lay-filter="goods-add" id="goods-add">
-                <div class="layui-form-item">
-                    {{/*                    <label class="layui-form-label"></label>*/}}
-                    <div class="layui-input-block">
-                        <div class="layui-col-lg2 layui-col-md2">
-                            <img id="s-pic" src="" class="full-pic">
-                        </div>
-                    </div>
-                </div>
                 <div class="layui-form-item">
                     <input type="hidden" name="id" id="id" lay-verify="required" autocomplete="off"
                            placeholder="" class="layui-input" value="{{.ID}}">
@@ -20,10 +20,12 @@
                         <i class="layui-icon layui-icon-upload"></i>上传
                     </a>
                 </div>
-                <button type="button" class="layui-btn">提交</button>
+                <button type="button" class="layui-btn" id="sub">提交</button>
             </form>
         </div>
     </div>
+    {{template "layout/window_footer.tpl"}}
+
     <script>
         layui.use(['layer','jquery','form','table','upload'], function () {
             let layer = layui.layer;
@@ -78,8 +80,8 @@
                 gg_request('get', '/goods/api/get/{{.ID}}', {}, function (res) {
                     console.log(res.data)
                     if(res.code === 0){
-                        console.log(res.data.pic)
-                        $("#s-pic").attr("src", res.data.pic);
+                        console.log(res.data.main_image)
+                        $("#s-pic").attr("src", res.data.main_image);
                     }else{
                         layer.msg(res.msg)
                     }

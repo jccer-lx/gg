@@ -1,51 +1,57 @@
 {{define "auth_rule/add.tpl"}}
-<div class="layui-form-item">
-    <label class="layui-form-label">添加菜单</label>
-    <div class="layui-input-block">
-        <form class="layui-form" action="" lay-filter="auth_rule-add" id="auth_rule-add">
-            <div class="layui-form-item">
-                <label class="layui-form-label">上级</label>
-                <div class="layui-input-block">
-                    <select name="pid" lay-verify="required" id="pid" lay-filter="pid"  class="layui-select">
-                        <option value="0" selected>无上级</option>
-                    </select>
+    {{template "layout/window_header.tpl"}}
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <form class="layui-form" action="" lay-filter="auth_rule-add" id="auth_rule-add">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">上级:</label>
+                    <div class="layui-input-block">
+                        <select name="pid" lay-verify="required" id="pid" lay-filter="pid"  class="layui-select">
+                            <option value="0" selected>无上级</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">名称</label>
-                <div class="layui-input-block">
-                    <input type="text" name="title" id="title" lay-verify="required" autocomplete="off"
-                           placeholder="Title" class="layui-input">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">名称:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" id="title" lay-verify="required" autocomplete="off"
+                               placeholder="Title" class="layui-input">
+                    </div>
                 </div>
-            </div>
-            <div class="layui-form-item">
-                <label class="layui-form-label">值</label>
-                <div class="layui-input-block">
-                    <input type="text" name="name" id="name" lay-verify="required" autocomplete="off" placeholder="建议路由值"
-                           class="layui-input">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">值:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" id="name" lay-verify="required" autocomplete="off" placeholder="建议路由值"
+                               class="layui-input">
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">备注</label>
-                <div class="layui-input-block">
-                    <input type="text" name="remark" id="remark" lay-verify="required" autocomplete="off"
-                           placeholder="Remark" class="layui-input">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">备注:</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="remark" id="remark" lay-verify="required" autocomplete="off"
+                               placeholder="Remark" class="layui-input">
+                    </div>
                 </div>
-            </div>
 
-            <div class="layui-form-item">
-                <label class="layui-form-label">权重</label>
-                <div class="layui-input-block">
-                    <input type="number" name="weigh" id="weigh" lay-verify="required" autocomplete="off"
-                           placeholder="Weigh" class="layui-input" value="0">
+                <div class="layui-form-item">
+                    <label class="layui-form-label">权重:</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="weigh" id="weigh" lay-verify="required" autocomplete="off"
+                               placeholder="Weigh" class="layui-input" value="0">
+                    </div>
                 </div>
-            </div>
-            <button type="button" class="layui-btn">提交</button>
-        </form>
+                <div class="layui-form-item">
+                    <div class="layui-input-block">
+                        <button type="button" id="sub" class="layui-btn">提交</button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
     </div>
-</div>
+    {{template "layout/window_footer.tpl"}}
 <script>
     layui.use(['layer','jquery','form','table'], function () {
         let layer = layui.layer;
